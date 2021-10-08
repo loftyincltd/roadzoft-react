@@ -1,0 +1,115 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.login-container {
+  height: 100vh;
+  background: url("./assets/images/bg-image.jpg") no-repeat center/cover;
+  font-family: "Roboto";
+}
+.dashboard-right {
+  background: #f7f8fc;
+  width: 250vh;
+}
+.sidebar-container {
+  height: 100%;
+  width: 250px;
+  font-family: "Mulish", sans-serif !important;
+}
+.sidebar-content {
+  font-family: "Mulish", sans-serif;
+}
+.header-container {
+  font-family: "Mulish", sans-serif;
+}
+.card-wrapper {
+  width: 258px;
+  height: 134px;
+  border-radius: 8px;
+}
+.card-large-wrapper {
+  width: 530px;
+  height: 336px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.large-card-title {
+  width: 100%;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-large-item  {
+  width: 100%;
+  height: 4rem;
+}
+.card-large-item p {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.sidebar {
+  width: 100%;
+  
+}
+.sidebar-logo {
+  width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.nav-menu {
+  width: 250px;
+  height: 100vh;
+  justify-content: center;
+}
+.nav-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  list-style: none;
+  padding: 8px 0px 8px 16px;
+  height: 60px;
+}
+.nav-item a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  width: 95%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 4px;
+}
+.nav-item a:hover {
+  background-color: teal;
+}
+.nav-item span {
+  margin-left: 16px;
+}
