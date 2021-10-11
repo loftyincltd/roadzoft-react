@@ -37,6 +37,7 @@ function AddUser() {
   const [lga, setLga] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [role, setRole] = React.useState("");
+  const [roles, setRoles] = React.useState([]);
 
   const handleDate = (newDate) => {
     setDate(newDate);
@@ -72,12 +73,29 @@ function AddUser() {
     console.log("Register", result);
   };
 
+  const getRoles = async () => {
+    const response = await fetch(`${API_BASE}/roles`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      }
+    })
+    const result = await response.json();
+    setRoles(result.data)
+    console.log("Roles", result)
+  }
+
   const title = "NEW USER";
   const user = {
     fullname: "Olusanya Michael",
     staff_id: "T64554",
     role: "Superadmin",
   };
+
+  React.useEffect(() => {
+    getRoles()
+  }, [])
 
   return (
     <div>

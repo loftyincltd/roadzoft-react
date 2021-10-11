@@ -23,6 +23,19 @@ function Projects() {
     console.log("Projects", result)
   };
 
+  const handleDelete = async (id) => {
+    const response = await fetch(`${API_BASE}/project/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization' : `Bearer ${localStorage.getItem("token")}`
+      },
+    });
+    const result = await response.json();
+    getProjects()
+    console.log("Projects", result)
+  };
+
   React.useEffect(() => {
       getProjects()
   }, []);
@@ -67,6 +80,15 @@ function Projects() {
       ignoreRowClick: true,
       cell: (row) => {
         return <Moment fromNow>{row.created_at}</Moment>;
+      },
+    },
+    {
+      selector: "id",
+      name: "Action",
+      sortable: true,
+      ignoreRowClick: true,
+      cell: (row) => {
+        return <Item.Button onClick={() => handleDelete(row.id)} color="error" variant="contained">Delete</Item.Button>;
       },
     },
    
