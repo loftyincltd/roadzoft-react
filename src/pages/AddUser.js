@@ -21,6 +21,7 @@ import TimePicker from "@mui/lab/TimePicker";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
+import { API_BASE } from "../utils/Api";
 
 const Input = styled("input")({
   display: "none",
@@ -29,13 +30,46 @@ const Input = styled("input")({
 function AddUser() {
   const [project, setProject] = React.useState("");
   const [date, setDate] = React.useState(new Date("2014-08-18T21:11:54"));
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [state, setUserstate] = React.useState("");
+  const [lga, setLga] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [role, setRole] = React.useState("");
 
   const handleDate = (newDate) => {
     setDate(newDate);
   };
 
-  const handleChange = (event) => {
+  const handleRoleChange = (event) => {
+    setRole(event.target.value);
+  };
+  const handleProjectChange = (event) => {
     setProject(event.target.value);
+  };
+
+  const register = async () => {
+    const dobYear = date.getFullYear();
+    const response = await fetch(`${API_BASE}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        email,
+        name,
+        phone,
+        state,
+        lga,
+        password: dobYear.toString(),
+        dob: date,
+      }),
+    });
+    const result = await response.json();
+    console.log("Register", result);
   };
 
   const title = "NEW USER";
@@ -74,93 +108,86 @@ function AddUser() {
           </div>
           <form className="mx-5">
             <div className="mt-5 flex flex-row justify-evenly items-center">
-              <div>
-                <TextField
-                  placeholder="Type Name"
-                  id="outlined-basic"
-                  label="Name"
-                  variant="outlined"
-                />
-                <div className="my-3 flex flex-row justify-evenly items-center">
+              <div className="flex flex-col justify-center items-center">
+                <div>
                   <TextField
-                    placeholder="State"
+                    placeholder="Type Name"
+                    onChange={(e) => setName(e.target.value)}
                     id="outlined-basic"
-                    label="State"
+                    label="Name"
                     variant="outlined"
                   />
-                  <TextField
-                    placeholder="LGA"
-                    id="outlined-basic"
-                    label="LGA"
-                    variant="outlined"
-                  />
-                </div>
-                <div className="my-3 flex flex-row justify-evenly items-center">
-                  <Box sx={{ minWidth: 190 }}>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Role
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={project}
-                        label="Project"
-                        onChange={handleChange}
-                      >
-                        <MenuItem value="Project 1">Super Admin</MenuItem>
-                        <MenuItem value="Project 2">Admin</MenuItem>
-                        <MenuItem value="Project 3">Staff</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Box>
-                  <TextField
-                    placeholder="Phone"
-                    id="outlined-basic"
-                    label="Phone"
-                    variant="outlined"
-                  />
-                </div>
-                <div className="my-3 flex flex-row justify-evenly items-center">
-                  <Box sx={{ minWidth: 190 }}>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">Sex</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={project}
-                        label="Project"
-                        onChange={handleChange}
-                      >
-                        <MenuItem value="Project 1">Male</MenuItem>
-                        <MenuItem value="Project 2">Female</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Box>
-                  <TextField
-                    placeholder="Email"
-                    type="email"
-                    id="outlined-basic"
-                    label="Email"
-                    variant="outlined"
-                  />
-                </div>
-                <div className="my-3 flex flex-row justify-evenly items-center">
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <Stack spacing={3}>
-                      <DesktopDatePicker
-                        label="Date of Birth"
-                        inputFormat="MM/dd/yyyy"
-                        value={date}
-                        onChange={handleDate}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                    </Stack>
-                  </LocalizationProvider>
+                  <div className="my-3 flex flex-row justify-evenly items-center">
+                    <TextField
+                      placeholder="State"
+                      onChange={(e) => setUserstate(e.target.value)}
+                      id="outlined-basic"
+                      label="State"
+                      variant="outlined"
+                    />
+                    <TextField
+                      placeholder="LGA"
+                      onChange={(e) => setLga(e.target.value)}
+                      id="outlined-basic"
+                      label="LGA"
+                      variant="outlined"
+                    />
+                  </div>
+                  <div className="my-3 flex flex-row justify-evenly items-center">
+                    <Box sx={{ minWidth: 200 }}>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Role
+                        </InputLabel>
+                        <Select
+                          disabled
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={project}
+                          label="Role"
+                          onChange={handleRoleChange}
+                        >
+                          <MenuItem value="Super Admin">Super Admin</MenuItem>
+                          <MenuItem value="Admin">Admin</MenuItem>
+                          <MenuItem value="Staff">Staff</MenuItem>
+                          <MenuItem value="Ad-hoc">Ad-hoc</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                    <TextField
+                      placeholder="Phone"
+                      onChange={(e) => setPhone(e.target.value)}
+                      id="outlined-basic"
+                      label="Phone"
+                      variant="outlined"
+                    />
+                  </div>
+                  <div className="my-3 flex flex-row justify-evenly items-center">
+                    <TextField
+                      placeholder="Email"
+                      onChange={(e) => setEmail(e.target.value)}
+                      type="email"
+                      id="outlined-basic"
+                      label="Email"
+                      variant="outlined"
+                    />
+
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <Stack spacing={3}>
+                        <DesktopDatePicker
+                          label="Date of Birth"
+                          inputFormat="MM/dd/yyyy"
+                          value={date}
+                          onChange={handleDate}
+                          renderInput={(params) => <TextField {...params} />}
+                        />
+                      </Stack>
+                    </LocalizationProvider>
+                  </div>
                 </div>
               </div>
-              <div>
-                <Box sx={{ minWidth: 200 }}>
+              <div className="flex flex-col justify-start items-center">
+                <Box className="my-5" sx={{ minWidth: 250 }}>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
                       Add to Project
@@ -170,7 +197,7 @@ function AddUser() {
                       id="demo-simple-select"
                       value={project}
                       label="Project"
-                      onChange={handleChange}
+                      onChange={handleProjectChange}
                     >
                       <MenuItem value="Project 1">Project 1</MenuItem>
                       <MenuItem value="Project 2">Project 2</MenuItem>
@@ -178,7 +205,13 @@ function AddUser() {
                     </Select>
                   </FormControl>
                 </Box>
-                <Item.Button color="primary" variant="contained">Regiter</Item.Button>
+                <Item.Button
+                  onClick={register}
+                  color="primary"
+                  variant="contained"
+                >
+                  Regiter
+                </Item.Button>
               </div>
             </div>
           </form>
