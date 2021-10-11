@@ -6,6 +6,7 @@ import Reports from './pages/Reports';
 import Users from './pages/Users';
 import Projects from './pages/Projects';
 import AddUser from './pages/AddUser';
+import CreateProject from './pages/CreateProject';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" exact component={Login} />
           <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/reports" exact component={Reports} />
+          <Route path="/create-project" exact component={CreateProject} />
           <Route path="/projects" exact component={Projects} />
           <Route path="/users" exact component={Users} />
           <Route path="/add-user" exact component={AddUser} />
