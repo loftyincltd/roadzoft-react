@@ -45,7 +45,7 @@ export default function Header({title}) {
                         <span className="mr-2">{user.name}</span>
                         <Item.Avatar variant="circular" />
                     </div>
-                    <p className="text-left mr-7">{user.phone} | {user.roles[0].name}</p>
+                    <p className="text-left mr-7">{user.phone} | </p>
                 </div>
             </div>
         </div>
