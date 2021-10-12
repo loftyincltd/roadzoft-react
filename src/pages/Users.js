@@ -8,33 +8,38 @@ import Moment from "react-moment";
 import ProjectTable from "../components/tables/ProjectTable";
 import HeaderWithButton from "../components/header/HeaderWithButton";
 import { API_BASE } from "../utils/Api";
-import {useHistory} from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 function Users() {
-  const history = useHistory()
+  const history = useHistory();
   const [users, setUsers] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
 
   const getUsers = async () => {
     const response = await fetch(`${API_BASE}/users`, {
       headers: {
         "Content-Type": "application/json",
-        'Authorization' : `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     const result = await response.json();
-    result && setUsers(result.data)
-    console.log("Users", result)
+    result && setUsers(result.data);
+    setLoading(false);
+    console.log("Users", result);
   };
 
   React.useEffect(() => {
-      getUsers()
+    getUsers();
   }, []);
 
-  const data = React.useMemo(() => users)
+  const data = React.useMemo(() => users);
 
   const handleNew = () => {
-    history.push('/add-user')
-  }
+    history.push("/add-user");
+  };
+  const viewUser = (id) => {
+    history.push(`/user-profile/${id}`);
+  };
   const title = "USERS";
   const user = {
     fullname: "Olusanya Michael",
@@ -66,9 +71,23 @@ function Users() {
     { selector: "role", name: "Role", sortable: true },
     { selector: "State", name: "State", sortable: true },
     { selector: "lga", name: "LGA", sortable: true },
+    {
+      selector: "id",
+      name: "Action",
+      cell: (row) => {
+        return (
+          <Item.Button
+            onClick={() => viewUser(row.id)}
+            color="success"
+            variant="contained"
+          >
+            View
+          </Item.Button>
+        );
+      },
+    },
   ];
 
- 
   return (
     <div>
       <div className="flex flex-row">
@@ -77,8 +96,21 @@ function Users() {
         </div>
 
         <div className="dashboard-right">
-          <HeaderWithButton handlClick={handleNew} title={title.toUpperCase()} profile={user} />
-          <ProjectTable columns={columns} data={data} />
+          <HeaderWithButton
+            handlClick={handleNew}
+            title={title.toUpperCase()}
+            
+          />
+          {loading ? (
+            <Item.Box
+              className="flex justify-center items-center"
+              sx={{ display: "flex" }}
+            >
+              <Item.CircularProgress />
+            </Item.Box>
+          ) : (
+            <ProjectTable columns={columns} data={data} />
+          )}
         </div>
       </div>
     </div>

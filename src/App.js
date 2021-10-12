@@ -7,6 +7,7 @@ import Users from './pages/Users';
 import Projects from './pages/Projects';
 import AddUser from './pages/AddUser';
 import CreateProject from './pages/CreateProject';
+import SingleUser from './pages/SingleUser';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/create-project" exact component={CreateProject} />
           <Route path="/projects" exact component={Projects} />
           <Route path="/users" exact component={Users} />
+          <Route path="/user-profile/:id" exact component={SingleUser} />
           <Route path="/add-user" exact component={AddUser} />
         </Switch>
       </Router>

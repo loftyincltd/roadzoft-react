@@ -68,7 +68,7 @@ function Dashboard() {
         </div>
 
         <div className="dashboard-right">
-          <Header title={title.toUpperCase()} profile={user} />
+          <Header title={title.toUpperCase()} />
           <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">Projects</h3>
           <div className="mx-5 flex flex-row justify-between items-center">
             {infos.map((info) => (

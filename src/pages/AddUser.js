@@ -105,7 +105,7 @@ function AddUser() {
         </div>
 
         <div className="dashboard-right">
-          <Header title={title.toUpperCase()} profile={user} />
+          <Header title={title.toUpperCase()} />
           <div className="profile-picture flex flex-col justify-center items-center">
             <Stack direction="row" alignItems="center" spacing={2}>
               <label htmlFor="icon-button-file">

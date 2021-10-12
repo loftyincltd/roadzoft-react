@@ -4,23 +4,35 @@ import TopCards from "../components/cards/TopCards";
 import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
 import * as Item from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import Moment from "react-moment";
 import ProjectTable from "../components/tables/ProjectTable";
 import { API_BASE } from "../utils/Api";
+import HeaderWithButton from "../components/header/HeaderWithButton";
+import { useHistory } from "react-router-dom";
 
 function Projects() {
+  const history = useHistory();
   const [projects, setProjects] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  const loadNew = () => {
+    history.push("/create-project");
+  };
 
   const getProjects = async () => {
+    
     const response = await fetch(`${API_BASE}/projects`, {
       headers: {
         "Content-Type": "application/json",
-        'Authorization' : `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     const result = await response.json();
-    result && setProjects(result)
-    console.log("Projects", result)
+    setLoading(false);
+    result && setProjects(result);
+    console.log("Projects", result);
   };
 
   const handleDelete = async (id) => {
@@ -28,16 +40,16 @@ function Projects() {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        'Authorization' : `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     const result = await response.json();
-    getProjects()
-    console.log("Projects", result)
+    getProjects();
+    console.log("Projects", result);
   };
 
   React.useEffect(() => {
-      getProjects()
+    getProjects();
   }, []);
 
   const title = "PROJECTS";
@@ -88,13 +100,20 @@ function Projects() {
       sortable: true,
       ignoreRowClick: true,
       cell: (row) => {
-        return <Item.Button onClick={() => handleDelete(row.id)} color="error" variant="contained">Delete</Item.Button>;
+        return (
+          <Item.Button
+            onClick={() => handleDelete(row.id)}
+            color="error"
+            variant="contained"
+          >
+            Delete
+          </Item.Button>
+        );
       },
     },
-   
   ];
 
-  const data = React.useMemo(() => projects)
+  const data = React.useMemo(() => projects);
 
   return (
     <div>
@@ -104,15 +123,25 @@ function Projects() {
         </div>
 
         <div className="dashboard-right">
-          <Header title={title.toUpperCase()} profile={user} />
+          <HeaderWithButton
+            handlClick={loadNew}
+            title={title.toUpperCase()}
+            
+          />
           <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">
             Projects
           </h3>
-          <div className="mx-5 flex flex-row justify-between items-center">
-            {infos.map((info) => (
-              <TopCards info={info} />
-            ))}
-          </div>
+          {loading ? (
+            <Box className="flex justify-center items-center" sx={{ display: "flex" }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <div className="mx-5 flex flex-row justify-between items-center">
+              {infos.map((info) => (
+                <TopCards info={info} />
+              ))}
+            </div>
+          )}
           <hr />
           <ProjectTable columns={columns} data={data} />
         </div>

@@ -59,7 +59,7 @@ function CreateProject() {
         </div>
 
         <div className="dashboard-right">
-          <Header title={page_title.toUpperCase()} profile={user} />
+          <Header title={page_title.toUpperCase()}/>
 
           <form className="mx-5">
             <div className="mt-5 flex flex-col justify-evenly items-center">
