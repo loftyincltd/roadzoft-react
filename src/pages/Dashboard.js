@@ -6,12 +6,13 @@ import Sidebar from "../components/sidebar/Sidebar";
 import {API_BASE} from '../utils/Api'
 
 function Dashboard() {
+  const [user, setUser] = React.useState({})
   const title = "Overview";
-  const user = {
+  /* const user = {
     fullname: "Olusanya Michael",
     staff_id: "T64554",
     role: "Superadmin",
-  };
+  }; */
 
   const getData = async () => {
     const response = fetch(`${API_BASE}/`)
@@ -60,6 +61,27 @@ function Dashboard() {
     {name: "Latest Messages"},
     {name: "New Users"},
 ]
+const getUser = async () => {
+  try {
+    const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const result = await response.json();
+    const data = result.data;
+    setUser(result.data)
+    console.log("User:", result);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+React.useEffect(() => {
+  getUser()
+}, [])
   return (
     <div>
       <div className="flex flex-row">
@@ -68,7 +90,7 @@ function Dashboard() {
         </div>
 
         <div className="dashboard-right">
-          <Header title={title.toUpperCase()} />
+          <Header user={user} title={title.toUpperCase()} />
           <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">Projects</h3>
           <div className="mx-5 flex flex-row justify-between items-center">
             {infos.map((info) => (

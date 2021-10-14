@@ -16,6 +16,7 @@ function Projects() {
   const history = useHistory();
   const [projects, setProjects] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [user, setUser] = React.useState({})
 
   const loadNew = () => {
     history.push("/create-project");
@@ -48,16 +49,35 @@ function Projects() {
     console.log("Projects", result);
   };
 
+  const getUser = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const result = await response.json();
+      const data = result.data;
+      setUser(data)
+      console.log("User:", result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   React.useEffect(() => {
+    getUser()
     getProjects();
   }, []);
 
   const title = "PROJECTS";
-  const user = {
+  /* const user = {
     fullname: "Olusanya Michael",
     staff_id: "T64554",
     role: "Superadmin",
-  };
+  }; */
 
   const infos = [
     {
@@ -126,7 +146,7 @@ function Projects() {
           <HeaderWithButton
             handlClick={loadNew}
             title={title.toUpperCase()}
-            
+            user={user}
           />
           <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">
             Projects

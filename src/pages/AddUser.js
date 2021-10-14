@@ -38,6 +38,7 @@ function AddUser() {
   const [phone, setPhone] = React.useState("");
   const [role, setRole] = React.useState("");
   const [roles, setRoles] = React.useState([]);
+  const [user, setUser] = React.useState({});
 
   const handleDate = (newDate) => {
     setDate(newDate);
@@ -87,13 +88,32 @@ function AddUser() {
   }
 
   const title = "NEW USER";
-  const user = {
+  /* const user = {
     fullname: "Olusanya Michael",
     staff_id: "T64554",
     role: "Superadmin",
+  }; */
+
+  const getUser = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const result = await response.json();
+      const data = result.data;
+      setUser(data)
+      console.log("User:", result);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   React.useEffect(() => {
+    getUser()
     getRoles()
   }, [])
 
@@ -105,7 +125,7 @@ function AddUser() {
         </div>
 
         <div className="dashboard-right">
-          <Header title={title.toUpperCase()} />
+          <Header user={user} title={title.toUpperCase()} />
           <div className="profile-picture flex flex-col justify-center items-center">
             <Stack direction="row" alignItems="center" spacing={2}>
               <label htmlFor="icon-button-file">

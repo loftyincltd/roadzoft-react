@@ -21,6 +21,7 @@ function CreateProject() {
   const [title, setTitle] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [description, setDesc] = React.useState("");
+  const [user, setUser] = React.useState({});
 
   const postProject = async () => {
     const response = await fetch(`${API_BASE}/project`, {
@@ -45,11 +46,33 @@ function CreateProject() {
   };
 
   const page_title = "CREATE PROJECT";
-  const user = {
+ /*  const user = {
     fullname: "Olusanya Michael",
     staff_id: "T64554",
     role: "Superadmin",
+  }; */
+
+  const getUser = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const result = await response.json();
+      const data = result.data;
+      setUser(data)
+      console.log("User:", result);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  React.useEffect(() => {
+    getUser()
+  }, [])
 
   return (
     <div>
@@ -59,7 +82,7 @@ function CreateProject() {
         </div>
 
         <div className="dashboard-right">
-          <Header title={page_title.toUpperCase()}/>
+          <Header user={user} title={page_title.toUpperCase()}/>
 
           <form className="mx-5">
             <div className="mt-5 flex flex-col justify-evenly items-center">

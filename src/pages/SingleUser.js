@@ -30,6 +30,7 @@ const Input = styled("input")({
 
 function SingleUser() {
   const params = useParams();
+  const [user, setUser] = React.useState({});
   const [project, setProject] = React.useState("");
   const [date, setDate] = React.useState(new Date("2014-08-18T21:11:54"));
   const [email, setEmail] = React.useState("");
@@ -116,11 +117,11 @@ function SingleUser() {
   };
   //header user
   const title = "NEW USER";
-  const user = {
+  /* const user = {
     fullname: "Olusanya Michael",
     staff_id: "T64554",
     role: "Superadmin",
-  };
+  }; */
 
   //Get single user
   const getUser = async () => {
@@ -135,6 +136,7 @@ function SingleUser() {
       });
       const result = await response.json();
       const data = result.data;
+      setUser(result.data);
       setName(data.name);
       setDate(data.dob);
       setUserstate(data.State);
@@ -217,7 +219,7 @@ function SingleUser() {
         </div>
 
         <div className="dashboard-right">
-          <Header title={title.toUpperCase()} />
+          <Header user={user} title={title.toUpperCase()} />
           {message != "" && (
             <Item.Alert
               onClose={() => setMessage("")}

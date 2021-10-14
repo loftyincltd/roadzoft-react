@@ -14,6 +14,7 @@ function Users() {
   const history = useHistory();
   const [users, setUsers] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [user, setUser] = React.useState({});
 
   const getUsers = async () => {
     const response = await fetch(`${API_BASE}/users`, {
@@ -28,7 +29,26 @@ function Users() {
     console.log("Users", result);
   };
 
+  const getUser = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const result = await response.json();
+      const data = result.data;
+      setUser(data)
+      console.log("User:", result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   React.useEffect(() => {
+    getUser()
     getUsers();
   }, []);
 
@@ -41,11 +61,11 @@ function Users() {
     history.push(`/user-profile/${id}`);
   };
   const title = "USERS";
-  const user = {
+  /* const user = {
     fullname: "Olusanya Michael",
     staff_id: "T64554",
     role: "Superadmin",
-  };
+  }; */
 
   const infos = [
     {
@@ -99,7 +119,7 @@ function Users() {
           <HeaderWithButton
             handlClick={handleNew}
             title={title.toUpperCase()}
-            
+            user={user}
           />
           {loading ? (
             <Item.Box

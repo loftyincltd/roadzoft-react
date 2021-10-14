@@ -4,31 +4,10 @@ import * as Item from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { API_BASE } from '../../utils/Api';
 
-export default function HeaderWithButton({title, handlClick}) {
-    const [user, setUser] = React.useState({});
-    const params = useParams();
+export default function HeaderWithButton({title, user, handlClick}) {
+  
 
-    const getUser = async () => {
-        const userId = params.id;
-        try {
-          const response = await fetch(`${API_BASE}/user/${localStorage.getItem("userId")}`, {
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
-          const result = await response.json();
-          const data = result.data;
-          setUser(data)
-          console.log("User:", result);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      React.useEffect(() => {
-          getUser()
-      }, [])
+   
     return (
         <div className="header-container flex flex-row justify-between items-center mx-5 my-2">
             <div className="flex flex-row justify-center items-center">
@@ -45,7 +24,7 @@ export default function HeaderWithButton({title, handlClick}) {
                         <span className="mr-2">{user.name}</span>
                         <Item.Avatar variant="circular" />
                     </div>
-                    <p className="text-left mr-7">{user.phone} | </p>
+                    <p className="text-left mr-7">{user.phone}</p>
                 </div>
             </div>
         </div>
