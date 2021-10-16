@@ -5,7 +5,7 @@ import * as MdIcons from 'react-icons/md';
 export const SidebarData = [
     {
         title: "Overview",
-        path: "/",
+        path: "/dashboard",
         icon: <MdIcons.MdPieChart />,
         classname: "nav-item"
     },
@@ -29,7 +29,7 @@ export const SidebarData = [
     },
     {
         title: "Logs",
-        path: "/logs",
+        path: "/log",
         icon: <MdIcons.MdBook />,
         classname: "nav-item"
     },

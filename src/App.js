@@ -8,6 +8,8 @@ import Projects from './pages/Projects';
 import AddUser from './pages/AddUser';
 import CreateProject from './pages/CreateProject';
 import SingleUser from './pages/SingleUser';
+import Log from './pages/Log';
+import Messages from './pages/Messages';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/projects" exact component={Projects} />
           <Route path="/users" exact component={Users} />
           <Route path="/user-profile/:id" exact component={SingleUser} />
+          <Route path="/log" exact component={Log} />
+          <Route path="/messages" exact component={Messages} />
           <Route path="/add-user" exact component={AddUser} />
         </Switch>
       </Router>
