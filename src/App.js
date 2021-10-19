@@ -10,6 +10,8 @@ import CreateProject from './pages/CreateProject';
 import SingleUser from './pages/SingleUser';
 import Log from './pages/Log';
 import Messages from './pages/Messages';
+import Settings from './pages/Settings';
+import Notifications from './pages/Notifications';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           <Route path="/" exact component={Login} />
           <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/reports" exact component={Reports} />
+          <Route path="/settings" exact component={Settings} />
+          <Route path="/notifications" exact component={Notifications} />
           <Route path="/create-project" exact component={CreateProject} />
           <Route path="/projects" exact component={Projects} />
           <Route path="/users" exact component={Users} />

@@ -15,12 +15,12 @@ export const SidebarData = [
         icon: <MdIcons.MdOutlineWork />,
         classname: "nav-item"
     },
-    {
+    /* {
         title: "Reports",
         path: "/reports",
         icon: <MdIcons.MdLightbulb />,
         classname: "nav-item"
-    },
+    }, */
     {
         title: "Users",
         path: "/users",

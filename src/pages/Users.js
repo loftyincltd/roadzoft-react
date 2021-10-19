@@ -47,6 +47,20 @@ function Users() {
     }
   };
 
+  const handleDelete = async (id) => {
+    const response = await fetch(`${API_BASE}/user/delete/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const result = await response.json();
+    getUsers();
+    console.log("Projects", result);
+  };
+
+
   React.useEffect(() => {
     getUser()
     getUsers();
@@ -61,39 +75,15 @@ function Users() {
     history.push(`/user-profile/${id}`);
   };
   const title = "USERS";
-  /* const user = {
-    fullname: "Olusanya Michael",
-    staff_id: "T64554",
-    role: "Superadmin",
-  }; */
-
-  const infos = [
-    {
-      title: "Total",
-      data: 5,
-    },
-    {
-      title: "Approved",
-      data: 15,
-    },
-    {
-      title: "Querried",
-      data: 2,
-    },
-    {
-      title: "Disapproved",
-      data: 20,
-    },
-  ];
+  
 
   const columns = [
     { selector: "name", name: "Full Name", sortable: true },
-    { selector: "role", name: "Role", sortable: true },
     { selector: "State", name: "State", sortable: true },
     { selector: "lga", name: "LGA", sortable: true },
     {
       selector: "id",
-      name: "Action",
+      name: "",
       cell: (row) => {
         return (
           <Item.Button
@@ -102,6 +92,23 @@ function Users() {
             variant="contained"
           >
             View
+          </Item.Button>
+        );
+      },
+    },
+    {
+      selector: "id",
+      name: "",
+      sortable: true,
+      ignoreRowClick: true,
+      cell: (row) => {
+        return (
+          <Item.Button
+            onClick={() => handleDelete(row.id)}
+            color="error"
+            variant="contained"
+          >
+            Delete
           </Item.Button>
         );
       },

@@ -23,6 +23,7 @@ import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
 import { API_BASE } from "../utils/Api";
 import { useParams } from "react-router-dom";
+import ProjectTable from "../components/tables/ProjectTable";
 
 const Input = styled("input")({
   display: "none",
@@ -46,7 +47,7 @@ function SingleUser() {
   const [roles, setRoles] = React.useState([]);
   const [userRoles, setUserRoles] = React.useState([]);
   const [projects, setProjects] = React.useState([]);
-  //const [projects, setProjects] = React.useState([]);
+  const [userProjects, setUserProjects] = React.useState([]);
   const [userReports, setUserReports] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -63,10 +64,10 @@ function SingleUser() {
   };
 
   //Update User account
-  const register = async () => {
+  const updateUser = async () => {
     const dobYear = date.getFullYear();
-    const response = await fetch(`${API_BASE}/register`, {
-      method: "POST",
+    const response = await fetch(`${API_BASE}/user/update/${localStorage.getItem("user")}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -78,11 +79,11 @@ function SingleUser() {
         phone,
         state,
         lga,
-        password: dobYear.toString(),
         dob: date,
       }),
     });
     const result = await response.json();
+    setMessage(result.message)
     console.log("Register", result);
   };
   //Get roles
@@ -115,13 +116,26 @@ function SingleUser() {
       console.log(error);
     }
   };
+
+  //Get user reports
+  const getUserReports = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}/reports`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const result = await response.json();
+      setUserReports(result.data);
+      console.log("Reports", result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //header user
   const title = "NEW USER";
-  /* const user = {
-    fullname: "Olusanya Michael",
-    staff_id: "T64554",
-    role: "Superadmin",
-  }; */
 
   //Get single user
   const getUser = async () => {
@@ -178,6 +192,30 @@ function SingleUser() {
     }
   };
 
+   //Detach Role
+   const detachRole = async (id) => {
+    try {
+      const response = await fetch(
+        `${API_BASE}/roles/detach/role/${id}/user/${userId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const result = await response.json();
+      if (result.success) {
+        setMessage("Role Detached Successfully");
+      }
+      console.log("Detach", result);
+      getUser();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //Assign Project
   const addProject = async () => {
     try {
@@ -209,7 +247,33 @@ function SingleUser() {
     getRoles();
     getProjects();
     getUser();
+    getUserReports()
   }, []);
+
+  const rolecolumns = [
+    { selector: "name", name: "Roles", sortable: true },
+    {
+      selector: "id",
+      name: "",
+      cell: (row) => {
+        return (
+          <Item.Button
+            onClick={() => detachRole(row.id)}
+            color="warning"
+            variant="contained"
+          >
+            Detach
+          </Item.Button>
+        );
+      },
+    },
+  ]
+  const projectcolumns = [
+    { selector: "title", name: "Projects", sortable: true },
+  ]
+  const reportcolumns = [
+    { selector: "title", name: "Reports", sortable: true },
+  ]
 
   return (
     <div>
@@ -318,12 +382,23 @@ function SingleUser() {
                         </Stack>
                       </LocalizationProvider>
                     </div>
+                    <Item.Button
+                      onClick={updateUser}
+                      color="primary"
+                      variant="contained"
+                    >
+                      Update User
+                    </Item.Button>
                   </div>
+                  <ProjectTable columns={reportcolumns} data={userReports} />
+                  <ProjectTable columns={projectcolumns} data={projects} />
+                  <ProjectTable columns={rolecolumns} data={userRoles} />
                 </div>
 
                 <div className="flex flex-col justify-start items-center">
                   <div className="flex flex-col justify-start items-center">
                     <Box className="my-5" sx={{ minWidth: 250 }}>
+                    
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           Add to Project
@@ -352,6 +427,7 @@ function SingleUser() {
                   </div>
                   <div className="flex flex-col justify-start items-center my-5">
                     <Box sx={{ minWidth: 200 }}>
+                    
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           Role
