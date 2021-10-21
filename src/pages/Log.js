@@ -9,6 +9,8 @@ import Moment from 'react-moment';
 import * as Item from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import UserDialog from "../components/dialog/LogDialog";
+import ProjectDialog from "../components/dialog/ProjectLog";
 
 function Log() {
   const [user, setUser] = React.useState({});
@@ -48,7 +50,61 @@ function Log() {
     console.log("Project Log", result);
   };
   const columns = [
-    { selector: "user.name", name: "User", sortable: true },
+    {
+      selector: "user",
+      name: "User",
+      sortable: true,
+      cell: (row) => {
+        return (<div>
+          <h2>{row.user.name}</h2>
+            <h2>{row.user.lga}/{row.user.State}</h2>
+            <h2>{row.user.phone}</h2>
+            <h2>{row.user.email}</h2>
+        </div>);
+      },
+    },
+    {
+      selector: "affected_model",
+      name: "Affected Model",
+      sortable: true,
+      cell: (row) => {
+        return row.affected_model != null && <UserDialog model={row.affected_model} />;
+      },
+    },
+    { selector: "description", name: "Activity", sortable: true },
+    {
+      selector: "created_at",
+      name: "Date",
+      sortable: true,
+      cell: (row) => {
+        return <Moment format="YYYY-MM-DD">{row.created_at}</Moment>;
+      },
+    },
+    { selector: "action", name: "", sortable: true },
+  ];
+
+  const projcolumns = [
+    {
+      selector: "user",
+      name: "User",
+      sortable: true,
+      cell: (row) => {
+        return (<div>
+          <h2>{row.user.name}</h2>
+            <h2>{row.user.lga}/{row.user.State}</h2>
+            <h2>{row.user.phone}</h2>
+            <h2>{row.user.email}</h2>
+        </div>);
+      },
+    },
+    {
+      selector: "affected_model",
+      name: "Affected Model",
+      sortable: true,
+      cell: (row) => {
+        return row.affected_model != null && <ProjectDialog model={row.affected_model} />;
+      },
+    },
     { selector: "description", name: "Activity", sortable: true },
     {
       selector: "created_at",
@@ -103,7 +159,10 @@ function Log() {
             <CircularProgress />
           </Box>) :
             (<div>
-              <ProjectTable data={data} columns={columns} />
+              <h3>User Log</h3>
+              <ProjectTable data={userLog} columns={columns} />
+              <h3>Project Log</h3>
+              <ProjectTable data={projectLog} columns={projcolumns} />
             </div>)}
           </div>
         </div>
