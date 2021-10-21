@@ -36,7 +36,7 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container py-8">
+    <div className="login-container flex justify-center items-center">
       <div className="overlay p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex flex-col items-center space">
         <div className="flex flex-col justify-between items-center mb-5">
           <img src={Logo} width="90" alt="Ferma Logo" />

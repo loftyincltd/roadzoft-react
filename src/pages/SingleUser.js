@@ -135,7 +135,7 @@ function SingleUser() {
     }
   };
   //header user
-  const title = "NEW USER";
+  const title = "USER DETAILS";
 
   //Get single user
   const getUser = async () => {

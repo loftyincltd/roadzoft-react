@@ -1,11 +1,19 @@
 import React from "react";
 import Logo from "../../assets/images/logo.png";
 import * as Icon from "react-feather";
+import * as Item from '@mui/material';
 import { MdLightbulb } from "react-icons/md";
 import { Link } from "react-router-dom";
 import {BottomSeidebarData, SidebarData} from './SideBarMenu';
+import {useHistory} from "react-router-dom";
 
 export default function Sidebar() {
+  const history = useHistory()
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    history.push("/")
+  }
   return (
     <div className="sidebar-container bg-green-900">
       <div className="sidebar-content bg-green-900 mx-5 flex flex-col justify-center items-center text-white">
@@ -29,6 +37,9 @@ export default function Sidebar() {
               </Link>
             </li>))}
           </ul>
+          <div className="flex flex-row justify-center items-center">
+          <Item.Button onClick={handleLogout} color="success" variant="outlined">Logout</Item.Button>
+          </div>
         </nav>
       </div>
     </div>
