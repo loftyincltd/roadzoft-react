@@ -62,8 +62,9 @@ function Users() {
 
 
   React.useEffect(() => {
-    getUser()
     getUsers();
+    getUser()
+    
   }, []);
 
   const data = React.useMemo(() => users);

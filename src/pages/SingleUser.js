@@ -272,7 +272,18 @@ function SingleUser() {
     { selector: "title", name: "Projects", sortable: true },
   ]
   const reportcolumns = [
-    { selector: "title", name: "Reports", sortable: true },
+    { selector: "message", name: "Reports", sortable: true },
+    { selector: "latitude", name: "Coordinates", sortable: true, 
+    cell: (row) => {
+      return (
+        <div>
+          <p><span className="text-bolder">Lat: </span>{row.latitude},</p>
+          <p><span className="text-bolder">Long: </span>{row.longitude}</p>
+        </div>
+      );
+    },
+  },
+  { selector: "status", name: "", sortable: true },
   ]
 
   return (
