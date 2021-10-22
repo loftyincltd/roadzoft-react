@@ -4,8 +4,10 @@ import TopCards from "../components/cards/TopCards";
 import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
 import { API_BASE } from "../utils/Api";
+import { useHistory } from "react-router-dom";
 
 function Dashboard() {
+  const history = useHistory();
   const [user, setUser] = React.useState({});
   const [users, setUsers] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -80,6 +82,13 @@ function Dashboard() {
   React.useEffect(() => {
     getUsers();
     getUser();
+    if (localStorage.getItem("roles") == "Ad-hoc") {
+      alert("You dont have access");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      localStorage.removeItem("roles");
+      history.push("/");
+    }
   }, []);
 
   const reportData = [

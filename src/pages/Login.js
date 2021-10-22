@@ -41,7 +41,7 @@ export default function Login() {
     } else {
       localStorage.setItem("token", result.access_token);
       localStorage.setItem("user", result.data.id);
-      localStorage.setItem("roles", result.data.roles);
+      localStorage.setItem("roles", result.data.roles.map(role => role.name));
       history.push("/dashboard");
     }
     console.log("Login", result);
