@@ -73,31 +73,7 @@ function Projects() {
   }, []);
 
   const title = "PROJECTS";
-  /* const user = {
-    fullname: "Olusanya Michael",
-    staff_id: "T64554",
-    role: "Superadmin",
-  }; */
-
-  const infos = [
-    {
-      title: "Total",
-      data: 5,
-    },
-    {
-      title: "Approved",
-      data: 15,
-    },
-    {
-      title: "Querried",
-      data: 2,
-    },
-    {
-      title: "Disapproved",
-      data: 20,
-    },
-  ];
-
+ 
   const columns = [
     {
       selector: "title",
@@ -151,20 +127,18 @@ function Projects() {
           <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">
             Projects
           </h3>
+          <hr />
           {loading ? (
             <Box className="flex justify-center items-center" sx={{ display: "flex" }}>
               <CircularProgress />
             </Box>
           ) : (
-            <div className="mx-5 flex flex-row justify-between items-center">
-              {infos.map((info) => (
-                <TopCards info={info} />
-              ))}
-            </div>
-          )}
-          <hr />
+            
+           
           <ProjectTable columns={columns} data={data} />
-        </div>
+        
+          )}
+          </div>
       </div>
     </div>
   );

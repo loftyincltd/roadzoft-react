@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Moment from 'react-moment'
 
-export default function LargeCard({title}) {
-  const data = [
+export default function LargeCard({title, data}) {
+ /*  const data = [
     {
       name: "Olusanya Michael",
       date: "12/20/2020",
@@ -19,7 +20,7 @@ export default function LargeCard({title}) {
       name: "Olusanya Michael",
       date: "12/20/2020",
     },
-  ];
+  ]; */
   
   return (
     <>
@@ -31,7 +32,7 @@ export default function LargeCard({title}) {
             </h5>
             <p className="text-gray-500">Group: <span className="text-gray-700">Support</span></p>
           </div>
-          <Link className="mr-3" to="/" className="">
+          <Link className="mr-3" to="/users" className="">
             View all
           </Link>
         </div>
@@ -39,7 +40,7 @@ export default function LargeCard({title}) {
           {data.map((item, i) => (
             <div className="card-large-item flex flex-row justify-between items-center border-b-2 border-gray-200">
               <p className="">{item.name}</p>
-              <p className="">{item.date}</p>
+              <Moment className="" format="DD-MM-YYYY">{item.created_at}</Moment>
             </div>
           ))}
         </div>

@@ -58,19 +58,19 @@ function Reports() {
   const infos = [
     {
       title: "Total",
-      data: 5,
+      data: reports.length,
     },
     {
       title: "Approved",
-      data: 15,
+      data: reports.filter(report => report.status === "Approved").length,
     },
     {
-      title: "Querried",
-      data: 2,
+      title: "Pending",
+      data: reports.filter(report => report.status === "Pending").length,
     },
     {
       title: "Disapproved",
-      data: 20,
+      data: reports.filter(report => report.status === "Disapproved").length,
     },
   ];
 
@@ -95,14 +95,7 @@ function Reports() {
         return <Moment fromNow>{row.created_at}</Moment>;
       },
     },
-    /* {
-      selector: "status",
-      name: "Status",
-      ignoreRowClick: true,
-      cell: row => {
-        return <Item.Badge variant="standard">{row.status}</Item.Badge>;
-      },
-    }, */
+    
   ];
 
 
@@ -116,7 +109,7 @@ function Reports() {
         <div className="dashboard-right">
           <Header user={user} title={title.toUpperCase()} />
           <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">
-            Projects
+            Reports
           </h3>
           <div className="mx-5 flex flex-row justify-between items-center">
             {infos.map((info) => (

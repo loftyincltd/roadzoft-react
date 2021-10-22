@@ -3,18 +3,26 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import * as Item from "@mui/material";
 import Logo from "../assets/images/logo.png";
 import { API_BASE } from "../utils/Api";
-import {useHistory} from 'react-router-dom'
+import { useHistory } from "react-router-dom";
 
 export default function Login() {
-  const history = useHistory()
+  const history = useHistory();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [message, setMessage] = React.useState("");
+
+  React.useEffect(() => {
+    if (localStorage.getItem("user") != null) {
+      history.push("/dashboard");
+    }
+  });
 
   const handleLogin = async () => {
-    console.log(email)
-    console.log(password)
+    console.log(email);
+    console.log(password);
     const response = await fetch(`${API_BASE}/login`, {
       method: "POST",
       headers: {
@@ -27,10 +35,14 @@ export default function Login() {
       }),
     });
     const result = await response.json();
-    if (result) {
-      localStorage.setItem("token", result.access_token)
-      localStorage.setItem("user", result.data.id)
-      history.push("/dashboard")
+   
+    if (result.data == {}) {
+      setMessage("You can't access this platform");
+    } else {
+      localStorage.setItem("token", result.access_token);
+      localStorage.setItem("user", result.data.id);
+      localStorage.setItem("roles", result.data.roles);
+      history.push("/dashboard");
     }
     console.log("Login", result);
   };
@@ -73,6 +85,11 @@ export default function Login() {
           Log In
         </Button>
         <p className="my-5">Don't have an account? Contact Admin.</p>
+        {message != "" && (
+          <Item.Alert color="info" variant="filled">
+            {message}
+          </Item.Alert>
+        )}
       </div>
     </div>
   );
