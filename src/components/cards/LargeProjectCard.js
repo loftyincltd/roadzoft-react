@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Moment from 'react-moment'
 
-export default function LargeCard({title, data, link}) {
+export default function LargeProjectsCard({title, data, link}) {
  /*  const data = [
     {
       name: "Olusanya Michael",
@@ -39,7 +39,7 @@ export default function LargeCard({title, data, link}) {
         <div className="w-full mt-1 mb-3 h-full">
           {data.slice(0, 5).map((item, i) => (
             <div className="card-large-item flex flex-row justify-between items-center border-b-2 border-gray-200">
-              <p className="">{item.name}</p>
+              <p className="">{item.title}</p>
               <Moment className="" format="DD-MM-YYYY">{item.created_at}</Moment>
             </div>
           ))}

@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Moment from 'react-moment'
 
-export default function LargeCard({title, data, link}) {
- /*  const data = [
+export default function LargeMessagesCard({title, link}) {
+  const data = [
     {
       name: "Olusanya Michael",
       date: "12/20/2020",
@@ -20,7 +20,7 @@ export default function LargeCard({title, data, link}) {
       name: "Olusanya Michael",
       date: "12/20/2020",
     },
-  ]; */
+  ]; 
   
   return (
     <>

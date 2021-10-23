@@ -5,11 +5,15 @@ import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
 import { API_BASE } from "../utils/Api";
 import { useHistory } from "react-router-dom";
+import LargeProjectsCard from "../components/cards/LargeProjectCard";
+import LargeReportsCard from "../components/cards/LargeReportsCard";
+import LargeMessagesCard from "../components/cards/LargeMessagesCard";
 
 function Dashboard() {
   const history = useHistory();
   const [user, setUser] = React.useState({});
   const [users, setUsers] = React.useState([]);
+  const [projects, setProjects] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const title = "Overview";
 
@@ -79,7 +83,22 @@ function Dashboard() {
   const data = users.map((user) => user.reports);
   const reports = [].concat.apply([], data);
 
+  const getProjects = async () => {
+    
+    const response = await fetch(`${API_BASE}/projects`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const result = await response.json();
+    setLoading(false);
+    result && setProjects(result);
+    console.log("Projects", result);
+  };
+
   React.useEffect(() => {
+    getProjects()
     getUsers();
     getUser();
     if (localStorage.getItem("roles") == "Ad-hoc") {
@@ -134,9 +153,18 @@ function Dashboard() {
             ))}
           </div>
           <div className="main-items grid grid-cols-2 gap-4 my-3 mx-5">
-            {titles.map((item, i) => (
-              <LargeCard title={item} data={users} />
-            ))}
+          <div>
+              <LargeCard title="New Users" data={users} link="users" />
+            </div>
+            <div>
+              <LargeProjectsCard title="Latest Projects" data={projects} link="projects" />
+            </div>
+            <div>
+              <LargeReportsCard title="Latest Reports" data={reports} link="reports" />
+            </div>
+            <div>
+              <LargeMessagesCard title="New Messages" link="messages" />
+            </div>
           </div>
         </div>
       </div>
