@@ -14,6 +14,7 @@ function Dashboard() {
   const [user, setUser] = React.useState({});
   const [users, setUsers] = React.useState([]);
   const [projects, setProjects] = React.useState([]);
+  const [reports, setReports] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const title = "Overview";
 
@@ -46,6 +47,20 @@ function Dashboard() {
     { name: "Latest Messages" },
     { name: "New Users" },
   ];
+
+  const getReports = async () => {
+    const response = await fetch(`${API_BASE}/reports`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const result = await response.json();
+    result && setReports(result.data);
+    setLoading(false);
+    console.log("Reports", result);
+  };
+
   const getUser = async () => {
     try {
       const response = await fetch(
@@ -80,8 +95,8 @@ function Dashboard() {
     console.log("Users", result);
   };
 
-  const data = users.map((user) => user.reports);
-  const reports = [].concat.apply([], data);
+ /*  const data = users.map((user) => user.reports);
+  const reports = [].concat.apply([], data); */
 
   const getProjects = async () => {
     
@@ -99,6 +114,7 @@ function Dashboard() {
 
   React.useEffect(() => {
     getProjects()
+    getReports()
     getUsers();
     getUser();
     if (localStorage.getItem("roles") == "Ad-hoc") {
