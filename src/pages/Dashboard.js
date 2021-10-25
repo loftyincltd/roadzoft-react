@@ -141,7 +141,7 @@ function Dashboard() {
     },
     {
       title: "Disapproved",
-      data: reports.filter((report) => report.status === "Disapproved").length,
+      data: reports.filter((report) => report.status === "Rejected").length,
     },
   ];
 
