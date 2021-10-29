@@ -113,7 +113,9 @@ function Reports() {
         );
       },
     },
-    { selector: "message", name: "Report", sortable: true },
+    { selector: "message", name: "Report", sortable: true, cell: (row) => {
+      return row.message == null ? <span>N/A</span> : <span>{row.message}</span>;
+    } },
     { selector: "latitude", name: "Coordinates", sortable: true },
     { selector: "longitude", name: "", sortable: true },
     { selector: "status", name: "Status", sortable: true },

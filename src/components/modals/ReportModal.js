@@ -3,7 +3,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import * as Item from "@mui/material"
+import * as Item from "@mui/material";
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
 
 const style = {
   position: "absolute",
@@ -26,7 +28,7 @@ export default function ReportModal({
   latitude,
   longitude,
   approve,
-  reject
+  reject,
 }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -43,10 +45,24 @@ export default function ReportModal({
       >
         <Box sx={style}>
           <div className="grid grid-cols-2 gap-4">
-            <img src={photo1} width="50px" alt="report image" />
-            <img src={photo2} width="50px" alt="report image" />
-            <img src={photo3} width="50px" alt="report image" />
-            <img src={photo4} width="50px" alt="report image" />
+            <Zoom>
+              <img src={photo1} width="50px" alt="report image" />
+            </Zoom>
+            {photo2 && (
+              <Zoom>
+                <img src={photo2} width="50px" alt="report image" />
+              </Zoom>
+            )}
+            {photo3 && (
+              <Zoom>
+                <img src={photo3} width="50px" alt="report image" />
+              </Zoom>
+            )}
+            {photo4 && (
+              <Zoom>
+                <img src={photo4} width="50px" alt="report image" />
+              </Zoom>
+            )}
           </div>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Coordinates:
@@ -62,10 +78,14 @@ export default function ReportModal({
             {status}
           </Typography>
           <div className="flex flex-row justify-between items-center my-5">
-          <Item.Button onClick={approve} color="primary" variant="outlined">Approve</Item.Button><Item.Button onClick={reject} color="error" variant="outlined">Reject</Item.Button>
+            <Item.Button onClick={approve} color="primary" variant="outlined">
+              Approve
+            </Item.Button>
+            <Item.Button onClick={reject} color="error" variant="outlined">
+              Reject
+            </Item.Button>
           </div>
         </Box>
-        
       </Modal>
     </div>
   );
