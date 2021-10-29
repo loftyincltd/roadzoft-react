@@ -107,7 +107,7 @@ function Reports() {
       cell: (row) => {
         return (
           <Item.Avatar
-            src={`https://roadzoftserver.xyz/storage/report/${row.photo_1}`}
+            src={`https://roadzoftserver.xyz/uploads/${row.photo_1}`}
             variant="square"
           />
         );
@@ -135,10 +135,10 @@ function Reports() {
         return (
           <ReportModal
             status={row.status}
-            photo1={row.photo_1}
-            photo2={row.photo_2}
-            photo3={row.photo_3}
-            photo4={row.photo_4}
+            photo1={`https://roadzoftserver.xyz/uploads/${row.photo_1}`}
+            photo2={`https://roadzoftserver.xyz/uploads/${row.photo_2}`}
+            photo3={`https://roadzoftserver.xyz/uploads/${row.photo_3}`}
+            photo4={`https://roadzoftserver.xyz/uploads/${row.photo_4}`}
             latitude={row.latitude}
             longitude={row.longitude}
             approve={() => handleApprove(row.id)}
