@@ -24,6 +24,7 @@ import MobileDatePicker from "@mui/lab/MobileDatePicker";
 import { API_BASE } from "../utils/Api";
 import { useParams } from "react-router-dom";
 import ProjectTable from "../components/tables/ProjectTable";
+import ReportModal from "../components/modals/ReportModal"
 
 const Input = styled("input")({
   display: "none",
@@ -243,6 +244,30 @@ function SingleUser() {
     }
   };
 
+  const userReportz = user.reports
+
+  const handleApprove = async (id) => {
+    const response = await fetch(`${API_BASE}/report/${id}/action/0`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const result = await response.json();
+    getUserReports()
+  }
+
+  const handleReject = async (id) => {
+    const response = await fetch(`${API_BASE}/report/${id}/action/1`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const result = await response.json();
+    getUserReports()
+  }
+
   React.useEffect(() => {
     getRoles();
     getProjects();
@@ -284,6 +309,27 @@ function SingleUser() {
     },
   },
   { selector: "status", name: "", sortable: true },
+  {
+    selector: "id",
+    name: "Submitted",
+    sortable: true,
+    ignoreRowClick: true,
+    cell: (row) => {
+      return (
+        <ReportModal
+          status={row.status}
+          photo1={`https://roadzoftserver.xyz/uploads/${row.photo_1}`}
+          photo2={`https://roadzoftserver.xyz/uploads/${row.photo_2}`}
+          photo3={`https://roadzoftserver.xyz/uploads/${row.photo_3}`}
+          photo4={`https://roadzoftserver.xyz/uploads/${row.photo_4}`}
+          latitude={row.latitude}
+          longitude={row.longitude}
+          approve={() => handleApprove(row.id)}
+          reject={() => handleReject(row.id)}
+        />
+      );
+    },
+  },
   ]
 
   return (

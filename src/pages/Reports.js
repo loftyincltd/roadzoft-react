@@ -144,7 +144,7 @@ function Reports() {
             latitude={row.latitude}
             longitude={row.longitude}
             approve={() => handleApprove(row.id)}
-            reject={() => handleApprove(row.id)}
+            reject={() => handleReject(row.id)}
           />
         );
       },
