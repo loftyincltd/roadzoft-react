@@ -1,4 +1,15 @@
 import React from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Legend,
+  ResponsiveContainer,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
+import { Chart } from 'react-charts'
 import LargeCard from "../components/cards/LargeCard";
 import TopCards from "../components/cards/TopCards";
 import Header from "../components/header/Header";
@@ -95,11 +106,10 @@ function Dashboard() {
     console.log("Users", result);
   };
 
- /*  const data = users.map((user) => user.reports);
+  /*  const data = users.map((user) => user.reports);
   const reports = [].concat.apply([], data); */
 
   const getProjects = async () => {
-    
     const response = await fetch(`${API_BASE}/projects`, {
       headers: {
         "Content-Type": "application/json",
@@ -113,8 +123,8 @@ function Dashboard() {
   };
 
   React.useEffect(() => {
-    getProjects()
-    getReports()
+    getProjects();
+    getReports();
     getUsers();
     getUser();
     if (localStorage.getItem("roles") == "Ad-hoc") {
@@ -145,6 +155,7 @@ function Dashboard() {
     },
   ];
 
+
   return (
     <div>
       <div className="flex flex-row">
@@ -155,11 +166,7 @@ function Dashboard() {
         <div className="dashboard-right">
           <Header user={user} title={title.toUpperCase()} />
           {/* <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">Projects</h3> */}
-          {/* <div className="mx-5 flex flex-row justify-between items-center">
-            {infos.map((info) => (
-              <TopCards info={info} />
-            ))}
-          </div> */}
+         
           <h3 className="mx-5 mt-3 mb-3 font-bold text-gray-700 text-2xl">
             Reports
           </h3>
@@ -168,15 +175,99 @@ function Dashboard() {
               <TopCards info={report} />
             ))}
           </div>
+          {localStorage.getItem("roles") == "Super Admin" && (
+            <div
+              style={{ height: 600, width: 1050 }}
+              className="bg-white shadow-sm rounded-sm my-5 mx-5"
+            >
+              <h3 className="mx-5 mt-5 mb-1 font-bold text-center text-gray-700">
+                Reports Per User
+              </h3>
+
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  width={500}
+                  height={300}
+                  data={users}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="reports.length"
+                    stroke="#8884d8"
+                    label="Nos of Reports"
+                    activeDot={{ r: 8 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+          {localStorage.getItem("roles") == "Super Admin" && (
+            <div
+              style={{ height: 600, width: 1050 }}
+              className="bg-white shadow-sm rounded-sm my-5 mx-5"
+            >
+              <h3 className="mx-5 mt-5 mb-1 font-bold text-center text-gray-700">
+                Users Per Project
+              </h3>
+
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  width={500}
+                  height={300}
+                  data={projects}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  {projects.map((project) =>
+                    project.users.map((item) => <XAxis dataKey={item.name} />)
+                  )}
+
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="users.length"
+                    stroke="#8884d8"
+                    activeDot={{ r: 8 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
           <div className="main-items grid grid-cols-2 gap-4 my-3 mx-5">
-          <div>
+            <div>
               <LargeCard title="New Users" data={users} link="users" />
             </div>
             <div>
-              <LargeProjectsCard title="Latest Projects" data={projects} link="projects" />
+              <LargeProjectsCard
+                title="Latest Projects"
+                data={projects}
+                link="projects"
+              />
             </div>
             <div>
-              <LargeReportsCard title="Latest Reports" data={reports} link="reports" />
+              <LargeReportsCard
+                title="Latest Reports"
+                data={reports}
+                link="reports"
+              />
             </div>
             <div>
               <LargeMessagesCard title="New Messages" link="messages" />
