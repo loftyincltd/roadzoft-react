@@ -1251,24 +1251,7 @@ function AddUser() {
                 </div>
               </div>
               <div className="flex flex-col justify-start items-center">
-                <Box className="my-5" sx={{ minWidth: 250 }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Add to Project
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={project}
-                      label="Project"
-                      onChange={handleProjectChange}
-                    >
-                      <MenuItem value="Project 1">Project 1</MenuItem>
-                      <MenuItem value="Project 2">Project 2</MenuItem>
-                      <MenuItem value="Project 3">Project 3</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
+               
                 <Item.Button
                   onClick={register}
                   color="primary"
