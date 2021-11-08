@@ -88,11 +88,45 @@ function AddUser() {
   }
 
   const title = "NEW USER";
-  /* const user = {
-    fullname: "Olusanya Michael",
-    staff_id: "T64554",
-    role: "Superadmin",
-  }; */
+  const states = [
+    "Abia",
+    "Adamawa",
+    "Akwa Ibom",
+    "Anambra",
+    "Bauchi",
+    "Bayelsa",
+    "Benue",
+    "Borno",
+    "Cross River",
+    "Delta",
+    "Ebonyi",
+    "Edo",
+    "Ekiti",
+    "Enugu",
+    "FCT - Abuja",
+    "Gombe",
+    "Imo",
+    "Jigawa",
+    "Kaduna",
+    "Kano",
+    "Katsina",
+    "Kebbi",
+    "Kogi",
+    "Kwara",
+    "Lagos",
+    "Nasarawa",
+    "Niger",
+    "Ogun",
+    "Ondo",
+    "Osun",
+    "Oyo",
+    "Plateau",
+    "Rivers",
+    "Sokoto",
+    "Taraba",
+    "Yobe",
+    "Zamfara"
+  ];
 
   const getUser = async () => {
     try {
@@ -155,14 +189,29 @@ function AddUser() {
                     label="Name"
                     variant="outlined"
                   />
+                  
                   <div className="my-3 flex flex-row justify-evenly items-center">
-                    <TextField
-                      placeholder="State"
-                      onChange={(e) => setUserstate(e.target.value)}
-                      id="outlined-basic"
-                      label="State"
-                      variant="outlined"
-                    />
+                  <Box sx={{ minWidth: 200 }}>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          State
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={state}
+                          label="State"
+                          onChange={(e) => setUserstate(e.target.value)}
+                        >
+                          <MenuItem>Select State</MenuItem>
+                          {states && states.map((item, i) => 
+                          <MenuItem value={item} key={i}>{item}</MenuItem>
+                          )}
+                          
+                          
+                        </Select>
+                      </FormControl>
+                    </Box>
                     <TextField
                       placeholder="LGA"
                       onChange={(e) => setLga(e.target.value)}
