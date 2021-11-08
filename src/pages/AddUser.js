@@ -1144,6 +1144,7 @@ function AddUser() {
               <div className="flex flex-col justify-center items-center">
                 <div>
                   <TextField
+                  style={{width: '100%', paddingX: 5}}
                     placeholder="Type Name"
                     onChange={(e) => setName(e.target.value)}
                     id="outlined-basic"
