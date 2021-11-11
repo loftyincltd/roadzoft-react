@@ -132,9 +132,9 @@ function Projects() {
           <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">
             Projects
           </h3>
-          <div className="mx-5">
+          {/* <div className="mx-5">
          <ExportModal />
-         </div>
+         </div> */}
           <hr />
           {loading ? (
             <Box className="flex justify-center items-center" sx={{ display: "flex" }}>

@@ -175,7 +175,7 @@ function Dashboard() {
               <TopCards info={report} />
             ))}
           </div>
-          {localStorage.getItem("roles") == "Super Admin" && (
+          {/* localStorage.getItem("roles") == "Super Admin" && (
             <div
               style={{ height: 600, width: 1050 }}
               className="bg-white shadow-sm rounded-sm my-5 mx-5"
@@ -211,7 +211,7 @@ function Dashboard() {
                 </LineChart>
               </ResponsiveContainer>
             </div>
-          )}
+          ) */}
           {localStorage.getItem("roles") == "Super Admin" && (
             <div
               style={{ height: 600, width: 1050 }}
@@ -234,9 +234,7 @@ function Dashboard() {
                   }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  {projects.map((project) =>
-                    project.users.map((item) => <XAxis dataKey={item.name} />)
-                  )}
+                  <XAxis dataKey="title" />
 
                   <YAxis />
                   <Tooltip />
