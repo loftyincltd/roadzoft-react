@@ -97,7 +97,7 @@ export default function ExportModal() {
         variant="contained"
         onClick={handleOpen}
       >
-        Export Data
+        Export Report
       </Button>
       <Modal
         open={open}
