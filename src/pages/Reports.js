@@ -1108,11 +1108,10 @@ function Reports() {
   const filterResults = results.map((item) => item.item);
 
   const headers = [
-    { label: "Project", key: "title" },
-    { label: "Description", key: "description" },
-    { label: "User", key: "users", cell: (row) => {
-      return row.users.map(user => user.name)
-    }},
+    { label: "Message", key: "message" },
+    { label: "Longitude", key: "longitude" },
+    { label: "Latitude", key: "latitude" },
+    { label: "User", key: "user.name"},
   ];
 
 
