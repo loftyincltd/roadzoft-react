@@ -1084,7 +1084,6 @@ function AddUser() {
     },
   ];
 
-  const localGovt = state && states.filter(s => s.state === state)
 
   const getUser = async () => {
     try {

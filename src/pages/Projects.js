@@ -83,7 +83,7 @@ function Projects() {
       name: "Projects",
       sortable: true,
     },
-    { selector: "description", name: "Lead Contractor", sortable: true },
+    { selector: "description", name: "Description", sortable: true },
     {
       selector: "created_at",
       name: "Created Date",
