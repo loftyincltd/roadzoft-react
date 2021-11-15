@@ -76,11 +76,12 @@ function AddUser() {
       }),
     });
     const result = await response.json();
+    console.log("Register", result);
     if (result) {
       setMessage("User created successfully")
        
           const response = await fetch(
-            `${API_BASE}/roles/assign/role/${role}/user/${result.id}`,
+            `${API_BASE}/roles/assign/role/${role}/user/${result.user_id}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -89,15 +90,15 @@ function AddUser() {
               },
             }
           );
-          const result = await response.json();
-          if (result.success) {
+          const user_role = await response.json();
+          if (user_role.success) {
             setMessage("Role Added Successfully");
           }
-          console.log("Assign", result);
+          console.log("Assign", user_role);
       
       
     }
-    console.log("Register", result);
+    
   };
 
   const getRoles = async () => {

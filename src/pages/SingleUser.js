@@ -36,12 +36,14 @@ function SingleUser() {
   const [project, setProject] = React.useState("");
   const [date, setDate] = React.useState(new Date("2014-08-18T21:11:54"));
   const [email, setEmail] = React.useState("");
+  const [newemail, setNewEmail] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [name, setName] = React.useState("");
   const [state, setUserstate] = React.useState("");
   const [lga, setLga] = React.useState("");
   const [phone, setPhone] = React.useState("");
+  const [newphone, setNewPhone] = React.useState("");
   const [userId, setUserId] = React.useState("");
   const [projectId, setProjectId] = React.useState("");
   const [role, setRole] = React.useState("");
@@ -80,12 +82,47 @@ function SingleUser() {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify({
-        email,
         name,
-        phone,
         state,
         lga,
         dob: date,
+      }),
+    });
+    const result = await response.json();
+    setMessage(result.message)
+    console.log("Register", result);
+  };
+
+  const updateEmail = async () => {
+    //const dobYear = date.getFullYear();
+    const response = await fetch(`${API_BASE}/user/update/${localStorage.getItem("user")}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        email
+        
+      }),
+    });
+    const result = await response.json();
+    setMessage(result.message)
+    console.log("Register", result);
+  };
+
+  const updatePhone = async () => {
+    //const dobYear = date.getFullYear();
+    const response = await fetch(`${API_BASE}/user/update/${localStorage.getItem("user")}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        phone
       }),
     });
     const result = await response.json();
@@ -1464,6 +1501,7 @@ function SingleUser() {
                         </Stack>
                       </LocalizationProvider>
                     </div>
+                    <div className="my-3 flex flex-row justify-evenly items-center">
                     <Item.Button
                       onClick={updateUser}
                       color="primary"
@@ -1471,6 +1509,21 @@ function SingleUser() {
                     >
                       Update User
                     </Item.Button>
+                    <Item.Button
+                      onClick={updateEmail}
+                      color="primary"
+                      variant="contained"
+                    >
+                      Update Email
+                    </Item.Button>
+                    <Item.Button
+                      onClick={updatePhone}
+                      color="primary"
+                      variant="contained"
+                    >
+                      Update Phone
+                    </Item.Button>
+                    </div>
                   </div>
                   <ProjectTable columns={reportcolumns} data={userReports} />
                   <ProjectTable columns={projectcolumns} data={projects} />
