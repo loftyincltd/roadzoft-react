@@ -39,6 +39,7 @@ function AddUser() {
   const [role, setRole] = React.useState("");
   const [roles, setRoles] = React.useState([]);
   const [user, setUser] = React.useState({});
+  const [message, setMessage] = React.useState("");
 
   const handleDate = (newDate) => {
     setDate(newDate);
@@ -75,6 +76,27 @@ function AddUser() {
       }),
     });
     const result = await response.json();
+    if (result) {
+      setMessage("User created successfully")
+       
+          const response = await fetch(
+            `${API_BASE}/roles/assign/role/${role}/user/${result.id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          const result = await response.json();
+          if (result.success) {
+            setMessage("Role Added Successfully");
+          }
+          console.log("Assign", result);
+      
+      
+    }
     console.log("Register", result);
   };
 
@@ -1120,6 +1142,15 @@ function AddUser() {
 
         <div className="dashboard-right">
           <Header user={user} title={title.toUpperCase()} />
+          {message != "" && (
+            <Item.Alert
+              onClose={() => setMessage("")}
+              variant="filled"
+              color="info"
+            >
+              {message}
+            </Item.Alert>
+          )}
           <div className="profile-picture flex flex-col justify-center items-center">
             <Stack direction="row" alignItems="center" spacing={2}>
               <label htmlFor="icon-button-file">
@@ -1204,17 +1235,15 @@ function AddUser() {
                           Role
                         </InputLabel>
                         <Select
-                          disabled
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          value={project}
                           label="Role"
                           onChange={handleRoleChange}
                         >
-                          <MenuItem value="Super Admin">Super Admin</MenuItem>
-                          <MenuItem value="Admin">Admin</MenuItem>
-                          <MenuItem value="Staff">Staff</MenuItem>
-                          <MenuItem value="Ad-hoc">Ad-hoc</MenuItem>
+                          <MenuItem value={1}>Super Admin</MenuItem>
+                          <MenuItem value={2}>Admin</MenuItem>
+                          <MenuItem value={3}>Staff</MenuItem>
+                          <MenuItem value={4}>Ad-hoc</MenuItem>
                         </Select>
                       </FormControl>
                     </Box>

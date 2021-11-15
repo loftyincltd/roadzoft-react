@@ -14,6 +14,7 @@ import HeaderWithButton from "../components/header/HeaderWithButton";
 import { CSVLink } from "react-csv";
 import { useHistory } from "react-router-dom";
 import ExportModal from "../components/modals/ExportModal";
+import ProjectModal from "../components/modals/ProjectModal";
 
 function Projects() {
   const history = useHistory();
@@ -95,7 +96,7 @@ function Projects() {
     },
     {
       selector: "id",
-      name: "Action",
+      name: "",
       sortable: true,
       ignoreRowClick: true,
       cell: (row) => {
@@ -107,6 +108,17 @@ function Projects() {
           >
             Delete
           </Item.Button>
+        );
+      },
+    },
+    {
+      selector: "id",
+      name: "",
+      sortable: true,
+      ignoreRowClick: true,
+      cell: (row) => {
+        return (
+          <ProjectModal description={row.description} />
         );
       },
     },
