@@ -1255,6 +1255,26 @@ function Reports() {
             <h3>Filter: </h3>
             <Box sx={{ minWidth: 200 }}>
               <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Project</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={project}
+                  label="Project"
+                  onChange={handleProjectChange}
+                >
+                  <MenuItem value="">Select Project</MenuItem>
+                  {projects &&
+                    projects.map((item, i) => (
+                      <MenuItem value={item.title} key={i}>
+                        {item.title}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box sx={{ minWidth: 200 }}>
+              <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">State</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -1297,26 +1317,7 @@ function Reports() {
                 </Select>
               </FormControl>
             </Box>
-            <Box sx={{ minWidth: 200 }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Project</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={project}
-                  label="Project"
-                  onChange={handleProjectChange}
-                >
-                  <MenuItem value="">Select Project</MenuItem>
-                  {projects &&
-                    projects.map((item, i) => (
-                      <MenuItem value={item.title} key={i}>
-                        {item.title}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Box>
+            
             <CSVLink className="flex flex-row" {...csvReport}> <Icons.Download />  Export Data</CSVLink>
           </div>
           <hr />
