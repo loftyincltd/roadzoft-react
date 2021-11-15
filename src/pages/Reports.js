@@ -21,6 +21,8 @@ function Reports() {
   const [user, setUser] = React.useState({});
   const [reports, setReports] = React.useState([]);
   const [filterTerm, setFilterTerm] = React.useState("");
+  const [projects, setProjects] = React.useState([]);
+  const [project, setProject] = React.useState("");
   const [loading, setLoading] = React.useState(true);
   const [state, setUserstate] = React.useState("");
   const [lga, setLga] = React.useState("");
@@ -29,6 +31,11 @@ function Reports() {
     console.log(event.target.value);
     setFilterTerm(event.target.value);
     setUserstate(event.target.value)
+  };
+  const handleProjectChange = (event) => {
+    console.log(event.target.value);
+    setFilterTerm(event.target.value);
+    setProject(event.target.value)
   };
   const handleLgaChange = (event) => {
     console.log(event.target.value);
@@ -1086,9 +1093,24 @@ function Reports() {
     }
   };
 
+  const getProjects = async () => {
+    
+    const response = await fetch(`${API_BASE}/projects`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const result = await response.json();
+    setLoading(false);
+    result && setProjects(result);
+    console.log("Projects", result);
+  };
+
   React.useEffect(() => {
     getUser();
     getReports();
+    getProjects()
   }, []);
 
   const data = React.useMemo(() => reports);
@@ -1099,7 +1121,9 @@ function Reports() {
     keys: [
       "message",
       "user.State",
-      "user.lga"
+      "user.lga",
+      ["user.projects"],
+      "user.projects.title"
       
     ],
   });
@@ -1270,6 +1294,26 @@ function Reports() {
                           </MenuItem>
                         ))
                       )}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box sx={{ minWidth: 200 }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Project</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={project}
+                  label="Project"
+                  onChange={handleProjectChange}
+                >
+                  <MenuItem value="">Select Project</MenuItem>
+                  {projects &&
+                    projects.map((item, i) => (
+                      <MenuItem value={item.title} key={i}>
+                        {item.title}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </Box>
