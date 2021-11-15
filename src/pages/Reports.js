@@ -1239,7 +1239,7 @@ function Reports() {
                   label="State"
                   onChange={handleStateChange}
                 >
-                  <MenuItem>Select State</MenuItem>
+                  <MenuItem value="">Select State</MenuItem>
                   {states &&
                     states.map((item, i) => (
                       <MenuItem value={item.name} key={i}>
@@ -1259,7 +1259,7 @@ function Reports() {
                   label="LGA"
                   onChange={handleLgaChange}
                 >
-                  <MenuItem>Select LGA</MenuItem>
+                  <MenuItem value="">Select LGA</MenuItem>
                   {states &&
                     states
                       .filter((s) => s.name === state)
