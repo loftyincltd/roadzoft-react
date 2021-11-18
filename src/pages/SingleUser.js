@@ -42,6 +42,7 @@ function SingleUser() {
   const [name, setName] = React.useState("");
   const [state, setUserstate] = React.useState("");
   const [lga, setLga] = React.useState("");
+  const [image, setImage] = React.useState("")
   const [phone, setPhone] = React.useState("");
   const [newphone, setNewPhone] = React.useState("");
   const [userId, setUserId] = React.useState("");
@@ -1196,6 +1197,7 @@ function SingleUser() {
       setRole(data.roles[0]);
       setUserRoles(data.roles);
       setUserReports(data.reports);
+      setImage(data.profile_photo);
       setLoading(false);
       console.log("User:", result);
     } catch (error) {
@@ -1394,6 +1396,7 @@ function SingleUser() {
                   component="span"
                 >
                   <Item.Avatar
+                  src={`https://roadzoftserver.xyz/uploads/avatar/${image}`}
                     style={{ height: 90, width: 90 }}
                     variant="circular"
                   />
