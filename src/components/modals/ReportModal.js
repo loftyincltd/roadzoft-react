@@ -29,6 +29,7 @@ export default function ReportModal({
   longitude,
   approve,
   reject,
+  query
 }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -83,6 +84,9 @@ export default function ReportModal({
             </Item.Button>
             <Item.Button onClick={reject} color="error" variant="outlined">
               Reject
+            </Item.Button>
+            <Item.Button onClick={query} color="warning" variant="outlined">
+              Querry
             </Item.Button>
           </div>
         </Box>

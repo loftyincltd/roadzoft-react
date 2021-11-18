@@ -1059,6 +1059,17 @@ function Reports() {
     getReports();
   };
 
+  const handleQuery = async (id) => {
+    const response = await fetch(`${API_BASE}/report/${id}/action/2`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const result = await response.json();
+    getReports();
+  };
+
   const getReports = async () => {
     const response = await fetch(`${API_BASE}/reports`, {
       headers: {
@@ -1227,6 +1238,7 @@ function Reports() {
             longitude={row.longitude}
             approve={() => handleApprove(row.id)}
             reject={() => handleReject(row.id)}
+            query={() => handleQuery(row.id)}
           />
         );
       },
