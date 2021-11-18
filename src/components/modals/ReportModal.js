@@ -27,13 +27,16 @@ export default function ReportModal({
   photo4,
   latitude,
   longitude,
+  comments,
+  commentz,
   approve,
   reject,
-  query
+  query,
 }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
 
   return (
     <div>
@@ -49,17 +52,17 @@ export default function ReportModal({
             <Zoom>
               <img src={photo1} width="50px" alt="report image" />
             </Zoom>
-            {photo2 && (
+            {photo2 != null && (
               <Zoom>
                 <img src={photo2} width="50px" alt="report image" />
               </Zoom>
             )}
-            {photo3 && (
+            {photo3 != null  && (
               <Zoom>
                 <img src={photo3} width="50px" alt="report image" />
               </Zoom>
             )}
-            {photo4 && (
+            {photo4 != null  && (
               <Zoom>
                 <img src={photo4} width="50px" alt="report image" />
               </Zoom>
@@ -78,6 +81,26 @@ export default function ReportModal({
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {status}
           </Typography>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Comments:
+          </Typography>
+          <Item.Button onClick={comments} color="success" variant="outlined">
+            View Comments
+          </Item.Button>
+          {commentz != [] ? (
+            <div>
+              {commentz.map((item, i) => (
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  {item}
+                </Typography>
+              ))}
+            </div>
+          ) : (
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              No Comments for this report
+            </Typography>
+          )}
+
           <div className="flex flex-row justify-between items-center my-5">
             <Item.Button onClick={approve} color="primary" variant="outlined">
               Approve
@@ -86,7 +109,7 @@ export default function ReportModal({
               Reject
             </Item.Button>
             <Item.Button onClick={query} color="warning" variant="outlined">
-              Querry
+              Query
             </Item.Button>
           </div>
         </Box>

@@ -16,6 +16,7 @@ import Box from "@mui/material/Box";
 import { CSVLink } from "react-csv";
 import Fuse from "fuse.js";
 import * as Icons from "react-feather";
+import ReportQuery from "../components/modals/ReportQuery";
 
 function Reports() {
   const [user, setUser] = React.useState({});
@@ -26,6 +27,7 @@ function Reports() {
   const [loading, setLoading] = React.useState(true);
   const [state, setUserstate] = React.useState("");
   const [lga, setLga] = React.useState("");
+  const [commentz, setCommentz] = React.useState([]);
 
   const handleStateChange = (event) => {
     console.log(event.target.value);
@@ -1118,6 +1120,19 @@ function Reports() {
     console.log("Projects", result);
   };
 
+  const getComments = async (uuid) => {
+    
+    const response = await fetch(`${API_BASE}/queried/${uuid}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const result = await response.json();
+    result && setCommentz(result);
+    console.log("Comments", result);
+  };
+
   React.useEffect(() => {
     getUser();
     getReports();
@@ -1228,6 +1243,7 @@ function Reports() {
       ignoreRowClick: true,
       cell: (row) => {
         return (
+          <div>
           <ReportModal
             status={row.status}
             photo1={`https://roadzoftserver.xyz/uploads/${row.photo_1}`}
@@ -1239,7 +1255,11 @@ function Reports() {
             approve={() => handleApprove(row.id)}
             reject={() => handleReject(row.id)}
             query={() => handleQuery(row.id)}
+            comments={() => getComments(row.uuid)}
+            commentz={commentz}
           />
+          {row.status === "Queried" && <ReportQuery uuid={row.uuid} reportId={row.id} />}
+          </div>
         );
       },
     },
