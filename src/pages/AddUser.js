@@ -1152,25 +1152,8 @@ function AddUser() {
               {message}
             </Item.Alert>
           )}
-          <div className="profile-picture flex flex-col justify-center items-center">
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <label htmlFor="icon-button-file">
-                <Input accept="image/*" id="icon-button-file" type="file" />
-                <IconButton
-                  color="primary"
-                  aria-label="upload picture"
-                  component="span"
-                >
-                  <Item.Avatar
-                    style={{ height: 90, width: 90 }}
-                    variant="circular"
-                  />
-                </IconButton>
-              </label>
-            </Stack>
-            <p>Tap to add profile picture (optional)</p>
-          </div>
-          <form className="mx-5">
+         
+          <form className="mx-5 bg-white p-10">
             <div className="mt-5 flex flex-row justify-evenly items-center">
               <div className="flex flex-col justify-center items-center">
                 <div>

@@ -24,7 +24,7 @@ import MobileDatePicker from "@mui/lab/MobileDatePicker";
 import { API_BASE } from "../utils/Api";
 import { useParams } from "react-router-dom";
 import ProjectTable from "../components/tables/ProjectTable";
-import ReportModal from "../components/modals/ReportModal"
+import ReportModal from "../components/modals/ReportModal";
 
 const Input = styled("input")({
   display: "none",
@@ -42,7 +42,7 @@ function SingleUser() {
   const [name, setName] = React.useState("");
   const [state, setUserstate] = React.useState("");
   const [lga, setLga] = React.useState("");
-  const [image, setImage] = React.useState("")
+  const [image, setImage] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [newphone, setNewPhone] = React.useState("");
   const [userId, setUserId] = React.useState("");
@@ -54,6 +54,8 @@ function SingleUser() {
   const [userProjects, setUserProjects] = React.useState([]);
   const [userReports, setUserReports] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [photo, setPhoto] = React.useState("");
+  const [uploadedImage, setUploadedImage] = React.useState("");
 
   //Handle changes
   const handleDate = (newDate) => {
@@ -61,7 +63,7 @@ function SingleUser() {
   };
 
   const handleStateChange = (event) => {
-    console.log(event.target.value)
+    console.log(event.target.value);
     setUserstate(event.target.value);
   };
 
@@ -71,63 +73,112 @@ function SingleUser() {
   const handleProjectChange = (event) => {
     setProjectId(event.target.value);
   };
+  //Image Change
+  const handleImage = (event) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(event.target.files[0]);
+    //let myImage = "";
+    var reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    reader.onload = function () {
+      //console.log("Base 64", reader.result); 
+      //base64
+      setUploadedImage(URL.createObjectURL(event.target.files[0]))
+      setPhoto(reader.result);
+    };
+  };
+
+  //Post Images
+  const addImage = async () => {
+  console.log("myImage", photo)
+    const response = await fetch(
+      `${API_BASE}/user/profile/avatar`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          photo: photo, 
+        })
+
+      }
+    );
+    const result = await response.json();
+    setMessage(result.message);
+    setPhoto("")
+    setUploadedImage("")
+    getUser();
+    console.log("Image", result);
+  };
 
   //Update User account
   const updateUser = async () => {
     //const dobYear = date.getFullYear();
-    const response = await fetch(`${API_BASE}/user/update/${localStorage.getItem("user")}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        name,
-        state,
-        lga,
-        dob: date,
-      }),
-    });
+    const response = await fetch(
+      `${API_BASE}/user/update/${localStorage.getItem("user")}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          name,
+          state,
+          lga,
+          dob: date,
+        }),
+      }
+    );
     const result = await response.json();
-    setMessage(result.message)
+    setMessage(result.message);
     console.log("Register", result);
   };
 
   const updateEmail = async () => {
     //const dobYear = date.getFullYear();
-    const response = await fetch(`${API_BASE}/user/update/${localStorage.getItem("user")}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        email
-        
-      }),
-    });
+    const response = await fetch(
+      `${API_BASE}/user/update/${localStorage.getItem("user")}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          email,
+        }),
+      }
+    );
     const result = await response.json();
-    setMessage(result.message)
+    setMessage(result.message);
     console.log("Register", result);
   };
 
   const updatePhone = async () => {
     //const dobYear = date.getFullYear();
-    const response = await fetch(`${API_BASE}/user/update/${localStorage.getItem("user")}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        phone
-      }),
-    });
+    const response = await fetch(
+      `${API_BASE}/user/update/${localStorage.getItem("user")}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          phone,
+        }),
+      }
+    );
     const result = await response.json();
-    setMessage(result.message)
+    setMessage(result.message);
     console.log("Register", result);
   };
   //Get roles
@@ -164,13 +215,16 @@ function SingleUser() {
   //Get user reports
   const getUserReports = async () => {
     try {
-      const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}/reports`, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await fetch(
+        `${API_BASE}/user/${localStorage.getItem("user")}/reports`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       const result = await response.json();
       setUserReports(result.data);
       console.log("Reports", result);
@@ -1197,7 +1251,8 @@ function SingleUser() {
       setRole(data.roles[0]);
       setUserRoles(data.roles);
       setUserReports(data.reports);
-      setImage(data.profile_photo);
+      //const photo = data.photos[0].photo
+      setImage(data.photos == null ? "" : data.photos.photo);
       setLoading(false);
       console.log("User:", result);
     } catch (error) {
@@ -1229,8 +1284,8 @@ function SingleUser() {
     }
   };
 
-   //Detach Role
-   const detachRole = async (id) => {
+  //Detach Role
+  const detachRole = async (id) => {
     try {
       const response = await fetch(
         `${API_BASE}/roles/detach/role/${id}/user/${userId}`,
@@ -1280,7 +1335,11 @@ function SingleUser() {
     }
   };
 
-  const userReportz = user.reports
+  const imageChnage = () => {
+    console.log("Image Chnage");
+  };
+
+  const userReportz = user.reports;
 
   const handleApprove = async (id) => {
     const response = await fetch(`${API_BASE}/report/${id}/action/0`, {
@@ -1290,8 +1349,8 @@ function SingleUser() {
       },
     });
     const result = await response.json();
-    getUserReports()
-  }
+    getUserReports();
+  };
 
   const handleReject = async (id) => {
     const response = await fetch(`${API_BASE}/report/${id}/action/1`, {
@@ -1301,14 +1360,14 @@ function SingleUser() {
       },
     });
     const result = await response.json();
-    getUserReports()
-  }
+    getUserReports();
+  };
 
   React.useEffect(() => {
     getRoles();
     getProjects();
     getUser();
-    getUserReports()
+    getUserReports();
   }, []);
 
   const rolecolumns = [
@@ -1328,45 +1387,54 @@ function SingleUser() {
         );
       },
     },
-  ]
+  ];
   const projectcolumns = [
     { selector: "title", name: "Projects", sortable: true },
-  ]
+  ];
   const reportcolumns = [
     { selector: "message", name: "Reports", sortable: true },
-    { selector: "latitude", name: "Coordinates", sortable: true, 
-    cell: (row) => {
-      return (
-        <div>
-          <p><span className="text-bolder">Lat: </span>{row.latitude},</p>
-          <p><span className="text-bolder">Long: </span>{row.longitude}</p>
-        </div>
-      );
+    {
+      selector: "latitude",
+      name: "Coordinates",
+      sortable: true,
+      cell: (row) => {
+        return (
+          <div>
+            <p>
+              <span className="text-bolder">Lat: </span>
+              {row.latitude},
+            </p>
+            <p>
+              <span className="text-bolder">Long: </span>
+              {row.longitude}
+            </p>
+          </div>
+        );
+      },
     },
-  },
-  { selector: "status", name: "", sortable: true },
-  {
-    selector: "id",
-    name: "Submitted",
-    sortable: true,
-    ignoreRowClick: true,
-    cell: (row) => {
-      return (
-        <ReportModal
-          status={row.status}
-          photo1={`https://roadzoftserver.xyz/uploads/${row.photo_1}`}
-          photo2={`https://roadzoftserver.xyz/uploads/${row.photo_2}`}
-          photo3={`https://roadzoftserver.xyz/uploads/${row.photo_3}`}
-          photo4={`https://roadzoftserver.xyz/uploads/${row.photo_4}`}
-          latitude={row.latitude}
-          longitude={row.longitude}
-          approve={() => handleApprove(row.id)}
-          reject={() => handleReject(row.id)}
-        />
-      );
+    { selector: "status", name: "", sortable: true },
+    {
+      selector: "id",
+      name: "Submitted",
+      sortable: true,
+      ignoreRowClick: true,
+      cell: (row) => {
+        return (
+          <ReportModal
+            status={row.status}
+            photo1={`https://roadzoftserver.xyz/uploads/${row.photo_1}`}
+            photo2={`https://roadzoftserver.xyz/uploads/${row.photo_2}`}
+            photo3={`https://roadzoftserver.xyz/uploads/${row.photo_3}`}
+            photo4={`https://roadzoftserver.xyz/uploads/${row.photo_4}`}
+            latitude={row.latitude}
+            longitude={row.longitude}
+            approve={() => handleApprove(row.id)}
+            reject={() => handleReject(row.id)}
+          />
+        );
+      },
     },
-  },
-  ]
+  ];
 
   return (
     <div>
@@ -1389,21 +1457,32 @@ function SingleUser() {
           <div className="profile-picture flex flex-col justify-center items-center">
             <Stack direction="row" alignItems="center" spacing={2}>
               <label htmlFor="icon-button-file">
-                <Input accept="image/*" id="icon-button-file" type="file" />
+                <Input
+                  onChange={handleImage}
+                  accept="image/*"
+                  id="icon-button-file"
+                  type="file"
+                />
                 <IconButton
                   color="primary"
                   aria-label="upload picture"
                   component="span"
                 >
-                  <Item.Avatar
-                  src={`https://roadzoftserver.xyz/uploads/avatar/${image}`}
+                 <Item.Avatar
+                    src={`https://roadzoftserver.xyz/uploads/avatar/${image}`}
                     style={{ height: 90, width: 90 }}
                     variant="circular"
                   />
+                 {uploadedImage != "" &&  <Item.Avatar
+                    src={uploadedImage}
+                    style={{ height: 90, width: 90 }}
+                    variant="circular"
+                  />}
                 </IconButton>
               </label>
             </Stack>
             <p>Tap to add profile picture (optional)</p>
+            {photo != "" && <Item.Button onClick={addImage} color="secondary" variant="contained">Upload Image</Item.Button>}
           </div>
           {loading ? (
             <Item.Box
@@ -1436,51 +1515,55 @@ function SingleUser() {
                       />
                     </div>
                     <div className="my-3 flex flex-row justify-evenly items-center">
-                    <Box sx={{ minWidth: 200 }}>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          {state}
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={state}
-                          label={state}
-                          onChange={handleStateChange}
-                        >
-                          <MenuItem>Select State</MenuItem>
-                          {states &&
-                            states.map((item, i) => (
-                              <MenuItem value={item.name} key={i}>
-                                {item.name}
-                              </MenuItem>
-                            ))}
-                        </Select>
-                      </FormControl>
-                    </Box>
-                    <Box sx={{ minWidth: 200 }}>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          {lga}
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={lga}
-                          label={lga}
-                          onChange={(e) => setLga(e.target.value)}
-                        >
-                          <MenuItem>Select LGA</MenuItem>
-                          { states &&
-                            states.filter(s => s.name === state).map((item, i) => (
-                              item.lgas.map((lg, i) => <MenuItem value={lg} key={i}>
-                                {lg}
-                              </MenuItem>)
-                            ))}
-                        </Select>
-                      </FormControl>
+                      <Box sx={{ minWidth: 200 }}>
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label">
+                            {state}
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={state}
+                            label={state}
+                            onChange={handleStateChange}
+                          >
+                            <MenuItem>Select State</MenuItem>
+                            {states &&
+                              states.map((item, i) => (
+                                <MenuItem value={item.name} key={i}>
+                                  {item.name}
+                                </MenuItem>
+                              ))}
+                          </Select>
+                        </FormControl>
                       </Box>
-                  </div>
+                      <Box sx={{ minWidth: 200 }}>
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label">
+                            {lga}
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={lga}
+                            label={lga}
+                            onChange={(e) => setLga(e.target.value)}
+                          >
+                            <MenuItem>Select LGA</MenuItem>
+                            {states &&
+                              states
+                                .filter((s) => s.name === state)
+                                .map((item, i) =>
+                                  item.lgas.map((lg, i) => (
+                                    <MenuItem value={lg} key={i}>
+                                      {lg}
+                                    </MenuItem>
+                                  ))
+                                )}
+                          </Select>
+                        </FormControl>
+                      </Box>
+                    </div>
                     <div className="my-3 flex flex-row justify-evenly items-center"></div>
                     <div className="my-3 flex flex-row justify-evenly items-center">
                       <TextField
@@ -1505,27 +1588,27 @@ function SingleUser() {
                       </LocalizationProvider>
                     </div>
                     <div className="my-3 flex flex-row justify-evenly items-center">
-                    <Item.Button
-                      onClick={updateUser}
-                      color="primary"
-                      variant="contained"
-                    >
-                      Update User
-                    </Item.Button>
-                    <Item.Button
-                      onClick={updateEmail}
-                      color="primary"
-                      variant="contained"
-                    >
-                      Update Email
-                    </Item.Button>
-                    <Item.Button
-                      onClick={updatePhone}
-                      color="primary"
-                      variant="contained"
-                    >
-                      Update Phone
-                    </Item.Button>
+                      <Item.Button
+                        onClick={updateUser}
+                        color="primary"
+                        variant="contained"
+                      >
+                        Update User
+                      </Item.Button>
+                      <Item.Button
+                        onClick={updateEmail}
+                        color="primary"
+                        variant="contained"
+                      >
+                        Update Email
+                      </Item.Button>
+                      <Item.Button
+                        onClick={updatePhone}
+                        color="primary"
+                        variant="contained"
+                      >
+                        Update Phone
+                      </Item.Button>
                     </div>
                   </div>
                   <ProjectTable columns={reportcolumns} data={userReports} />
@@ -1536,7 +1619,6 @@ function SingleUser() {
                 <div className="flex flex-col justify-start items-center">
                   <div className="flex flex-col justify-start items-center">
                     <Box className="my-5" sx={{ minWidth: 250 }}>
-                    
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           Add to Project
@@ -1565,7 +1647,6 @@ function SingleUser() {
                   </div>
                   <div className="flex flex-col justify-start items-center my-5">
                     <Box sx={{ minWidth: 200 }}>
-                    
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           Role
