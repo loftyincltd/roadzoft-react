@@ -56,6 +56,7 @@ function SingleUser() {
   const [loading, setLoading] = React.useState(true);
   const [photo, setPhoto] = React.useState("");
   const [uploadedImage, setUploadedImage] = React.useState("");
+  const [realUser, setRealUser] = React.useState([]);
 
   //Handle changes
   const handleDate = (newDate) => {
@@ -1260,6 +1261,26 @@ function SingleUser() {
     }
   };
 
+  //Get single user
+  const getRealUser = async () => {
+    const userId = params.id;
+    try {
+      const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const result = await response.json();
+      const data = result.data;
+      setRealUser(result.data);
+      console.log("Real User:", result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //Assign Role
   const addRole = async () => {
     try {
@@ -1368,6 +1389,7 @@ function SingleUser() {
     getProjects();
     getUser();
     getUserReports();
+    getRealUser()
   }, []);
 
   const rolecolumns = [
@@ -1444,7 +1466,7 @@ function SingleUser() {
         </div>
 
         <div className="dashboard-right">
-          <Header user={user} title={title.toUpperCase()} />
+          <Header user={realUser} title={title.toUpperCase()} />
           {message != "" && (
             <Item.Alert
               onClose={() => setMessage("")}
