@@ -117,7 +117,10 @@ function Notifications() {
           <Header user={user} title={title.toUpperCase()} />
           
           <hr />
-              <ProjectTable columns={columns} data={data} />
+              {/* <ProjectTable columns={columns} data={data} /> */}
+              <div className="bg-white p-10 text-center">
+                <p>No new notifications</p>
+              </div>
          
         </div>
       </div>

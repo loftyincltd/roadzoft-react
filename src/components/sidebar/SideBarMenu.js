@@ -48,12 +48,12 @@ export const SidebarData = [
 ]
 
 export const BottomSeidebarData = [
-    {
+   /*  {
         title: "Settings",
         path: "/settings",
         icon: <MdIcons.MdSettings />,
         classname: "nav-item"
-    },
+    }, */
     {
         title: "Notifications",
         path: "/notifications",
