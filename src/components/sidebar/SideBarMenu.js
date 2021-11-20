@@ -28,6 +28,12 @@ export const SidebarData = [
         classname: "nav-item"
     },
     {
+        title: "Inquiries",
+        path: "/inquiries",
+        icon: <MdIcons.MdHelpCenter />,
+        classname: "nav-item"
+    },
+    {
         title: "Logs",
         path: "/log",
         icon: <MdIcons.MdBook />,
