@@ -23,7 +23,7 @@ export default function HeaderWithButton({title, user, handlClick}) {
             </div>
             <div className="flex flex-row justify-between items-center">
                 <div className="mr-8 flex flex-row justify-between items-center">
-                <Icon.Search className="p-1 mr-5" /> <Icon.Bell className="p-1" />
+                {/* <Icon.Search className="p-1 mr-5" />  */}<Icon.Bell style={{cursor: 'pointer'}}  onClick={() => history.push("/notifications")} className="p-1" />
                 </div>
                 <span className="text-3xl text-gray-200 mr-5">|</span>
                 <div>
