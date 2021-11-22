@@ -1273,7 +1273,7 @@ function AddUser() {
                   onClick={register}
                   variant="contained"
                 >
-                  Regiter
+                  Register
                 </Item.Button>
                 </div>
               </div>
