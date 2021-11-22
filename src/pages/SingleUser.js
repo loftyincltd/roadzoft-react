@@ -78,40 +78,33 @@ function SingleUser() {
   const handleImage = (event) => {
     const img = new Image();
     img.src = URL.createObjectURL(event.target.files[0]);
-    //let myImage = "";
     var reader = new FileReader();
     reader.readAsDataURL(event.target.files[0]);
     reader.onload = function () {
-      //console.log("Base 64", reader.result); 
-      //base64
-      setUploadedImage(URL.createObjectURL(event.target.files[0]))
+      setUploadedImage(URL.createObjectURL(event.target.files[0]));
       setPhoto(reader.result);
     };
   };
 
   //Post Images
   const addImage = async () => {
-  console.log("myImage", photo)
-    const response = await fetch(
-      `${API_BASE}/user/profile/avatar`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          photo: photo, 
-        })
-
-      }
-    );
+    console.log("myImage", photo);
+    const response = await fetch(`${API_BASE}/user/profile/avatar`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        photo: photo,
+      }),
+    });
     const result = await response.json();
     setMessage(result.message);
-    setPhoto("")
-    setUploadedImage("")
+    setPhoto("");
+    setUploadedImage("");
     getUser();
     console.log("Image", result);
   };
@@ -1265,13 +1258,16 @@ function SingleUser() {
   const getRealUser = async () => {
     const userId = params.id;
     try {
-      const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await fetch(
+        `${API_BASE}/user/${localStorage.getItem("user")}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       const result = await response.json();
       const data = result.data;
       setRealUser(result.data);
@@ -1389,7 +1385,7 @@ function SingleUser() {
     getProjects();
     getUser();
     getUserReports();
-    getRealUser()
+    getRealUser();
   }, []);
 
   const rolecolumns = [
@@ -1400,6 +1396,7 @@ function SingleUser() {
       cell: (row) => {
         return (
           <Item.Button
+            className="user-button"
             onClick={() => detachRole(row.id)}
             color="warning"
             variant="contained"
@@ -1467,6 +1464,7 @@ function SingleUser() {
 
         <div className="dashboard-right">
           <Header user={realUser} title={title.toUpperCase()} />
+          <hr />
           {message != "" && (
             <Item.Alert
               onClose={() => setMessage("")}
@@ -1490,21 +1488,32 @@ function SingleUser() {
                   aria-label="upload picture"
                   component="span"
                 >
-                 <Item.Avatar
+                  <Item.Avatar
                     src={`https://roadzoftserver.xyz/uploads/avatar/${image}`}
                     style={{ height: 90, width: 90 }}
                     variant="circular"
                   />
-                 {uploadedImage != "" &&  <Item.Avatar
-                    src={uploadedImage}
-                    style={{ height: 90, width: 90 }}
-                    variant="circular"
-                  />}
+                  {uploadedImage != "" && (
+                    <Item.Avatar
+                      src={uploadedImage}
+                      style={{ height: 90, width: 90 }}
+                      variant="circular"
+                    />
+                  )}
                 </IconButton>
               </label>
             </Stack>
             <p>Tap to add profile picture (optional)</p>
-            {photo != "" && <Item.Button onClick={addImage} color="secondary" variant="contained">Upload Image</Item.Button>}
+            {photo != "" && (
+              <Item.Button
+                className="user-button"
+                onClick={addImage}
+                color="secondary"
+                variant="contained"
+              >
+                Upload Image
+              </Item.Button>
+            )}
           </div>
           {loading ? (
             <Item.Box
@@ -1514,12 +1523,13 @@ function SingleUser() {
               <Item.CircularProgress />
             </Item.Box>
           ) : (
-            <form className="mx-5">
-              <div className="mt-5 flex flex-row justify-evenly items-center">
+            <form className="">
+              <div className="flex flex-row justify-evenly items-center">
                 <div className="flex flex-col justify-center items-center">
                   <div>
                     <div className="my-3 flex flex-row justify-evenly items-center">
                       <TextField
+                        style={{ minWidth: "50%" }}
                         placeholder="Type Name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -1528,6 +1538,7 @@ function SingleUser() {
                         variant="outlined"
                       />
                       <TextField
+                        style={{ minWidth: "50%" }}
                         placeholder="Phone"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
@@ -1537,7 +1548,7 @@ function SingleUser() {
                       />
                     </div>
                     <div className="my-3 flex flex-row justify-evenly items-center">
-                      <Box sx={{ minWidth: 200 }}>
+                      <Box sx={{ minWidth: "50%" }}>
                         <FormControl fullWidth>
                           <InputLabel id="demo-simple-select-label">
                             {state}
@@ -1559,7 +1570,7 @@ function SingleUser() {
                           </Select>
                         </FormControl>
                       </Box>
-                      <Box sx={{ minWidth: 200 }}>
+                      <Box sx={{ minWidth: "50%" }}>
                         <FormControl fullWidth>
                           <InputLabel id="demo-simple-select-label">
                             {lga}
@@ -1611,6 +1622,7 @@ function SingleUser() {
                     </div>
                     <div className="my-3 flex flex-row justify-evenly items-center">
                       <Item.Button
+                        className="user-button"
                         onClick={updateUser}
                         color="primary"
                         variant="contained"
@@ -1618,6 +1630,7 @@ function SingleUser() {
                         Update User
                       </Item.Button>
                       <Item.Button
+                        className="user-button"
                         onClick={updateEmail}
                         color="primary"
                         variant="contained"
@@ -1625,6 +1638,7 @@ function SingleUser() {
                         Update Email
                       </Item.Button>
                       <Item.Button
+                        className="user-button"
                         onClick={updatePhone}
                         color="primary"
                         variant="contained"
@@ -1633,14 +1647,12 @@ function SingleUser() {
                       </Item.Button>
                     </div>
                   </div>
-                  <ProjectTable columns={reportcolumns} data={userReports} />
-                  <ProjectTable columns={projectcolumns} data={projects} />
                   <ProjectTable columns={rolecolumns} data={userRoles} />
                 </div>
 
-                <div className="flex flex-col justify-start items-center">
+                <div className="pt-20">
                   <div className="flex flex-col justify-start items-center">
-                    <Box className="my-5" sx={{ minWidth: 250 }}>
+                    <Box className="my-5" sx={{ minWidth: "100%" }}>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           Add to Project
@@ -1660,6 +1672,7 @@ function SingleUser() {
                       </FormControl>
                     </Box>
                     <Item.Button
+                      className="user-button"
                       onClick={addProject}
                       color="primary"
                       variant="contained"
@@ -1668,7 +1681,7 @@ function SingleUser() {
                     </Item.Button>
                   </div>
                   <div className="flex flex-col justify-start items-center my-5">
-                    <Box sx={{ minWidth: 200 }}>
+                    <Box sx={{ minWidth: "100%" }}>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           Role
@@ -1691,6 +1704,7 @@ function SingleUser() {
                       </FormControl>
                     </Box>
                     <Item.Button
+                      className="user-button"
                       onClick={addRole}
                       color="primary"
                       variant="contained"
@@ -1698,6 +1712,9 @@ function SingleUser() {
                       Update Role
                     </Item.Button>
                   </div>
+                  <ProjectTable columns={reportcolumns} data={userReports} />
+                  <ProjectTable columns={projectcolumns} data={projects} />
+                  
                 </div>
               </div>
             </form>

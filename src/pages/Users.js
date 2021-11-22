@@ -1200,7 +1200,8 @@ function Users() {
             title={title.toUpperCase()}
             user={user}
           />
-           <div className="my-3 flex flex-row justify-evenly items-center">
+          <hr />
+           <div className="mb-3 mt-10 flex flex-row justify-evenly items-center">
             <h3>Filter: </h3>
             <Box sx={{ minWidth: 200 }}>
               <FormControl fullWidth>

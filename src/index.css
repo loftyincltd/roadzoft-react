@@ -113,3 +113,11 @@ code {
 .nav-item span {
   margin-left: 16px;
 }
+
+.user-button {
+  background: #2c4c2c !important;
+}
+.user-button:hover {
+  background: #398639 !important;
+  transition: all 0.2 !important
+}

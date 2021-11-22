@@ -1143,6 +1143,7 @@ function AddUser() {
 
         <div className="dashboard-right">
           <Header user={user} title={title.toUpperCase()} />
+          <hr />
           {message != "" && (
             <Item.Alert
               onClose={() => setMessage("")}
@@ -1154,20 +1155,24 @@ function AddUser() {
           )}
          
           <form className="mx-5 bg-white p-10">
-            <div className="mt-5 flex flex-row justify-evenly items-center">
+            <h3 className="mx-5 mt-5 mb-3 text-center font-bold text-gray-700 text-2xl">Create New User</h3>
+            <p className="mx-5 mt-1 mb-1 text-gray-600 text-center text-xl">All fields are required</p>
+            <div className="mt-5 flex flex-column justify-evenly items-center">
               <div className="flex flex-col justify-center items-center">
                 <div>
+                <div className="my-3 flex flex-row justify-evenly items-center">
                   <TextField
-                  style={{width: '100%', paddingX: 5}}
+                  style={{width: "100%"}}
                     placeholder="Type Name"
                     onChange={(e) => setName(e.target.value)}
                     id="outlined-basic"
                     label="Name"
                     variant="outlined"
                   />
+                  </div>
 
                   <div className="my-3 flex flex-row justify-evenly items-center">
-                    <Box sx={{ minWidth: 200 }}>
+                    <Box sx={{ minWidth: "50%" }}>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           State
@@ -1189,7 +1194,7 @@ function AddUser() {
                         </Select>
                       </FormControl>
                     </Box>
-                    <Box sx={{ minWidth: 200 }}>
+                    <Box sx={{ minWidth: "50%" }}>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           LGA
@@ -1213,7 +1218,7 @@ function AddUser() {
                       </Box>
                   </div>
                   <div className="my-3 flex flex-row justify-evenly items-center">
-                    <Box sx={{ minWidth: 200 }}>
+                    <Box sx={{ minWidth: "50%"}}>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           Role
@@ -1232,6 +1237,7 @@ function AddUser() {
                       </FormControl>
                     </Box>
                     <TextField
+                    style={{minWidth: "50%"}}
                       placeholder="Phone"
                       onChange={(e) => setPhone(e.target.value)}
                       id="outlined-basic"
@@ -1261,17 +1267,15 @@ function AddUser() {
                       </Stack>
                     </LocalizationProvider>
                   </div>
-                </div>
-              </div>
-              <div className="flex flex-col justify-start items-center">
-               
-                <Item.Button
+                  <Item.Button
+                  className="user-button bg-gree-700"
+                  style={{minWidth: "100%"}}
                   onClick={register}
-                  color="primary"
                   variant="contained"
                 >
                   Regiter
                 </Item.Button>
+                </div>
               </div>
             </div>
           </form>
