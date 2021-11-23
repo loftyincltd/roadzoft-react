@@ -30,7 +30,7 @@ export default function LargeMessagesCard({title, link}) {
   
   return (
     <>
-      {loading ? <span>Loading...</span> : <div className="card-large-wrapper bg-white shadow-sm rounded-sm flex flex-col justify-center items-center p-5">
+      {loading ? <span className="text-center">Loading...</span> : <div className="card-large-wrapper bg-white shadow-sm rounded-sm flex flex-col justify-center items-center p-5">
         <div className="large-card-title">
           <div className="">
             <h5 className="font-semibold text-gray-700 text-2xl">
