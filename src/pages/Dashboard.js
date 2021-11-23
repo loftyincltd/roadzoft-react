@@ -168,7 +168,7 @@ function Dashboard() {
           <h3 className="mx-5 mt-3 mb-3 font-bold text-gray-600 text-2xl">
             Reports
           </h3>
-          <div className="mx-5 flex grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-4">
+          <div className="mx-5 flex grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-4 justify-items-center items-center">
             {reportData.map((report) => (
               <TopCards info={report} />
             ))}
@@ -176,8 +176,8 @@ function Dashboard() {
          
           {localStorage.getItem("roles") == "Super Admin" && (
             <div
-              style={{ }}
-              className="chart-wrapper bg-white shadow-sm rounded-sm my-5 mx-5"
+              style={{}}
+              className="chart-wrapper justify-items-center items-center bg-white shadow-sm rounded-sm my-5 mx-5"
             >
               <h3 className="mx-5 mt-5 mb-1 font-bold text-center text-gray-700">
                 Users Per Project
@@ -211,7 +211,7 @@ function Dashboard() {
               </ResponsiveContainer>
             </div>
           )}
-          <div className="main-items grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4 my-3 mx-5">
+          <div className="main-items justify-items-center items-center grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4 my-3 mx-5">
             <div>
               <LargeCard title="New Users" data={users} link="users" />
             </div>

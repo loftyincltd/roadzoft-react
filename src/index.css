@@ -121,12 +121,18 @@ code {
   transition: all 0.2 !important;
 }
 .chart-wrapper {
-  height: 600;
-  width: 1050;
+  height: 500px !important;
+  width: 1080px !important;
+}
+@media only screen and (max-width: 1021px) {
+  .chart-wrapper {
+    height: 400px !important;
+    width: 700px !important;
+  }
 }
 @media only screen and (max-width: 768px) {
   .chart-wrapper {
-    height: 200 !important;
-    width: 300 !important;
+    height: 300px !important;
+    width: 500px !important;
   }
 }
