@@ -27,6 +27,7 @@ function Dashboard() {
   const [projects, setProjects] = React.useState([]);
   const [reports, setReports] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const title = "Overview";
 
   const getData = async () => {
@@ -159,6 +160,7 @@ function Dashboard() {
         <div className="dashboard-left">
           <Sidebar />
         </div>
+        
 
         <div className="dashboard-right">
           <Header user={user} title={title.toUpperCase()} />
@@ -175,9 +177,10 @@ function Dashboard() {
           </div>
          
           {localStorage.getItem("roles") == "Super Admin" && (
+            <div className="flex flex-col justify-center items-center ">
             <div
               style={{}}
-              className="chart-wrapper justify-items-center items-center bg-white shadow-sm rounded-sm my-5 mx-5"
+              className="chart-wrapper bg-white shadow-sm rounded-sm my-5 mx-5"
             >
               <h3 className="mx-5 mt-5 mb-1 font-bold text-center text-gray-700">
                 Users Per Project
@@ -209,6 +212,7 @@ function Dashboard() {
                   />
                 </LineChart>
               </ResponsiveContainer>
+            </div>
             </div>
           )}
           <div className="main-items justify-items-center items-center grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4 my-3 mx-5">
