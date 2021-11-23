@@ -63,9 +63,9 @@ code {
   align-items: center;
 }
 
-.card-large-item  {
+.card-large-item {
   width: 100%;
-  height: 4rem;
+  height: 3rem;
 }
 .card-large-item p {
   margin-left: 5px;
@@ -74,7 +74,6 @@ code {
 
 .sidebar {
   width: 100%;
-  
 }
 .sidebar-logo {
   width: 250px;
@@ -119,5 +118,15 @@ code {
 }
 .user-button:hover {
   background: #398639 !important;
-  transition: all 0.2 !important
+  transition: all 0.2 !important;
+}
+.chart-wrapper {
+  height: 600;
+  width: 1050;
+}
+@media only screen and (max-width: 768px) {
+  .chart-wrapper {
+    height: 200 !important;
+    width: 300 !important;
+  }
 }

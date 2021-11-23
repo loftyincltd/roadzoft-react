@@ -106,9 +106,6 @@ function Dashboard() {
     console.log("Users", result);
   };
 
-  /*  const data = users.map((user) => user.reports);
-  const reports = [].concat.apply([], data); */
-
   const getProjects = async () => {
     const response = await fetch(`${API_BASE}/projects`, {
       headers: {
@@ -165,57 +162,22 @@ function Dashboard() {
 
         <div className="dashboard-right">
           <Header user={user} title={title.toUpperCase()} />
-          {/* <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">Projects</h3> */}
+          <hr />
+      
          
-          <h3 className="mx-5 mt-3 mb-3 font-bold text-gray-700 text-2xl">
+          <h3 className="mx-5 mt-3 mb-3 font-bold text-gray-600 text-2xl">
             Reports
           </h3>
-          <div className="mx-5 flex flex-row justify-between items-center">
+          <div className="mx-5 flex grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-4">
             {reportData.map((report) => (
               <TopCards info={report} />
             ))}
           </div>
-          {/* localStorage.getItem("roles") == "Super Admin" && (
-            <div
-              style={{ height: 600, width: 1050 }}
-              className="bg-white shadow-sm rounded-sm my-5 mx-5"
-            >
-              <h3 className="mx-5 mt-5 mb-1 font-bold text-center text-gray-700">
-                Reports Per User
-              </h3>
-
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  width={500}
-                  height={300}
-                  data={users}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="reports.length"
-                    stroke="#8884d8"
-                    label="Nos of Reports"
-                    activeDot={{ r: 8 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          ) */}
+         
           {localStorage.getItem("roles") == "Super Admin" && (
             <div
-              style={{ height: 600, width: 1050 }}
-              className="bg-white shadow-sm rounded-sm my-5 mx-5"
+              style={{ }}
+              className="chart-wrapper bg-white shadow-sm rounded-sm my-5 mx-5"
             >
               <h3 className="mx-5 mt-5 mb-1 font-bold text-center text-gray-700">
                 Users Per Project
@@ -249,7 +211,7 @@ function Dashboard() {
               </ResponsiveContainer>
             </div>
           )}
-          <div className="main-items grid grid-cols-2 gap-4 my-3 mx-5">
+          <div className="main-items grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4 my-3 mx-5">
             <div>
               <LargeCard title="New Users" data={users} link="users" />
             </div>
