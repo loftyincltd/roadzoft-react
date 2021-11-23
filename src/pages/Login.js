@@ -36,8 +36,8 @@ export default function Login() {
     });
     const result = await response.json();
    
-    if (result.data == {}) {
-      setMessage("You can't access this platform");
+    if (!result.data) {
+      setMessage(result.message);
     } else {
       localStorage.setItem("token", result.access_token);
       localStorage.setItem("user", result.data.id);

@@ -113,7 +113,7 @@ function SingleUser() {
   const updateUser = async () => {
     //const dobYear = date.getFullYear();
     const response = await fetch(
-      `${API_BASE}/user/update/${localStorage.getItem("user")}`,
+      `${API_BASE}/user/update/${userId}`,
       {
         method: "PATCH",
         headers: {
@@ -137,7 +137,7 @@ function SingleUser() {
   const updateEmail = async () => {
     //const dobYear = date.getFullYear();
     const response = await fetch(
-      `${API_BASE}/user/update/${localStorage.getItem("user")}`,
+      `${API_BASE}/user/update/${userId}`,
       {
         method: "PATCH",
         headers: {
@@ -158,7 +158,7 @@ function SingleUser() {
   const updatePhone = async () => {
     //const dobYear = date.getFullYear();
     const response = await fetch(
-      `${API_BASE}/user/update/${localStorage.getItem("user")}`,
+      `${API_BASE}/user/update/${userId}`,
       {
         method: "PATCH",
         headers: {
@@ -210,7 +210,7 @@ function SingleUser() {
   const getUserReports = async () => {
     try {
       const response = await fetch(
-        `${API_BASE}/user/${localStorage.getItem("user")}/reports`,
+        `${API_BASE}/user/${userId}/reports`,
         {
           headers: {
             "Content-Type": "application/json",
