@@ -39,7 +39,7 @@ export default function LargeReportsCard({title, data, link}) {
         <div className="w-full mt-1 mb-3 h-full">
           {data.slice(0, 5).map((item, i) => (
             <div className="card-large-item flex flex-row justify-between items-center border-b-2 border-gray-200">
-              <p className="">{item.message}</p>
+              <p className="">{item.message == null ? "N/A" : item.message}</p> 
               <Moment className="" format="DD-MM-YYYY">{item.created_at}</Moment>
             </div>
           ))}

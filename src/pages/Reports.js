@@ -23,7 +23,7 @@ function Reports() {
   const [reports, setReports] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
-  const countPerPage = 20;
+  const [countPerPage, setCountPerPage] = React.useState(10);
   const [filterTerm, setFilterTerm] = React.useState("");
   const [projects, setProjects] = React.useState([]);
   const [project, setProject] = React.useState("");
@@ -1084,6 +1084,7 @@ function Reports() {
     const result = await response.json();
     result && setReports(result.data.data);
     setTotalPages(result.data.total)
+    setCountPerPage(result.data.per_page)
     setLoading(false);
     console.log("Reports", result);
   };

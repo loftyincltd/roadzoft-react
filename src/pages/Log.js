@@ -21,7 +21,7 @@ function Log() {
   const [pageProject, setPageProject] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
   const [totalProjectPages, setProjectTotalPages] = React.useState(1);
-  const countPerPage = 20;
+  const [countPerPage, setCountPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(true);
   const title = "Logs";
 
@@ -37,6 +37,7 @@ function Log() {
     const result = await (await response).json();
     setUserLog(result.data.data);
     setTotalPages(result.data.total)
+    setCountPerPage(result.data.per_page)
     setLoading(false);
     console.log("User Log", result);
   };
@@ -53,6 +54,7 @@ function Log() {
     const result = await (await response).json();
     setProjectLog(result.data.data);
     setProjectTotalPages(result.data.total)
+    setCountPerPage(result.data.per_page);
     setLoading(false);
     console.log("Project Log", result);
   };

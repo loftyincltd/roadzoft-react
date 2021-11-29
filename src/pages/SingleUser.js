@@ -185,7 +185,7 @@ function SingleUser() {
       },
     });
     const result = await response.json();
-    setRoles(result.data.data);
+    setRoles(result.data);
     console.log("Roles", result);
   };
   //Get projects
@@ -1411,7 +1411,11 @@ function SingleUser() {
     { selector: "title", name: "Projects", sortable: true },
   ];
   const reportcolumns = [
-    { selector: "message", name: "Reports", sortable: true },
+    { selector: "message", name: "Reports", sortable: true, cell: (row) => {
+      return (
+        row.message == null ? <span>N/A</span> : <span>{row.message}</span>
+      )
+    } },
     {
       selector: "latitude",
       name: "Coordinates",
@@ -1457,7 +1461,7 @@ function SingleUser() {
 
   return (
     <div>
-      <div className="flex flex-row">
+      <div className="flex flex-row justify-center">
         <div className="dashboard-left">
           <Sidebar />
         </div>

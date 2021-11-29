@@ -21,7 +21,7 @@ function Projects() {
   const [projects, setProjects] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
-  const countPerPage = 20;
+  const [countPerPage, setCountPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(true);
   const [user, setUser] = React.useState({});
 
@@ -39,7 +39,8 @@ function Projects() {
     const result = await response.json();
     setLoading(false);
     result && setProjects(result.data);
-    setTotalPages(result.total)
+    setTotalPages(result.total);
+    setCountPerPage(result.data.per_page)
     console.log("Projects", result);
   };
 
@@ -110,7 +111,9 @@ function Projects() {
       cell: (row) => {
         return (
           <Item.Button
-            onClick={() => handleDelete(row.id)}
+            onClick={() => {
+              if (window.confirm("Delete this product?")) handleDelete(row.id);
+            }}
             color="error"
             variant="contained"
           >

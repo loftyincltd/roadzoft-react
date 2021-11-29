@@ -3,10 +3,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import Popover from "@mui/material/Popover";
 import * as Item from "@mui/material";
 import { API_BASE } from "../../utils/Api";
 import Moment from "react-moment";
 import ProjectTable from "../../components/tables/ProjectTable";
+import QueryReadModal from "./QueryReadModal";
 
 const style = {
   position: "absolute",
@@ -21,6 +23,7 @@ const style = {
 };
 
 export default function ReportQuery({ uuid, reject, query, reportId }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -82,7 +85,15 @@ export default function ReportQuery({ uuid, reject, query, reportId }) {
   }, [page]);
 
   const columns = [
-    { selector: "comment", name: "Comment", sortable: true },
+    {
+      selector: "comment",
+      name: "Comment",
+      sortable: true,
+      cell: (row) => {
+        return <QueryReadModal message={row.comment} />;
+      },
+    },
+    { selector: "type", name: "Type", sortable: true },
     {
       selector: "created_at",
       name: "Date",
@@ -98,7 +109,9 @@ export default function ReportQuery({ uuid, reject, query, reportId }) {
       sortable: true,
       ignoreRowClick: true,
       cell: (row) => {
-        return (
+        return row.type != "Ad-Hoc" ? (
+          ""
+        ) : (
           <Item.Button
             onClick={() => approve(row.report_uuid, uuid)}
             color="primary"

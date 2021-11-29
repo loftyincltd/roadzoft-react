@@ -23,7 +23,7 @@ function Users() {
   const [users, setUsers] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
-  const countPerPage = 20;
+  const [countPerPage, setCountPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(true);
   const [projects, setProjects] = React.useState([]);
   const [project, setProject] = React.useState("");
@@ -57,7 +57,8 @@ function Users() {
     });
     const result = await response.json();
     result && setUsers(result.data.data);
-    setTotalPages(result.data.total)
+    setTotalPages(result.data.total);
+    setCountPerPage(result.data.per_page)
     setLoading(false);
     console.log("Users", result);
   };
@@ -1178,7 +1179,9 @@ function Users() {
       cell: (row) => {
         return (
           <Item.Button
-            onClick={() => handleDelete(row.id)}
+            onClick={() => {
+              if (window.confirm("Delete this user?")) handleDelete(row.id);
+            }}
             color="error"
             variant="contained"
           >
