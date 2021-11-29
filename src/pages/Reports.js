@@ -1187,18 +1187,22 @@ function Reports() {
   const infos = [
     {
       title: "Total",
+      color: "blue",
       data: reports.length,
     },
     {
       title: "Approved",
+      color: "green",
       data: reports.filter((report) => report.status === "Approved").length,
     },
     {
       title: "Pending",
+      color: "red",
       data: reports.filter((report) => report.status === "Pending").length,
     },
     {
       title: "Disapproved",
+      color: "black",
       data: reports.filter((report) => report.status === "Rejected").length,
     },
   ];
