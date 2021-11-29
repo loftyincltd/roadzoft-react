@@ -8,8 +8,10 @@ import {
   ResponsiveContainer,
   CartesianGrid,
   Tooltip,
+  BarChart,
+  Bar,
 } from "recharts";
-import { Chart } from 'react-charts'
+import { Chart } from "react-charts";
 import LargeCard from "../components/cards/LargeCard";
 import TopCards from "../components/cards/TopCards";
 import Header from "../components/header/Header";
@@ -102,7 +104,7 @@ function Dashboard() {
       },
     });
     const result = await response.json();
-    console.log("Users Res", response)
+    console.log("Users Res", response);
     result && setUsers(result.data.data);
     setLoading(false);
     console.log("Users", result);
@@ -154,20 +156,17 @@ function Dashboard() {
     },
   ];
 
-
   return (
     <div>
       <div className="flex flex-row">
         <div className="dashboard-left">
           <Sidebar />
         </div>
-        
 
         <div className="dashboard-right">
           <Header user={user} title={title.toUpperCase()} />
           <hr />
-      
-         
+
           <h3 className="mx-5 mt-3 mb-3 font-bold text-gray-600 text-2xl">
             Reports
           </h3>
@@ -176,44 +175,54 @@ function Dashboard() {
               <TopCards info={report} />
             ))}
           </div>
-         
+
           {localStorage.getItem("roles") == "Super Admin" && (
             <div className="flex flex-col justify-center items-center ">
-            <div
-              style={{}}
-              className="chart-wrapper bg-white shadow-sm rounded-sm my-5 mx-5"
-            >
-              <h3 className="mx-5 mt-5 mb-1 font-bold text-center text-gray-700">
+              <div
+                style={{}}
+                className="chart-wrapper bg-white shadow-sm rounded-sm my-5 mx-5"
+              >
+                {/* <h3 className="mx-5 mt-5 mb-1 font-bold text-center text-gray-700">
                 Users Per Project
-              </h3>
+              </h3> */}
 
-              <ResponsiveContainer width="100%" height="90%">
-                <LineChart
-                  width={500}
-                  height={300}
-                  data={projects}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="title" />
-
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="users.length"
+                <ResponsiveContainer width={500} height={300}>
+                  <LineChart
                     stroke="#8884d8"
-                    activeDot={{ r: 8 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+                    width={500}
+                    height={300}
+                    data={projects}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="title" stroke="#8884d8" />
+
+                    <YAxis stroke="#8884d8" />
+                    <Tooltip />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="users.length"
+                      stroke="#2c4c2c"
+                      activeDot={{ r: 8 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+                <ResponsiveContainer width={500} height={300}>
+                  <BarChart width={500} height={300} data={projects}>
+                    <XAxis dataKey="title" stroke="#8884d8" />
+                    <YAxis />
+                    <Tooltip />
+                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                    <Bar dataKey="users[0].reports.length" fill="#2c4c2c" barSize={30} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           )}
           <div className="main-items justify-items-center items-center grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4 my-3 mx-5">

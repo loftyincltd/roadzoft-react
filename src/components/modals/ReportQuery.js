@@ -20,21 +20,18 @@ const style = {
   p: 4,
 };
 
-export default function ReportQuery({
-  uuid,
-  reject,
-  query,
-  reportId,
-}) {
+export default function ReportQuery({ uuid, reject, query, reportId }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [comments, setComments] = React.useState([]);
+  const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+  const countPerPage = 20;
   const [comment, setComment] = React.useState("");
 
-
   const getComments = async () => {
-    const response = await fetch(`${API_BASE}/queried/${uuid}`, {
+    const response = await fetch(`${API_BASE}/queried/${uuid}?page=${page}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -42,6 +39,7 @@ export default function ReportQuery({
     });
     const result = await response.json();
     result && setComments(result.data.data);
+    setTotalPages(result.data.total);
     console.log("Comments", result);
   };
 
@@ -59,7 +57,7 @@ export default function ReportQuery({
     });
     const result = await response.json();
     getComments();
-    setComment("")
+    setComment("");
     console.log("Comments", result);
   };
   const approve = async (reportId, commentId) => {
@@ -81,7 +79,7 @@ export default function ReportQuery({
 
   React.useEffect(() => {
     getComments();
-  }, []);
+  }, [page]);
 
   const columns = [
     { selector: "comment", name: "Comment", sortable: true },
@@ -95,17 +93,23 @@ export default function ReportQuery({
       },
     },
     {
-        selector: "id",
-        name: "",
-        sortable: true,
-        ignoreRowClick: true,
-        cell: (row) => {
-          return <Item.Button onClick={() => approve(row.report_uuid, uuid)} color="primary" variant="outlined">
-          Approve
-        </Item.Button>;
-        },
+      selector: "id",
+      name: "",
+      sortable: true,
+      ignoreRowClick: true,
+      cell: (row) => {
+        return (
+          <Item.Button
+            onClick={() => approve(row.report_uuid, uuid)}
+            color="primary"
+            variant="outlined"
+          >
+            Approve
+          </Item.Button>
+        );
       },
-  ]
+    },
+  ];
 
   return (
     <div>
@@ -122,9 +126,13 @@ export default function ReportQuery({
           </Typography>
 
           {comments != [] ? (
-       
-              <ProjectTable columns={columns} data={comments} />
-         
+            <ProjectTable
+              columns={columns}
+              data={comments}
+              total={totalPages}
+              countPerPage={countPerPage}
+              changePage={(pageProject) => setPage(pageProject)}
+            />
           ) : (
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               No Comments for this report
@@ -132,7 +140,7 @@ export default function ReportQuery({
           )}
           <div className="flex flex-row justify-evenly items-center my-5">
             <Item.TextField
-            style={{width: 500}}
+              style={{ width: 500 }}
               onChange={(e) => setComment(e.target.value)}
               value={comment}
               id="outlined-textarea"

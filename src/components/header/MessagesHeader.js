@@ -4,6 +4,7 @@ import * as Item from '@mui/material';
 import { useParams, useHistory, Link } from 'react-router-dom';
 import { API_BASE } from '../../utils/Api';
 import NewMessage from '../modals/NewMessage';
+import Badge from '@mui/material/Badge';
 
 export default function MessageHeader({title, user, handleClick, newTitle, newBody}) {
     const history = useHistory();
@@ -23,7 +24,9 @@ export default function MessageHeader({title, user, handleClick, newTitle, newBo
             </div>
             <div className="flex flex-row justify-between items-center">
                 <div className="mr-8 flex flex-row justify-between items-center">
+                <Badge variant="dot" color="primary">
                 {/* <Icon.Search className="p-1 mr-5" /> */} <Icon.Bell style={{cursor: 'pointer'}} onClick={() => history.push("/notifications")} className="p-1" />
+                </Badge>
                 </div>
                 <span className="text-3xl text-gray-200 mr-5">|</span>
                 <div>

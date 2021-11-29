@@ -3,6 +3,7 @@ import * as Icon from 'react-feather';
 import * as Item from '@mui/material';
 import { useParams, useHistory, Link } from 'react-router-dom';
 import { API_BASE } from '../../utils/Api';
+import Badge from '@mui/material/Badge';
 
 export default function HeaderWithButton({title, user, handlClick}) {
     const history = useHistory();
@@ -23,7 +24,9 @@ export default function HeaderWithButton({title, user, handlClick}) {
             </div>
             <div className="flex flex-row justify-between items-center">
                 <div className="mr-8 flex flex-row justify-between items-center">
+                <Badge variant="dot" color="primary">
                 {/* <Icon.Search className="p-1 mr-5" />  */}<Icon.Bell style={{cursor: 'pointer'}}  onClick={() => history.push("/notifications")} className="p-1" />
+                </Badge>
                 </div>
                 <span className="text-3xl text-gray-200 mr-5">|</span>
                 <div>

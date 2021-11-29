@@ -185,7 +185,7 @@ function SingleUser() {
       },
     });
     const result = await response.json();
-    setRoles(result.data);
+    setRoles(result.data.data);
     console.log("Roles", result);
   };
   //Get projects
@@ -199,7 +199,7 @@ function SingleUser() {
         },
       });
       const result = await response.json();
-      setProjects(result);
+      setProjects(result.data);
       console.log("Projects", result);
     } catch (error) {
       console.log(error);
@@ -220,7 +220,7 @@ function SingleUser() {
         }
       );
       const result = await response.json();
-      setUserReports(result.data);
+      setUserReports(result.data.data);
       console.log("Reports", result);
     } catch (error) {
       console.log(error);

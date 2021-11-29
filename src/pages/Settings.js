@@ -3,109 +3,1159 @@ import LargeCard from "../components/cards/LargeCard";
 import TopCards from "../components/cards/TopCards";
 import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
+import * as Icon from "@mui/icons-material";
 import * as Item from "@mui/material";
-import Moment from "react-moment";
-import ProjectTable from "../components/tables/ProjectTable";
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Box from "@mui/material/Box";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import TimePicker from "@mui/lab/TimePicker";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import MobileDatePicker from "@mui/lab/MobileDatePicker";
 import { API_BASE } from "../utils/Api";
+import { useParams } from "react-router-dom";
+import ProjectTable from "../components/tables/ProjectTable";
+import ReportModal from "../components/modals/ReportModal";
+
+const Input = styled("input")({
+  display: "none",
+});
 
 function Settings() {
-  const [user, setUser] = React.useState({})
-  const title = "Settings";
- 
+  const params = useParams();
+  const [user, setUser] = React.useState({});
+  const [project, setProject] = React.useState("");
+  const [date, setDate] = React.useState(new Date("2014-08-18T21:11:54"));
+  const [email, setEmail] = React.useState("");
+  const [newemail, setNewEmail] = React.useState("");
+  const [message, setMessage] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [state, setUserstate] = React.useState("");
+  const [lga, setLga] = React.useState("");
+  const [image, setImage] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [newphone, setNewPhone] = React.useState("");
+  const [userId, setUserId] = React.useState("");
+  const [projectId, setProjectId] = React.useState("");
+  const [role, setRole] = React.useState("");
+  const [roles, setRoles] = React.useState([]);
+  const [userRoles, setUserRoles] = React.useState([]);
+  const [projects, setProjects] = React.useState([]);
+  const [userProjects, setUserProjects] = React.useState([]);
+  const [userReports, setUserReports] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [photo, setPhoto] = React.useState("");
+  const [uploadedImage, setUploadedImage] = React.useState("");
+  const [realUser, setRealUser] = React.useState([]);
 
-  const getUser = async () => {
+  //Handle changes
+  const handleDate = (newDate) => {
+    setDate(newDate);
+  };
+
+  const handleStateChange = (event) => {
+    console.log(event.target.value);
+    setUserstate(event.target.value);
+  };
+
+  const handleRoleChange = (event) => {
+    setRole(event.target.value);
+  };
+  const handleProjectChange = (event) => {
+    setProjectId(event.target.value);
+  };
+  //Image Change
+  const handleImage = (event) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(event.target.files[0]);
+    var reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    reader.onload = function () {
+      setUploadedImage(URL.createObjectURL(event.target.files[0]));
+      setPhoto(reader.result);
+    };
+  };
+
+  //Post Images
+  const addImage = async () => {
+    console.log("myImage", photo);
+    const response = await fetch(`${API_BASE}/user/profile/avatar`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        user_id: user.id,
+        photo: photo,
+      }),
+    });
+    const result = await response.json();
+    setMessage(result.message);
+    setPhoto("");
+    setUploadedImage("");
+    getRealUser();
+    console.log("Image", result);
+  };
+
+  //Update User account
+  const updateUser = async () => {
+    if (password == "") {
+      setMessage("Password Can not be empty")
+    } else {
+    const response = await fetch(`${API_BASE}/user/update/${user.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        password
+      }),
+    });
+    const result = await response.json();
+    setMessage(result.message);
+    console.log("Register", result);
+  }
+  };
+
+
+  //header user
+  const title = "Settings";
+
+  const states = [
+    {
+      code: "FC",
+      name: "Abuja",
+      lgas: ["Abuja", "Kwali", "Kuje", "Gwagwalada", "Bwari", "Abaji"],
+    },
+    {
+      code: "AB",
+      name: "Abia",
+      lgas: [
+        "Aba North",
+        "Aba South",
+        "Arochukwu",
+        "Bende",
+        "Ikawuno",
+        "Ikwuano",
+        "Isiala-Ngwa North",
+        "Isiala-Ngwa South",
+        "Isuikwuato",
+        "Umu Nneochi",
+        "Obi Ngwa",
+        "Obioma Ngwa",
+        "Ohafia",
+        "Ohaozara",
+        "Osisioma",
+        "Ugwunagbo",
+        "Ukwa West",
+        "Ukwa East",
+        "Umuahia North",
+        "Umuahia South",
+      ],
+    },
+    {
+      code: "AD",
+      name: "Adamawa",
+      lgas: [
+        "Demsa",
+        "Fufore",
+        "Ganye",
+        "Girei",
+        "Gombi",
+        "Guyuk",
+        "Hong",
+        "Jada",
+        "Lamurde",
+        "Madagali",
+        "Maiha",
+        "Mayo-Belwa",
+        "Michika",
+        "Mubi-North",
+        "Mubi-South",
+        "Numan",
+        "Shelleng",
+        "Song",
+        "Toungo",
+        "Yola North",
+        "Yola South",
+      ],
+    },
+    {
+      code: "AK",
+      name: "AkwaIbom",
+      lgas: [
+        "Abak",
+        "Eastern-Obolo",
+        "Eket",
+        "Esit-Eket",
+        "Essien-Udim",
+        "Etim-Ekpo",
+        "Etinan",
+        "Ibeno",
+        "Ibesikpo-Asutan",
+        "Ibiono-Ibom",
+        "Ika",
+        "Ikono",
+        "Ikot-Abasi",
+        "Ikot-Ekpene",
+        "Ini",
+        "Itu",
+        "Mbo",
+        "Mkpat-Enin",
+        "Nsit-Atai",
+        "Nsit-Ibom",
+        "Nsit-Ubium",
+        "Obot-Akara",
+        "Okobo",
+        "Onna",
+        "Oron",
+        "Oruk Anam",
+        "Udung-Uko",
+        "Ukanafun",
+        "Urue-Offong/Oruko",
+        "Uruan",
+        "Uyo",
+      ],
+    },
+    {
+      code: "AN",
+      name: "Anambra",
+      lgas: [
+        "Aguata",
+        "Anambra East",
+        "Anambra West",
+        "Anaocha",
+        "Awka North",
+        "Awka South",
+        "Ayamelum",
+        "Dunukofia",
+        "Ekwusigo",
+        "Idemili-North",
+        "Idemili-South",
+        "Ihiala",
+        "Njikoka",
+        "Nnewi-North",
+        "Nnewi-South",
+        "Ogbaru",
+        "Onitsha-North",
+        "Onitsha-South",
+        "Orumba-North",
+        "Orumba-South",
+      ],
+    },
+    {
+      code: "BA",
+      name: "Bauchi",
+      lgas: [
+        "Alkaleri",
+        "Bauchi",
+        "Bogoro",
+        "Damban",
+        "Darazo",
+        "Dass",
+        "Gamawa",
+        "Ganjuwa",
+        "Giade",
+        "Itas Gadau",
+        "Jama'Are",
+        "Katagum",
+        "Kirfi",
+        "Misau",
+        "Ningi",
+        "Shira",
+        "Tafawa-Balewa",
+        "Toro",
+        "Warji",
+        "Zaki",
+      ],
+    },
+    {
+      code: "BY",
+      name: "Bayelsa",
+      lgas: [
+        "Brass",
+        "Ekeremor",
+        "Kolokuma Opokuma",
+        "Nembe",
+        "Ogbia",
+        "Sagbama",
+        "Southern-Ijaw",
+        "Yenagoa",
+      ],
+    },
+    {
+      code: "BE",
+      name: "Benue",
+      lgas: [
+        "Ado",
+        "Agatu",
+        "Apa",
+        "Buruku",
+        "Gboko",
+        "Guma",
+        "Gwer-East",
+        "Gwer-West",
+        "Katsina-Ala",
+        "Konshisha",
+        "Kwande",
+        "Logo",
+        "Makurdi",
+        "Ogbadibo",
+        "Ohimini",
+        "Oju",
+        "Okpokwu",
+        "Otukpo",
+        "Tarka",
+        "Ukum",
+        "Ushongo",
+        "Vandeikya",
+      ],
+    },
+    {
+      code: "BO",
+      name: "Borno",
+      lgas: [
+        "Abadam",
+        "Askira-Uba",
+        "Bama",
+        "Bayo",
+        "Biu",
+        "Chibok",
+        "Damboa",
+        "Dikwa",
+        "Gubio",
+        "Guzamala",
+        "Gwoza",
+        "Hawul",
+        "Jere",
+        "Kaga",
+        "Kala Balge",
+        "Konduga",
+        "Kukawa",
+        "Kwaya-Kusar",
+        "Mafa",
+        "Magumeri",
+        "Maiduguri",
+        "Marte",
+        "Mobbar",
+        "Monguno",
+        "Ngala",
+        "Nganzai",
+        "Shani",
+      ],
+    },
+    {
+      code: "CR",
+      name: "CrossRiver",
+      lgas: [
+        "Abi",
+        "Akamkpa",
+        "Akpabuyo",
+        "Bakassi",
+        "Bekwarra",
+        "Biase",
+        "Boki",
+        "Calabar-Municipal",
+        "Calabar-South",
+        "Etung",
+        "Ikom",
+        "Obanliku",
+        "Obubra",
+        "Obudu",
+        "Odukpani",
+        "Ogoja",
+        "Yakurr",
+        "Yala",
+      ],
+    },
+    {
+      code: "DE",
+      name: "Delta",
+      lgas: [
+        "Aniocha North",
+        "Aniocha-North",
+        "Aniocha-South",
+        "Bomadi",
+        "Burutu",
+        "Ethiope-East",
+        "Ethiope-West",
+        "Ika-North-East",
+        "Ika-South",
+        "Isoko-North",
+        "Isoko-South",
+        "Ndokwa-East",
+        "Ndokwa-West",
+        "Okpe",
+        "Oshimili-North",
+        "Oshimili-South",
+        "Patani",
+        "Sapele",
+        "Udu",
+        "Ughelli-North",
+        "Ughelli-South",
+        "Ukwuani",
+        "Uvwie",
+        "Warri South-West",
+        "Warri North",
+        "Warri South",
+      ],
+    },
+    {
+      code: "EB",
+      name: "Ebonyi",
+      lgas: [
+        "Abakaliki",
+        "Afikpo-North",
+        "Afikpo South (Edda)",
+        "Ebonyi",
+        "Ezza-North",
+        "Ezza-South",
+        "Ikwo",
+        "Ishielu",
+        "Ivo",
+        "Izzi",
+        "Ohaukwu",
+        "Onicha",
+      ],
+    },
+    {
+      code: "ED",
+      name: "Edo",
+      lgas: [
+        "Akoko Edo",
+        "Egor",
+        "Esan-Central",
+        "Esan-North-East",
+        "Esan-South-East",
+        "Esan-West",
+        "Etsako-Central",
+        "Etsako-East",
+        "Etsako-West",
+        "Igueben",
+        "Ikpoba-Okha",
+        "Oredo",
+        "Orhionmwon",
+        "Ovia-North-East",
+        "Ovia-South-West",
+        "Owan East",
+        "Owan-West",
+        "Uhunmwonde",
+      ],
+    },
+    {
+      code: "EK",
+      name: "Ekiti",
+      lgas: [
+        "Ado-Ekiti",
+        "Efon",
+        "Ekiti-East",
+        "Ekiti-South-West",
+        "Ekiti-West",
+        "Emure",
+        "Gbonyin",
+        "Ido-Osi",
+        "Ijero",
+        "Ikere",
+        "Ikole",
+        "Ilejemeje",
+        "Irepodun Ifelodun",
+        "Ise-Orun",
+        "Moba",
+        "Oye",
+      ],
+    },
+    {
+      code: "EN",
+      name: "Enugu",
+      lgas: [
+        "Aninri",
+        "Awgu",
+        "Enugu-East",
+        "Enugu-North",
+        "Enugu-South",
+        "Ezeagu",
+        "Igbo-Etiti",
+        "Igbo-Eze-North",
+        "Igbo-Eze-South",
+        "Isi-Uzo",
+        "Nkanu-East",
+        "Nkanu-West",
+        "Nsukka",
+        "Oji-River",
+        "Udenu",
+        "Udi",
+        "Uzo-Uwani",
+      ],
+    },
+    {
+      code: "GO",
+      name: "Gombe",
+      lgas: [
+        "Akko",
+        "Balanga",
+        "Billiri",
+        "Dukku",
+        "Funakaye",
+        "Gombe",
+        "Kaltungo",
+        "Kwami",
+        "Nafada",
+        "Shongom",
+        "Yamaltu Deba",
+      ],
+    },
+    {
+      code: "IM",
+      name: "Imo",
+      lgas: [
+        "Aboh-Mbaise",
+        "Ahiazu-Mbaise",
+        "Ehime-Mbano",
+        "Ezinihitte",
+        "Ideato-North",
+        "Ideato-South",
+        "Ihitte Uboma",
+        "Ikeduru",
+        "Isiala-Mbano",
+        "Isu",
+        "Mbaitoli",
+        "Ngor-Okpala",
+        "Njaba",
+        "Nkwerre",
+        "Nwangele",
+        "Obowo",
+        "Oguta",
+        "Ohaji-Egbema",
+        "Okigwe",
+        "Onuimo",
+        "Orlu",
+        "Orsu",
+        "Oru-East",
+        "Oru-West",
+        "Owerri-Municipal",
+        "Owerri-North",
+        "Owerri-West",
+      ],
+    },
+    {
+      code: "JI",
+      name: "Jigawa",
+      lgas: [
+        "Auyo",
+        "Babura",
+        "Biriniwa",
+        "Birnin-Kudu",
+        "Buji",
+        "Dutse",
+        "Gagarawa",
+        "Garki",
+        "Gumel",
+        "Guri",
+        "Gwaram",
+        "Gwiwa",
+        "Hadejia",
+        "Jahun",
+        "Kafin-Hausa",
+        "Kaugama",
+        "Kazaure",
+        "Kiri kasama",
+        "Maigatari",
+        "Malam Madori",
+        "Miga",
+        "Ringim",
+        "Roni",
+        "Sule-Tankarkar",
+        "Taura",
+        "Yankwashi",
+      ],
+    },
+    {
+      code: "KD",
+      name: "Kaduna",
+      lgas: [
+        "Birnin-Gwari",
+        "Chikun",
+        "Giwa",
+        "Igabi",
+        "Ikara",
+        "Jaba",
+        "Jema'A",
+        "Kachia",
+        "Kaduna-North",
+        "Kaduna-South",
+        "Kagarko",
+        "Kajuru",
+        "Kaura",
+        "Kauru",
+        "Kubau",
+        "Kudan",
+        "Lere",
+        "Makarfi",
+        "Sabon-Gari",
+        "Sanga",
+        "Soba",
+        "Zangon-Kataf",
+        "Zaria",
+      ],
+    },
+    {
+      code: "KN",
+      name: "Kano",
+      lgas: [
+        "Ajingi",
+        "Albasu",
+        "Bagwai",
+        "Bebeji",
+        "Bichi",
+        "Bunkure",
+        "Dala",
+        "Dambatta",
+        "Dawakin-Kudu",
+        "Dawakin-Tofa",
+        "Doguwa",
+        "Fagge",
+        "Gabasawa",
+        "Garko",
+        "Garun-Mallam",
+        "Gaya",
+        "Gezawa",
+        "Gwale",
+        "Gwarzo",
+        "Kabo",
+        "Kano-Municipal",
+        "Karaye",
+        "Kibiya",
+        "Kiru",
+        "Kumbotso",
+        "Kunchi",
+        "Kura",
+        "Madobi",
+        "Makoda",
+        "Minjibir",
+        "Nasarawa",
+        "Rano",
+        "Rimin-Gado",
+        "Rogo",
+        "Shanono",
+        "Sumaila",
+        "Takai",
+        "Tarauni",
+        "Tofa",
+        "Tsanyawa",
+        "Tudun-Wada",
+        "Ungogo",
+        "Warawa",
+        "Wudil",
+      ],
+    },
+    {
+      code: "KT",
+      name: "Katsina",
+      lgas: [
+        "Bakori",
+        "Batagarawa",
+        "Batsari",
+        "Baure",
+        "Bindawa",
+        "Charanchi",
+        "Dan-Musa",
+        "Dandume",
+        "Danja",
+        "Daura",
+        "Dutsi",
+        "Dutsin-Ma",
+        "Faskari",
+        "Funtua",
+        "Ingawa",
+        "Jibia",
+        "Kafur",
+        "Kaita",
+        "Kankara",
+        "Kankia",
+        "Katsina",
+        "Kurfi",
+        "Kusada",
+        "Mai-Adua",
+        "Malumfashi",
+        "Mani",
+        "Mashi",
+        "Matazu",
+        "Musawa",
+        "Rimi",
+        "Sabuwa",
+        "Safana",
+        "Sandamu",
+        "Zango",
+      ],
+    },
+    {
+      code: "KE",
+      name: "Kebbi",
+      lgas: [
+        "Aleiro",
+        "Arewa-Dandi",
+        "Argungu",
+        "Augie",
+        "Bagudo",
+        "Birnin-Kebbi",
+        "Bunza",
+        "Dandi",
+        "Fakai",
+        "Gwandu",
+        "Jega",
+        "Kalgo",
+        "Koko-Besse",
+        "Maiyama",
+        "Ngaski",
+        "Sakaba",
+        "Shanga",
+        "Suru",
+        "Wasagu/Danko",
+        "Yauri",
+        "Zuru",
+      ],
+    },
+    {
+      code: "KO",
+      name: "Kogi",
+      lgas: [
+        "Adavi",
+        "Ajaokuta",
+        "Ankpa",
+        "Dekina",
+        "Ibaji",
+        "Idah",
+        "Igalamela-Odolu",
+        "Ijumu",
+        "Kabba Bunu",
+        "Kogi",
+        "Lokoja",
+        "Mopa-Muro",
+        "Ofu",
+        "Ogori Magongo",
+        "Okehi",
+        "Okene",
+        "Olamaboro",
+        "Omala",
+        "Oyi",
+        "Yagba-East",
+        "Yagba-West",
+      ],
+    },
+    {
+      code: "KW",
+      name: "Kwara",
+      lgas: [
+        "Asa",
+        "Baruten",
+        "Edu",
+        "Ekiti (Araromi/Opin)",
+        "Ilorin-East",
+        "Ilorin-South",
+        "Ilorin-West",
+        "Isin",
+        "Kaiama",
+        "Moro",
+        "Offa",
+        "Oke-Ero",
+        "Oyun",
+        "Pategi",
+      ],
+    },
+    {
+      code: "LA",
+      name: "Lagos",
+      lgas: [
+        "Agege",
+        "Ajeromi-Ifelodun",
+        "Alimosho",
+        "Amuwo-Odofin",
+        "Apapa",
+        "Badagry",
+        "Epe",
+        "Eti-Osa",
+        "Ibeju-Lekki",
+        "Ifako-Ijaiye",
+        "Ikeja",
+        "Ikorodu",
+        "Kosofe",
+        "Lagos-Island",
+        "Lagos-Mainland",
+        "Mushin",
+        "Ojo",
+        "Oshodi-Isolo",
+        "Shomolu",
+        "Surulere",
+        "Yewa-South",
+      ],
+    },
+    {
+      code: "NA",
+      name: "Nassarawa",
+      lgas: [
+        "Akwanga",
+        "Awe",
+        "Doma",
+        "Karu",
+        "Keana",
+        "Keffi",
+        "Kokona",
+        "Lafia",
+        "Nasarawa",
+        "Nasarawa-Eggon",
+        "Obi",
+        "Wamba",
+        "Toto",
+      ],
+    },
+    {
+      code: "NI",
+      name: "Niger",
+      lgas: [
+        "Agaie",
+        "Agwara",
+        "Bida",
+        "Borgu",
+        "Bosso",
+        "Chanchaga",
+        "Edati",
+        "Gbako",
+        "Gurara",
+        "Katcha",
+        "Kontagora",
+        "Lapai",
+        "Lavun",
+        "Magama",
+        "Mariga",
+        "Mashegu",
+        "Mokwa",
+        "Moya",
+        "Paikoro",
+        "Rafi",
+        "Rijau",
+        "Shiroro",
+        "Suleja",
+        "Tafa",
+        "Wushishi",
+      ],
+    },
+    {
+      code: "OG",
+      name: "Ogun",
+      lgas: [
+        "Abeokuta-North",
+        "Abeokuta-South",
+        "Ado-Odo Ota",
+        "Ewekoro",
+        "Ifo",
+        "Ijebu-East",
+        "Ijebu-North",
+        "Ijebu-North-East",
+        "Ijebu-Ode",
+        "Ikenne",
+        "Imeko-Afon",
+        "Ipokia",
+        "Obafemi-Owode",
+        "Odeda",
+        "Odogbolu",
+        "Ogun-Waterside",
+        "Remo-North",
+        "Shagamu",
+        "Yewa North",
+      ],
+    },
+    {
+      code: "ON",
+      name: "Ondo",
+      lgas: [
+        "Akoko North-East",
+        "Akoko North-West",
+        "Akoko South-West",
+        "Akoko South-East",
+        "Akure-North",
+        "Akure-South",
+        "Ese-Odo",
+        "Idanre",
+        "Ifedore",
+        "Ilaje",
+        "Ile-Oluji-Okeigbo",
+        "Irele",
+        "Odigbo",
+        "Okitipupa",
+        "Ondo West",
+        "Ondo-East",
+        "Ose",
+        "Owo",
+      ],
+    },
+    {
+      code: "OS",
+      name: "Osun",
+      lgas: [
+        "Atakumosa West",
+        "Atakumosa East",
+        "Ayedaade",
+        "Ayedire",
+        "Boluwaduro",
+        "Boripe",
+        "Ede South",
+        "Ede North",
+        "Egbedore",
+        "Ejigbo",
+        "Ife North",
+        "Ife South",
+        "Ife-Central",
+        "Ife-East",
+        "Ifelodun",
+        "Ila",
+        "Ilesa-East",
+        "Ilesa-West",
+        "Irepodun",
+        "Irewole",
+        "Isokan",
+        "Iwo",
+        "Obokun",
+        "Odo-Otin",
+        "Ola Oluwa",
+        "Olorunda",
+        "Oriade",
+        "Orolu",
+        "Osogbo",
+      ],
+    },
+    {
+      code: "OY",
+      name: "Oyo",
+      lgas: [
+        "Afijio",
+        "Akinyele",
+        "Atiba",
+        "Atisbo",
+        "Egbeda",
+        "Ibadan North",
+        "Ibadan North-East",
+        "Ibadan North-West",
+        "Ibadan South-East",
+        "Ibadan South-West",
+        "Ibarapa-Central",
+        "Ibarapa-East",
+        "Ibarapa-North",
+        "Ido",
+        "Ifedayo",
+        "Irepo",
+        "Iseyin",
+        "Itesiwaju",
+        "Iwajowa",
+        "Kajola",
+        "Lagelu",
+        "Ogo-Oluwa",
+        "Ogbomosho-North",
+        "Ogbomosho-South",
+        "Olorunsogo",
+        "Oluyole",
+        "Ona-Ara",
+        "Orelope",
+        "Ori-Ire",
+        "Oyo-West",
+        "Oyo-East",
+        "Saki-East",
+        "Saki-West",
+        "Surulere",
+      ],
+    },
+    {
+      code: "PL",
+      name: "Plateau",
+      lgas: [
+        "Barkin-Ladi",
+        "Bassa",
+        "Bokkos",
+        "Jos-East",
+        "Jos-North",
+        "Jos-South",
+        "Kanam",
+        "Kanke",
+        "Langtang-North",
+        "Langtang-South",
+        "Mangu",
+        "Mikang",
+        "Pankshin",
+        "Qua'an Pan",
+        "Riyom",
+        "Shendam",
+        "Wase",
+      ],
+    },
+    {
+      code: "RI",
+      name: "Rivers",
+      lgas: [
+        "Abua Odual",
+        "Ahoada-East",
+        "Ahoada-West",
+        "Akuku Toru",
+        "Andoni",
+        "Asari-Toru",
+        "Bonny",
+        "Degema",
+        "Eleme",
+        "Emuoha",
+        "Etche",
+        "Gokana",
+        "Ikwerre",
+        "Khana",
+        "Obio Akpor",
+        "Ogba-Egbema-Ndoni",
+        "Ogba Egbema Ndoni",
+        "Ogu Bolo",
+        "Okrika",
+        "Omuma",
+        "Opobo Nkoro",
+        "Oyigbo",
+        "Port-Harcourt",
+        "Tai",
+      ],
+    },
+    {
+      code: "SO",
+      name: "Sokoto",
+      lgas: [
+        "Binji",
+        "Bodinga",
+        "Dange-Shuni",
+        "Gada",
+        "Goronyo",
+        "Gudu",
+        "Gwadabawa",
+        "Illela",
+        "Kebbe",
+        "Kware",
+        "Rabah",
+        "Sabon Birni",
+        "Shagari",
+        "Silame",
+        "Sokoto-North",
+        "Sokoto-South",
+        "Tambuwal",
+        "Tangaza",
+        "Tureta",
+        "Wamako",
+        "Wurno",
+        "Yabo",
+      ],
+    },
+    {
+      code: "TA",
+      name: "Taraba",
+      lgas: [
+        "Ardo-Kola",
+        "Bali",
+        "Donga",
+        "Gashaka",
+        "Gassol",
+        "Ibi",
+        "Jalingo",
+        "Karim-Lamido",
+        "Kurmi",
+        "Lau",
+        "Sardauna",
+        "Takum",
+        "Ussa",
+        "Wukari",
+        "Yorro",
+        "Zing",
+      ],
+    },
+    {
+      code: "YO",
+      name: "Yobe",
+      lgas: [
+        "Bade",
+        "Bursari",
+        "Damaturu",
+        "Fika",
+        "Fune",
+        "Geidam",
+        "Gujba",
+        "Gulani",
+        "Jakusko",
+        "Karasuwa",
+        "Machina",
+        "Nangere",
+        "Nguru",
+        "Potiskum",
+        "Tarmuwa",
+        "Yunusari",
+        "Yusufari",
+      ],
+    },
+    {
+      code: "ZA",
+      name: "Zamfara",
+      lgas: [
+        "Anka",
+        "Bakura",
+        "Birnin Magaji/Kiyaw",
+        "Bukkuyum",
+        "Bungudu",
+        "Gummi",
+        "Gusau",
+        "Isa",
+        "Kaura-Namoda",
+        "Kiyawa",
+        "Maradun",
+        "Maru",
+        "Shinkafi",
+        "Talata-Mafara",
+        "Tsafe",
+        "Zurmi",
+      ],
+    },
+  ];
+
+  //Get single user
+  const getRealUser = async () => {
+    const userId = params.id;
     try {
-      const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await fetch(
+        `${API_BASE}/user/${localStorage.getItem("user")}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       const result = await response.json();
       const data = result.data;
-      setUser(data)
-      console.log("User:", result);
+      setUser(result.data);
+      setUserId(result.data.id)
+      setLoading(false)
+      console.log("Real User:", result);
     } catch (error) {
       console.log(error);
     }
   };
 
   React.useEffect(() => {
-    getUser()
-  })
+    getRealUser();
+  }, []);
 
-  const columns = [
-    {
-      selector: "image",
-      name: "Image",
-      cell: row => {
-        return <Item.Avatar src={row.image} variant="square" />;
-      },
-    },
-    { selector: "report", name: "Report", sortable: true },
-    { selector: "coordinates", name: "Coordinates", sortable: true},
-    {
-      selector: "created_at",
-      name: "Submitted",
-      sortable: true,
-      ignoreRowClick: true,
-      cell: row => {
-        return <Moment fromNow>{row.created_at}</Moment>;
-      },
-    },
-    {
-      selector: "status",
-      name: "Status",
-      ignoreRowClick: true,
-      cell: row => {
-        return <Item.Badge variant="standard">{row.status}</Item.Badge>;
-      },
-    },
-  ];
-
-  const data = [
-    {
-      image:
-        "data:image/png;base64,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",
-      report: "Femi Oluwagbemi",
-      coordinates: "41.25543, 2.635353",
-      status: "Approved",
-      created_at: "12-09-2020",
-    },
-    {
-      image:
-        "data:image/png;base64,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",
-      report: "Femi Oluwagbemi",
-      coordinates: "41.25543, 2.635353",
-      status: "Approved",
-      created_at: "12-09-2020",
-    },
-    {
-      image:
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHwAAAA2CAYAAAAF3f20AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAABm6SURBVHgB7VwHfFRVuv/OuXdmkkmdSQNCE1CRImBhUbHtsqIsG4ohslbQFXwPRQFZxd23ZvXpw0JVUCzoUwFJ6CCCuovoKhawAQEEQTFAQvqkzsy957z/uTNpYypSfP7y/X7JLafcc8//fP3cYdRGjdLsTPcURrK/1Ngyb6X56YybSopxW9L/Y2LURo3SnEz3O0D39xQAOUsyuYZz/i9NVnw7+frK7KbaLlwS46py6BcyJvtIIdtJ4owTZZvC/NoM0798YER+aXPPT19Eztg4Vw+dmFlu44db0qY5agO8EZqdQeHE3Hk4jahXIMmPSdsnGe2RxL7UhPzCz8xvy7NKfkhPJ/HUa5GJWph9EtAdLaU8B1Nsr9+z9KLdZ1wXf79vZPFWxhqWGE9mJLTTmfGmlGwA6lSi1iFibKs0zOWl+4q/Vs+iE6A2wBuhOZmxV0nJMyWXEOvUmwQbjdk656c1pZcYLyEhlbgvZIx1liTbU/NzW4l6/5g2puiJ0IJ0iIOYTNdKydjI0DJ0WiEkbeecZTjt9lcmphyroFZQG+CN0OxM12M4jOWmOVZq+h2GZJs13SzkQutkSjGQEbsEs5cMPosgJh2oq2M6tWBzMLc0UKcK5wWo9yM49EIcnaHPkZI2Mm7eMzW15GD1vVkr469mQmzEaViTg2SkFtk7puTPOSXbPiktr4yaoTbAG6FZma71mJwoMuUc0vl0abKviIt+0MORmLZjgGo3RHMOOLtc8qBYZswvhfDrjFcJjUrB+54qo+pQlIMbfqbfBO6fSZI5Qp+FxjmcsWf9ourlv6SV58xe4VqCeje2cKgKRBN97MZZJhbfak9c4b70q8lopG4bhdKide2d5V7vHgD4bybpE0DinjKm8B/puB/NK9qxCnaFYPxyVO2J8k6YbDcHOwM5CAJMtATfcybAvWqCBQw3KQzxINfYNCyS8xt5rFo0h1H/FRwn4KIDnRiVYdyfYgQLXAlRb4+/+vuquoVtgDdAc1fGXiEEf0udAjQnJilralrhy43VhwHFbQMiEhxeRxwnFimkGaYEvPRpXk0TSufeJfzsA91BU1F9ILWQrAUTMOpOFKcS2AFvoKOlotL29fRbc8vbAG+A5i2JPhuu00RwyTu4vBN/L04dU/hOS9sro8u9yt3BZCzK5yOyafIRMP03nLR7YKglUMvpKwiOtyEqhgD4PrgOpxMjP9bMxxD3C9sAb4KeWBsfpXtFpknag39Jy/uqJW0WLSJbudv9GvhyEHS7EyJfcWg0Bbg0jFpB4M57p6UWzIeKiS/zVg0C+CnobAQ6SqQTISa9OrVRo8S8LAKTbrPx8tyWtjFcEXE4KBfOzn5eTK7KwcOWqBO4Xvk4bICIf+vJJe5H9HA2BFb8OIzwytZ0qAzGNsCbIDvJGIjTBCMyygP3t0VtJllWtuMCuGXjYJWnQH92ATCOBqrCvoOOJToKGZCDBXI27nWqKSS28e7RRwrqNgjo80IV4XtV/c1e6u4tbXQD7t+C53Sq4xY2Sm0ivQmavSz+ItLNFZjmg5jpTDg/n4Rptv0t8Xet9hkdwxkvvx2ceR8iZt9ispMx47DrKJdJtk76jLe22Up+yEwjc06GeypWwKxgU3iBcsT01KL1LXnOogxXjIe0wRqJ8bi8Cv3HNVa3DfBm6OmlUfHMZh+GiRoDD2sQpkwFVPZCH34B9bwPVY4JQUXQ1x5JZqUpAj55ONk1UzfC4JTdLAyKmD626D/nb+zhKDTKNfriWFVoaBSBnrEqsgY1cB0uc/12fuEJxM7ZE8vi2+s2IxULagIue1EIxm2At4LSt5Aeleu+iDQaDL+7N7gWYlQqAyoaE6nEKeIyBPwJDAodwGQ+RHM22HXO/WMLPm+q79dykiJi8mRkdo7prioSV01LK3outE7Grl52PexwbPa37UomDzvgbXq0xOasjB+ACMADWIJpNTepjX42TYBl3s3lctrJ1PRI3egbXlhxdSORroZoZVZsF03an4YevkQyvt3O+L1/6HXsh7p1lu2N7xBu8vnQ14OworI0k01M6Zd7qLm+Z2XGpkOLPGxdSCr/VRhtizYmdmfc6K/rLJlpXAW2DghNfDP+isLsxrJRJ5NemKj83KISOkHShH4bWC9VWWUYbrJPmB7o/dvqjj3c4Pej8PpgMCZZ2OQ/cPvWpvqdCd3OJd0sq9ma06YzDrgSk528sb1NzXahpsvOEJOHmY3tiDp2fFcajJnG2mVkkJbvdMP94bdLbl7AOIsRsIYBNnENMS5ipW98FL/7jW182YGq4y+lt4LjTidhuGztXq0rYvI19wBot7RMSz3Uvj+js+o3bChzV5/sgQRP15pHGbT8jACuXvKZNYnddLsxjlWxcQanjir/IKH8ABZxVKhqH3/w9Y/5kw6qyky71FNYt/381YndczVjPpdsGFPObigPS+SguWWpXoGHXXFOePy4JZ/rk2+6OOcz+oWR4uLVX5vvcp3dgmnRMV4TxtvqzJDFzoXcIDhTBp0DIHphDC5vrmukduGuBV01RvtsNtp2RnT4s2viJjEuH2Aa68SxjtVWEK6yD+qoqfPAH7gWOQh2WLOJR2+4MP9lNTlzV7kGaxp/Fd10V3VxL1Bfq9MHD+lDlTEqxcUtYy/OXduasarF+XpukjO+1K9d16OwtDkVoeq/fcAd5S0TvLBcNzcdza/IbEJSKcqQpDl2JY4QTF6uEf9Md0StGnb2T42ydbsT0kzBBkomd+ouPTMlufFc+GNLI5LCbWGIDsp21g1GL0xNLZx42gGfv8b1GON8GgBwsBpQGgdc06xjgYcdb1912HUuBr4cAY1e+KNWAR54RgHjInXMgPz31VjW5sVHUR57pKFxck08bRp6R1i5d6KHfuAXxSm5WDmv+8y4FWl9snzVdbdALZUkxf1RCj4Ew+mFQcWQGhqEKLi1GPcO4rnro3rmb7qa1aqW9fvikoUJ3dwAaYZ8Y/j5+TvW7W7XWzLzzw1OpqTXRvTO+7KholkrXP8B12xh8LLcNPjw6X/Kf/+0ivR5q9z3IwL1F0hhvdo/ALt4cfo2dNgWXBRBAMVioPB3aQQFtxeh/Al7aVetkjx/xfl5dKLEZBwkxtx126OGpFxUmu/NZRF2xu5rqKppan6APYFZ4NVhaiGH2mT+BTizgNqyKyHSw+hljDkFAw2DCP0R7QrQ7jyA7Qi+Izif3VG8K2Hh/P0x0ycHudfwUzJr5Pl+Yltx2GEKkYxF22AddPoR/jcIOJb+bdXnWPM7PVrix0T51CTgz21MGMC4v7PiMmhWB4dWsDrQuAPAWJBxLnCuKcbCfDKd2aRu48GHMia4TfrAZhVHD8h8U5gPkdJTweGih3fxb/LEofn7Qh79zNL3IpJkZPhTEJHnVur+F0uK/EMwaTdYhmwd6pr0W+rRMYU8Fd/RrsOLyRQBKRcZ1pG6JY0kZ1g72ntsEVX6s4MPpfN99jBwTOlMmL6V0mtbBpCGQlK7608mTcfbbYVXjbAnS6Pa5zK87NR1+xLWpJyb9+9ixiai7pjguICTeH5U77zH1+1NOkuYUmXYegT6gwLTaNJZhmcZrrZZ9/y242QXKzBvV0JMN5hFMw37Ic3mW4n+ryG1IaMFNOvN2H4YzMA6ZuCy9LSARGoU8OffSrgWKb3VJLUwFUlQolPJS8ZqJkStHLwlkBcBUarMAxU3VAanEqOWRSItV2MbcsRqV4arFi22STNsqWpP1pxVcaNhrFXcO6JwU3XpjUPKc+dvbH9njD03cvyg0uI5K10TKCRuoGkO6p78R/p839MU5WxPZ3e4nvZmv2Eh0jUxhX7I30AOWwx1iU8B6AtrHgwuH7t0X9RLad2LVFLixuU7EiY5wtizIVNwQKviw6JKc32epMQq5SbVKWOmAaCJ/g1mSBBmzbhs4OoZOD6e0jP30NrdSZtgit5d0wpc4xNMWdsW4KMG5HyPftPW7EqYB+a4hxqg1AHZ+9Vh1c7E16GWbqYWEBhynLIlgg/1VnrN16vLGgXcZ5pC5zRD8bQmA3pWql5YQERxpeWYtHEFLv4pXw8r1W5dMglrk3TJuUOa/IfiHJFrmvQs4zXdZ5X4vbc8NDq/Ym6GqzMWxF1oO3DBOveLpk6PTh5W6FGVgtEkLyJG7RG2vC7U4OjW7hoyjArqkTyC9hx+gxJdF2ARamTXI5V0odKqw9Qz+WEMSCenI5mqjCPBeZd9I72O3uByJTYp75go63hWaN6BvZ1yUcAoWrPbAui2eqVqYyMp0W++Cx2vwpguq0DQTnVY8k2MCwzTOzS2xaSolyJVPPG/W0VFTHzTeY+yUlEWHcOpOXp4oztaVlBKjRaSfNOMm4qKqssbBXxyipXwb3HSvymaneGaDraqIzLFvIdGl1qZIBPiUoeOgdW+C6voWhtjw5/f7JpjD/evljysymXz2ouLhV5cxjMwN0PRxEoMKEBtegTZbVHkKToMEd6ebJoTHO2icLsLoMfgOgLSxkRUO4pinedSjicAuJJHQmcKsK2NjRkWV82+cy54kWAWH9eiImX8xv09HLCm/7luV/v+JhMjmDRdGNePa7MS5kjJR6JSVzrNFFtBqcC6szrHfMEOMetJruaXzAmS2vZjiRVpYdOnTlE5M7X31clTqyIRh5adYc3mwBZYD/G/HG32g2OmCH/YemjELWV+xyf2KJ7ZrjP7yu6QMF7YUdVWSZvsvI+psGw/fXdkvcVI5ZVHqGfHm+mcDmMpr+QLC/Sdh2dReVU2wP6o/gAZxTc1filrkxvCpvalhbhjeCvDWa5t+KazSzJxF4rvxTpKR8FivAeyYzIRDX6g00gTtkOlSDlKSVfrhmT7HMz+Sd06+pxV7kwMNl7pYyWb8WJ+SzfzgI6m4HnA3eE1bpA61jvXgjo9cPQzTYat+Iqvumfx8Zf9l1C8rXY7fll+iXFcnZR/U5YfOyBmPfOSOWl0yZYFG+Jcdju7COJ/PUT8+ei6DBOfCxF8NSz7/3a3014+nm1AR/IFaB4ZGd6B8oq+tlZUbEQPS3eH2WItEa5pYRQV3o1ySz6EKC+gcD2BKo3aj0WEv+nJQ5fR1efgksjQXLP6OKCqyGXY9fznMcG31C3DeD9kgmYKjS6DNHkotO+1uxPvwntdILTKGaPPKy2gk0Q9DsT0JY3/ptqrgDpeNSm1fipXxzpOVQhZO+Xq7JpT/wSrIwICvkXgNLitjlF113gtSUE9HriHFzawfl600voh5LAHoru94LEeNeG+aHyV1a8pX7I5uMuui+vNKmOhaeqDYPxdjL/30eN5GpcTOnS27T32o3gG1WcUeHbTwJ5TqcJ3HH26qGPcYMrKfoWiwjpQ58Rr6UDOMkqMvpic9nYAPa/eGLBQ86kpkvLimrqmVC4Wq18sv7NpRztIYbu0ruOAs/1ldnP4zWcXelbvSrikofQUhN7lkH/XkE/+TV3b7OyntUKUrcabl8a6rl+jmDeITyn02Yqf1JHCiJPNfbQSTQEUUS86utYrVeEjZ4Vp8wZdtIiIYD0Fepjmu76Pp1CJdr0DqzvbEZFRehKORSpWPm+FeFtwPv2ZNe6NiKAtlkL2jGB8Z4mQ4/CSo9DxcTy3s9KeEJUamHdWxx7ag0cOGm96/aVjt2X9D/U96xaq8udRccV+Ol6yg4rLsygupg9FO7tjKF7a+eNslcYOeA4B8glO+5t6ZYAyVHGiIA6xLEaFlsNDXWXXpebzMWf9dpQQ5dO6r97TnpMwhv2kHUPCQ4puOPMbmi1szZ6kvmCOi2WoxhA0bO2uhF3C78+X3NER7m6f0Bgf+rpy8Vb3p7dfWfjjfBhrRrm8WQatRID+WWlW0e7Q5+tT0+rHqU82Wd9bZcjdOq9ZxJFckPqEZqa6uDfVs39BRsJfDV0ONzC7FWViZRVWkNTYiw5NngXpc4uUdTlA+fGyC17I4ov4mF6w0JdRp6QrrPlQhptNi7TsK49aAJ5tqNOfCst31B3WIadT7Gpq3Cqcj06eg5PZQCxVfluY53y9w3lwYPLpWxh47esUxiKJ86ny2yyPBpIOvFnDr7h5ZfAB2+GZdwQXftRgrJbRnVh0vyfdPhGScnNDAV2U3223acNH3hc7wFsmL9OYteEh0JyzBQ19f3ZCkTZljM3JpDDX2bEOs1LUiJpwpP1trhI/gZ99Hd3cnuf0p12aXQmR+J7kTO2JtiJnsMynzV3nWnpfCsxrUvvALD3z5vbtF678vODguXBdrtMEJcK/P4RH/Ynp8nnMVGzN8338n+C6+eo8ProXuaK6Q2frVFF5lHyGkmRq772wjLY+nSbT8dKPQsYv3x3aJT+nqXfE+nwCc9wfszqC6gV72GfSTjdWb/BftSf+YVg+S7Aok2tqYN3BnDiC48PQ43FQc4+SSl7VkgexjSd1JXZOUnAbDJVa63uTx6+z9xqq1+rHvfhu/FUQq5ugAx3Vxp0V164x7ILGnGZts92V1v94X5XKPMrjXoPeujFg6KmkiPxAGuGjQzfq1aVF29s7o03/LKzWu1Tfwbj6tuM/GpsNg6VXx9ITYnuRputUVJalQiLWGGy6A5x9PkR9DlUgylYTb9fY98S8v0s9v/Zbrmc3xN0GP/zVkKm5d0Sv3GfW7E7oh0DN7xBMciJk+mWeN3/zxIuonsm3dm98FGLVo/CIrpD1sF34Nw4fbRnaL7dcla/e064rvLoU4OFCnVxdyjV/6JOXQyeJ5iJRImx2ME/gS1UAP3taWuG0huq2msMxcVdijj9U8XAL7MBtrZoLlDmmFgKOcK8DESWlq2dn0DyNQ0RVb8Rn7ArNUbn6hQ1xj5RVhH80NS27svoZaoFUxMf3133GYxDt19QE9yQMbZ9YbBg0o+6YCjxZtcmTYGVTeOGafV6TPAn2YMBG+NuYAbVgB4bS8MIP2K/WfvQm96SP6GntPXutsfJR5+V8j8N8OkUk7fbRVko4cGVqnGc0VrfVgN/x2/xHKMQnVQBlJdRO2vCriO18v6v2w9bvazJKU9MKPpu3Ou5RTOJcChr/ylqFyFvljK7c8cK7iV9q0IgAJ6qCyf5YWJfJ+rFjaAL2+rE8/3uwlR44AVFYCTE6E2nWpXVvLpJki9+pdQutDLXSbeN+QmCFmts7dkYp/RUKgzq5vfqaqW/Pna6v1EerDdFJ0iAtozFYGJc74mYo3QZA9ZamR4PXr5Zz/5TxA4qLkWK9nDO+BJ5xpxalR3XKt2lsYuoFx1fXDaBk7I9MsPkiPoc7GoOZiA0ZrtdbRd9mLCpOW/mCby/9DJqzwv0KlnfNokIUzsOEmJnMij6H9PPRz6DZGXEDEQr8oPqrVDDF3VNSCxY0Vv+0pkfVRoAMWfDYs2tdBxEkUd9fd6FmF53Mxgp+dcwFeX+vBmvyyKIPX9oU3d8rbFPRfAzqdFQf/dVvRl71Ga7GxT+Rw/svtD/6k6694TBsZZdGRuBAWSeu2xD7PnFMHl8cmSCtwEx14EZ6YLoPnnJD0U46GcTk2Gqw8ZyjSIFsbar6ad/iFACtaOmCtxL+hVU+SXI5BIx4TjD5EMjNSFkGXv0OYnUDJ3PF2IHFX/8ppJ8/X2u5k3/L+LjjY8XllZeRKXsDuARpqQtWBAPxAHKVn946qOBoo4OJySuRJQnjGytGerPKb7d9Tz+DwqPCrkGUttaKIPYCDKqTAvZTm5MiWKmRIoMBMczeJ+V7C5uURqdVpDdE6qsJESm7MTtP0iRz6nZRpXPbER8TB+8Y/PN/xOZM06xM94uY5OodK1IIcdX9NxR/QCeB5qyIGwmwVZRS8YkXEYrxU0YVLWuqzRnftToxzdre+yX9CgmBDztY+tLarRN02M6MPXSSSAh5Z7WHgcP3Xr/c2FybU5YtayOEoXvFXgI0OlZfQ5t9QzllHjoJ9MTa+A4U2AVjEaJ7ax5Ma35vfBvgp5BgMQ+lelk3NthoH7fi6czY0XNeiY2ln0E2nxzHqiU0IkIm4y+3pN0Z1+G/VkrPSIiMYuZmTPClDRQrKysX3LbMb8rF08cW7aJWkPWjAy73Z0Cvv7rGMz6dMqZwUEvatn0ffooo2jC7IKLeg6iR1AhRO2Q2pmgau292pnuHMMVrXJdveeJKDjf3lUyZK/Y66O6ewUvkZ8RCaiG1ifRTREwXNmDhaKJKAQtkmBX4F3GNz5dC2x6V735u3nLXsCczIto11MjaVsg0xB5qfj7kiHJfqYXUBvgpIi+xQ0CnMVHtZ0zAVeO3IWiiPvq3NkuCa9Wu3j+bnK3VmWP93JVxj83OcPWtkwWj+SsTeqDfwTU9MdrcmhR3mw4/hfR0hrsXsoJLMM39Gyj+mBtsavjZXb/wHDh4LrK7w1FvfOhHggC7nKnfXWNiuUfoS6OEcRPCxQvVL0lAWfgQfB4ydUzeh9RCagP8FJNKLGVL1zDkEyeAm3+LW3VDwGqDwmakXhfrhvfDYt1ZHi3FIMjde4H0MOvnQepTicr4AbbgT3rInZ74mIHpIT++1xS1AX6aSG31cvaJ7q4L+0io7huQQ+5Xs7vUIql+mPcoImd+BFGSWvJLjDDWJt8/pvgZagW1AX4GSP3Wi7+ycAAAvxN/1wOEGGo9mX5e2fWBZn63PZTaAD/DlJ5BkdGaewzs9bFA4zfUQvAlk8unpRaNpVZSG+C/EFKW+NzM2H4m8Rs5yWugvXs29MvLwdoml+y6+9IK36VWUlvg5RdCgbRxsbWd6vFVyU84jfLLBONjkFodBp1e78tW2HJvFmcVbKEToDYO/wWTMvQieiV14dI/hJiciFXRFwtjgVnhmzn91rLjdAL0fxFuTSg12VBdAAAAAElFTkSuQmCC",
-      report: "Femi Oluwagbemi",
-      coordinates: "41.25543, 2.635353",
-      status: "Diaspproved",
-      created_at: "12-09-2020",
-    },
-    {
-      image:
-        "data:image/png;base64,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",
-      report: "Femi Oluwagbemi",
-      coordinates: "41.25543, 2.635353",
-      status: "Pending",
-      created_at: "12-09-2020",
-    },
-    {
-      image:
-        "data:image/png;base64,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",
-      report: "Femi Oluwagbemi",
-      coordinates: "41.25543, 2.635353",
-      status: "Querried",
-      created_at: "12-09-2020",
-    },
-  ];
   return (
     <div>
       <div className="flex flex-row">
@@ -114,11 +1164,98 @@ function Settings() {
         </div>
 
         <div className="dashboard-right">
-          <Header user={user} title={title.toUpperCase()} />
-          
+          <Header user={realUser} title={title.toUpperCase()} />
           <hr />
-              <ProjectTable columns={columns} data={data} />
-         
+          {message != "" && (
+            <Item.Alert
+              onClose={() => setMessage("")}
+              variant="filled"
+              color="info"
+            >
+              {message}
+            </Item.Alert>
+          )}
+          <div className="profile-picture flex flex-col justify-center items-center">
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <label htmlFor="icon-button-file">
+                <Input
+                  onChange={handleImage}
+                  accept="image/*"
+                  id="icon-button-file"
+                  type="file"
+                />
+                <IconButton
+                  color="primary"
+                  aria-label="upload picture"
+                  component="span"
+                >
+                  <Item.Avatar
+                    src={`https://roadzoftserver.xyz/uploads/avatar/${user.photos == null ? "" : user.photos.photo}`}
+                    style={{ height: 90, width: 90 }}
+                    variant="circular"
+                  />
+                  {uploadedImage != "" && (
+                    <Item.Avatar
+                      src={uploadedImage}
+                      style={{ height: 90, width: 90 }}
+                      variant="circular"
+                    />
+                  )}
+                </IconButton>
+              </label>
+            </Stack>
+            <p>Tap to add profile picture (optional)</p>
+            {photo != "" && (
+              <Item.Button
+                className="user-button"
+                onClick={addImage}
+                color="secondary"
+                variant="contained"
+              >
+                Upload Image
+              </Item.Button>
+            )}
+          </div>
+          {loading ? (
+            <Item.Box
+              className="flex justify-center items-center"
+              sx={{ display: "flex" }}
+            >
+              <Item.CircularProgress />
+            </Item.Box>
+          ) : (
+            <form className="">
+              <div className="flex flex-row justify-evenly items-center">
+                <div className="flex flex-col justify-center items-center">
+                  <div>
+                    
+                    <div className="my-3 flex flex-row justify-evenly items-center"></div>
+                    <div className="my-3 flex justify-evenly items-center">
+                      <TextField
+                        onChange={(e) => setPassword(e.target.value)}
+                        type="password"
+                        id="outlined-basic"
+                        label="Change Password"
+                        variant="outlined"
+                      />
+
+                    </div>
+                    <div className="my-3 flex flex-row justify-evenly items-center">
+                      <Item.Button
+                        className="user-button"
+                        onClick={updateUser}
+                        color="primary"
+                        variant="contained"
+                      >
+                        Change Password
+                      </Item.Button>
+                     
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </div>
