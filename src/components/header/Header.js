@@ -33,7 +33,7 @@ export default function Header({title, user}) {
                 <div>
                     <Link to={`/user-profile/${user.id}`} className="flex flex-row justify-evenly items-center">
                         <span className="mr-2">{user.name}</span>
-                        <Item.Avatar variant="circular" />
+                        <Item.Avatar variant="circular" src={`https://roadzoftserver.xyz/uploads/avatar/${user.photos == null ? "" : user.photos.photo}`}  />
                     </Link>
                     <div className="flex flex-row justify-evenly items-center">
                     <p className="text-left mr-7">{user.phone}</p>

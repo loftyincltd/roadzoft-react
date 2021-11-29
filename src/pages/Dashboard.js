@@ -140,18 +140,22 @@ function Dashboard() {
   const reportData = [
     {
       title: "Total",
+      color: "blue",
       data: reports.length,
     },
     {
       title: "Approved",
+      color: "green",
       data: reports.filter((report) => report.status === "Approved").length,
     },
     {
       title: "Pending",
+      color: "red",
       data: reports.filter((report) => report.status === "Pending").length,
     },
     {
       title: "Disapproved",
+      color: "black",
       data: reports.filter((report) => report.status === "Rejected").length,
     },
   ];
@@ -185,7 +189,8 @@ function Dashboard() {
                 {/* <h3 className="mx-5 mt-5 mb-1 font-bold text-center text-gray-700">
                 Users Per Project
               </h3> */}
-
+              <div>
+                <h5 className="text-center my-1 text-xl text-gray-700">Users per Project</h5>
                 <ResponsiveContainer width={500} height={300}>
                   <LineChart
                     stroke="#8884d8"
@@ -213,6 +218,9 @@ function Dashboard() {
                     />
                   </LineChart>
                 </ResponsiveContainer>
+                </div>
+                <div>
+                <h5 className="text-center my-1 text-xl text-gray-700">Reports per Project</h5>
                 <ResponsiveContainer width={500} height={300}>
                   <BarChart width={500} height={300} data={projects}>
                     <XAxis dataKey="title" stroke="#8884d8" />
@@ -222,6 +230,7 @@ function Dashboard() {
                     <Bar dataKey="users[0].reports.length" fill="#2c4c2c" barSize={30} />
                   </BarChart>
                 </ResponsiveContainer>
+                </div>
               </div>
             </div>
           )}
