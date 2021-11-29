@@ -68,7 +68,7 @@ function Dashboard() {
       },
     });
     const result = await response.json();
-    result && setReports(result.data);
+    result && setReports(result.data.data);
     setLoading(false);
     console.log("Reports", result);
   };
@@ -102,7 +102,8 @@ function Dashboard() {
       },
     });
     const result = await response.json();
-    result && setUsers(result.data);
+    console.log("Users Res", response)
+    result && setUsers(result.data.data);
     setLoading(false);
     console.log("Users", result);
   };
@@ -116,7 +117,7 @@ function Dashboard() {
     });
     const result = await response.json();
     setLoading(false);
-    result && setProjects(result);
+    result && setProjects(result.data);
     console.log("Projects", result);
   };
 

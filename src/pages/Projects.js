@@ -19,16 +19,18 @@ import ProjectModal from "../components/modals/ProjectModal";
 function Projects() {
   const history = useHistory();
   const [projects, setProjects] = React.useState([]);
+  const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+  const countPerPage = 20;
   const [loading, setLoading] = React.useState(true);
-  const [user, setUser] = React.useState({})
+  const [user, setUser] = React.useState({});
 
   const loadNew = () => {
     history.push("/create-project");
   };
 
   const getProjects = async () => {
-    
-    const response = await fetch(`${API_BASE}/projects`, {
+    const response = await fetch(`${API_BASE}/projects?page=${page}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -36,7 +38,8 @@ function Projects() {
     });
     const result = await response.json();
     setLoading(false);
-    result && setProjects(result);
+    result && setProjects(result.data);
+    setTotalPages(result.total)
     console.log("Projects", result);
   };
 
@@ -55,16 +58,19 @@ function Projects() {
 
   const getUser = async () => {
     try {
-      const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await fetch(
+        `${API_BASE}/user/${localStorage.getItem("user")}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       const result = await response.json();
       const data = result.data;
-      setUser(data)
+      setUser(data);
       console.log("User:", result);
     } catch (error) {
       console.log(error);
@@ -72,12 +78,14 @@ function Projects() {
   };
 
   React.useEffect(() => {
-    getUser()
     getProjects();
+  }, [page]);
+  React.useEffect(() => {
+    getUser();
   }, []);
 
   const title = "PROJECTS";
- 
+
   const columns = [
     {
       selector: "title",
@@ -117,16 +125,12 @@ function Projects() {
       sortable: true,
       ignoreRowClick: true,
       cell: (row) => {
-        return (
-          <ProjectModal description={row.description} />
-        );
+        return <ProjectModal description={row.description} />;
       },
     },
   ];
 
   const data = React.useMemo(() => projects);
-
-
 
   return (
     <div>
@@ -149,16 +153,22 @@ function Projects() {
          </div> */}
           <hr />
           {loading ? (
-            <Box className="flex justify-center items-center" sx={{ display: "flex" }}>
+            <Box
+              className="flex justify-center items-center"
+              sx={{ display: "flex" }}
+            >
               <CircularProgress />
             </Box>
           ) : (
-            
-           
-          <ProjectTable columns={columns} data={data} />
-        
+            <ProjectTable
+              columns={columns}
+              data={data}
+              total={totalPages}
+              countPerPage={countPerPage}
+              changePage={(page) => setPage(page)}
+            />
           )}
-          </div>
+        </div>
       </div>
     </div>
   );

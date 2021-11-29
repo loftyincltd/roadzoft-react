@@ -21,6 +21,9 @@ import ReportQuery from "../components/modals/ReportQuery";
 function Reports() {
   const [user, setUser] = React.useState({});
   const [reports, setReports] = React.useState([]);
+  const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+  const countPerPage = 20;
   const [filterTerm, setFilterTerm] = React.useState("");
   const [projects, setProjects] = React.useState([]);
   const [project, setProject] = React.useState("");
@@ -32,19 +35,18 @@ function Reports() {
   const handleStateChange = (event) => {
     console.log(event.target.value);
     setFilterTerm(event.target.value);
-    setUserstate(event.target.value)
+    setUserstate(event.target.value);
   };
   const handleProjectChange = (event) => {
     console.log(event.target.value);
     setFilterTerm(event.target.value);
-    setProject(event.target.value)
+    setProject(event.target.value);
   };
   const handleLgaChange = (event) => {
     console.log(event.target.value);
     setFilterTerm(event.target.value);
     setLga(event.target.value);
   };
-
 
   const title = "REPORTS";
   const states = [
@@ -1071,16 +1073,17 @@ function Reports() {
     const result = await response.json();
     getReports();
   };
-
+  /* https://roadzoftserver.xyz/api/reports?page=1 */
   const getReports = async () => {
-    const response = await fetch(`${API_BASE}/reports`, {
+    const response = await fetch(`${API_BASE}/reports?page=${page}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     const result = await response.json();
-    result && setReports(result.data);
+    result && setReports(result.data.data);
+    setTotalPages(result.data.total)
     setLoading(false);
     console.log("Reports", result);
   };
@@ -1107,7 +1110,6 @@ function Reports() {
   };
 
   const getProjects = async () => {
-    
     const response = await fetch(`${API_BASE}/projects`, {
       headers: {
         "Content-Type": "application/json",
@@ -1116,12 +1118,11 @@ function Reports() {
     });
     const result = await response.json();
     setLoading(false);
-    result && setProjects(result);
+    result && setProjects(result.data);
     console.log("Projects", result);
   };
 
   const getComments = async (uuid) => {
-    
     const response = await fetch(`${API_BASE}/queried/${uuid}`, {
       headers: {
         "Content-Type": "application/json",
@@ -1129,15 +1130,18 @@ function Reports() {
       },
     });
     const result = await response.json();
-    result && setCommentz(result);
+    result && setCommentz(result.data);
     console.log("Comments", result);
   };
 
   React.useEffect(() => {
     getUser();
     getReports();
-    getProjects()
+    getProjects();
   }, []);
+  React.useEffect(() => {
+    getReports();
+  }, [page]);
 
   const data = React.useMemo(() => reports);
 
@@ -1149,8 +1153,7 @@ function Reports() {
       "user.State",
       "user.lga",
       ["user.projects"],
-      "user.projects.title"
-      
+      "user.projects.title",
     ],
   });
   const results = fuse.search(filterTerm);
@@ -1161,22 +1164,24 @@ function Reports() {
     { label: "Message", key: "message" },
     { label: "Longitude", key: "longitude" },
     { label: "Latitude", key: "latitude" },
-    { label: "User", key: "user.name"},
+    { label: "User", key: "user.name" },
   ];
 
-
-  const csvData = filterTerm == "" ? data.map(row => ({
-    ...row,
-    users: JSON.stringify(row.users)
-  })) : filterResults.map(row => ({
-    ...row,
-    users: JSON.stringify(row.users)
-  }))
+  const csvData =
+    filterTerm == ""
+      ? data.map((row) => ({
+          ...row,
+          users: JSON.stringify(row.users),
+        }))
+      : filterResults.map((row) => ({
+          ...row,
+          users: JSON.stringify(row.users),
+        }));
 
   const csvReport = {
     data: csvData,
     headers: headers,
-    filename: `${Date.now()}_Project_Report.csv`
+    filename: `${Date.now()}_Project_Report.csv`,
   };
 
   const infos = [
@@ -1244,21 +1249,23 @@ function Reports() {
       cell: (row) => {
         return (
           <div>
-          <ReportModal
-            status={row.status}
-            photo1={`https://roadzoftserver.xyz/uploads/${row.photo_1}`}
-            photo2={`https://roadzoftserver.xyz/uploads/${row.photo_2}`}
-            photo3={`https://roadzoftserver.xyz/uploads/${row.photo_3}`}
-            photo4={`https://roadzoftserver.xyz/uploads/${row.photo_4}`}
-            latitude={row.latitude}
-            longitude={row.longitude}
-            approve={() => handleApprove(row.id)}
-            reject={() => handleReject(row.id)}
-            query={() => handleQuery(row.id)}
-            comments={() => getComments(row.uuid)}
-            commentz={commentz}
-          />
-          {row.status === "Queried" && <ReportQuery uuid={row.uuid} reportId={row.id} />}
+            <ReportModal
+              status={row.status}
+              photo1={`https://roadzoftserver.xyz/uploads/${row.photo_1}`}
+              photo2={`https://roadzoftserver.xyz/uploads/${row.photo_2}`}
+              photo3={`https://roadzoftserver.xyz/uploads/${row.photo_3}`}
+              photo4={`https://roadzoftserver.xyz/uploads/${row.photo_4}`}
+              latitude={row.latitude}
+              longitude={row.longitude}
+              approve={() => handleApprove(row.id)}
+              reject={() => handleReject(row.id)}
+              query={() => handleQuery(row.id)}
+              comments={() => getComments(row.uuid)}
+              commentz={commentz}
+            />
+            {row.status === "Queried" && (
+              <ReportQuery uuid={row.uuid} reportId={row.id} />
+            )}
           </div>
         );
       },
@@ -1349,11 +1356,20 @@ function Reports() {
                 </Select>
               </FormControl>
             </Box>
-            
-            <CSVLink className="flex flex-row" {...csvReport}> <Icons.Download />  Export Data</CSVLink>
+
+            <CSVLink className="flex flex-row" {...csvReport}>
+              {" "}
+              <Icons.Download /> Export Data
+            </CSVLink>
           </div>
           <hr />
-          <ProjectTable columns={columns} data={filterTerm != "" ? filterResults : data} />
+          <ProjectTable
+            columns={columns}
+            data={filterTerm != "" ? filterResults : data}
+            total={totalPages}
+            countPerPage={countPerPage}
+            changePage={(page) => setPage(page)}
+          />
         </div>
       </div>
     </div>

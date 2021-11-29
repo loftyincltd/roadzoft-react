@@ -16,7 +16,7 @@ export default function LargeMessagesCard({title, link}) {
       },
     });
     const result = await response.json();
-    result && setMessages(result.data);
+    result && setMessages(result.data.data);
     setLoading(false);
     console.log("Messages", result);
   };

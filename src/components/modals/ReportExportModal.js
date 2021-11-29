@@ -39,7 +39,7 @@ export default function ExportModal() {
       },
     });
     const result = await response.json();
-    result && setProjects(result);
+    result && setProjects(result.data);
     console.log("Projects", result);
   };
 

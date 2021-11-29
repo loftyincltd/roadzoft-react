@@ -18,29 +18,30 @@ import Fuse from "fuse.js";
 import * as Icons from "react-feather";
 import ReportQuery from "../components/modals/ReportQuery";
 import InquiryModal from "../components/modals/InquiryModal";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 function Inquiry() {
   const [user, setUser] = React.useState({});
   const [inquiries, setInquiries] = React.useState([]);
+  const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+  const countPerPage = 20;
   const [filterTerm, setFilterTerm] = React.useState("");
   const [loading, setLoading] = React.useState(true);
-  const history = useHistory()
- 
-
-
+  const history = useHistory();
 
   const title = "Inquiry";
 
   const getInquiry = async () => {
-    const response = await fetch(`${API_BASE}/inquiries`, {
+    const response = await fetch(`${API_BASE}/inquiries?page=${page}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     const result = await response.json();
-    result && setInquiries(result.data);
+    result && setInquiries(result.data.data);
+    setTotalPages(result.data.total)
     setLoading(false);
     console.log("Inquiry", result);
   };
@@ -66,12 +67,13 @@ function Inquiry() {
     }
   };
 
-
-
   React.useEffect(() => {
     getInquiry();
-    getUser()
+    getUser();
   }, []);
+  React.useEffect(() => {
+    getInquiry();
+  }, [page]);
 
   const data = React.useMemo(() => inquiries);
 
@@ -83,8 +85,7 @@ function Inquiry() {
       "user.State",
       "user.lga",
       ["user.projects"],
-      "user.projects.title"
-      
+      "user.projects.title",
     ],
   });
   const results = fuse.search(filterTerm);
@@ -95,22 +96,24 @@ function Inquiry() {
     { label: "Message", key: "message" },
     { label: "Longitude", key: "longitude" },
     { label: "Latitude", key: "latitude" },
-    { label: "User", key: "user.name"},
+    { label: "User", key: "user.name" },
   ];
 
-
-  const csvData = filterTerm == "" ? data.map(row => ({
-    ...row,
-    users: JSON.stringify(row.users)
-  })) : filterResults.map(row => ({
-    ...row,
-    users: JSON.stringify(row.users)
-  }))
+  const csvData =
+    filterTerm == ""
+      ? data.map((row) => ({
+          ...row,
+          users: JSON.stringify(row.users),
+        }))
+      : filterResults.map((row) => ({
+          ...row,
+          users: JSON.stringify(row.users),
+        }));
 
   const csvReport = {
     data: csvData,
     headers: headers,
-    filename: `${Date.now()}_Project_Report.csv`
+    filename: `${Date.now()}_Project_Report.csv`,
   };
 
   const modalcolumns = [
@@ -125,19 +128,23 @@ function Inquiry() {
       },
     },
     {
-        selector: "id",
-        name: "",
-        sortable: true,
-        ignoreRowClick: true,
-        cell: (row) => {
-          return <Item.Button onClick={() => history.push(row.user_id)} color="primary" variant="outlined">
-          View User
-        </Item.Button>;
-        },
+      selector: "id",
+      name: "",
+      sortable: true,
+      ignoreRowClick: true,
+      cell: (row) => {
+        return (
+          <Item.Button
+            onClick={() => history.push(row.user_id)}
+            color="primary"
+            variant="outlined"
+          >
+            View User
+          </Item.Button>
+        );
       },
-  ]
-
- 
+    },
+  ];
 
   const columns = [
     {
@@ -169,7 +176,7 @@ function Inquiry() {
       cell: (row) => {
         return (
           <div>
-          <InquiryModal message={row.message} userId={row.user_id} />
+            <InquiryModal message={row.message} userId={row.user_id} />
           </div>
         );
       },
@@ -191,11 +198,20 @@ function Inquiry() {
           <hr />
           <div className="my-3 flex flex-row justify-evenly items-center">
             <h3>Filter: </h3>
-           
-            <CSVLink className="flex flex-row" {...csvReport}> <Icons.Download />  Export Data</CSVLink>
+
+            <CSVLink className="flex flex-row" {...csvReport}>
+              {" "}
+              <Icons.Download /> Export Data
+            </CSVLink>
           </div>
           <hr />
-          <ProjectTable columns={columns} data={filterTerm != "" ? filterResults : data} />
+          <ProjectTable
+            columns={columns}
+            data={filterTerm != "" ? filterResults : data}
+            total={totalPages}
+            countPerPage={countPerPage}
+            changePage={(page) => setPage(page)}
+          />
         </div>
       </div>
     </div>

@@ -21,6 +21,9 @@ import * as Icons from "react-feather";
 function Users() {
   const history = useHistory();
   const [users, setUsers] = React.useState([]);
+  const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+  const countPerPage = 20;
   const [loading, setLoading] = React.useState(true);
   const [projects, setProjects] = React.useState([]);
   const [project, setProject] = React.useState("");
@@ -29,16 +32,15 @@ function Users() {
   const [state, setUserstate] = React.useState("");
   const [lga, setLga] = React.useState("");
 
-
   const handleStateChange = (event) => {
     console.log(event.target.value);
     setFilterTerm(event.target.value);
-    setUserstate(event.target.value)
+    setUserstate(event.target.value);
   };
   const handleProjectChange = (event) => {
     console.log(event.target.value);
     setFilterTerm(event.target.value);
-    setProject(event.target.value)
+    setProject(event.target.value);
   };
   const handleLgaChange = (event) => {
     console.log(event.target.value);
@@ -47,30 +49,34 @@ function Users() {
   };
 
   const getUsers = async () => {
-    const response = await fetch(`${API_BASE}/users`, {
+    const response = await fetch(`${API_BASE}/users?page=${page}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     const result = await response.json();
-    result && setUsers(result.data);
+    result && setUsers(result.data.data);
+    setTotalPages(result.data.total)
     setLoading(false);
     console.log("Users", result);
   };
 
   const getUser = async () => {
     try {
-      const response = await fetch(`${API_BASE}/user/${localStorage.getItem("user")}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await fetch(
+        `${API_BASE}/user/${localStorage.getItem("user")}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       const result = await response.json();
       const data = result.data;
-      setUser(data)
+      setUser(data);
       console.log("User:", result);
     } catch (error) {
       console.log(error);
@@ -91,7 +97,6 @@ function Users() {
   };
 
   const getProjects = async () => {
-    
     const response = await fetch(`${API_BASE}/projects`, {
       headers: {
         "Content-Type": "application/json",
@@ -100,15 +105,17 @@ function Users() {
     });
     const result = await response.json();
     setLoading(false);
-    result && setProjects(result);
+    result && setProjects(result.data);
     console.log("Projects", result);
   };
   React.useEffect(() => {
     getUsers();
     getUser();
     getProjects();
-    
   }, []);
+  React.useEffect(() => {
+    getUsers();
+  }, [page]);
 
   const states = [
     {
@@ -1107,13 +1114,7 @@ function Users() {
   const fuse = new Fuse(data, {
     threshold: 0.5,
     includeMatches: true,
-    keys: [
-      "State",
-      "lga",
-      ["projects"],
-      "projects.title"
-      
-    ],
+    keys: ["State", "lga", ["projects"], "projects.title"],
   });
   const results = fuse.search(filterTerm);
   console.log("result", results);
@@ -1122,22 +1123,24 @@ function Users() {
   const headers = [
     { label: "Name", key: "name" },
     { label: "State", key: "State" },
-    { label: "Lga", key: "lga"},
+    { label: "Lga", key: "lga" },
   ];
 
-
-  const csvData = filterTerm == "" ? data.map(row => ({
-    ...row,
-    users: JSON.stringify(row.users)
-  })) : filterResults.map(row => ({
-    ...row,
-    users: JSON.stringify(row.users)
-  }))
+  const csvData =
+    filterTerm == ""
+      ? data.map((row) => ({
+          ...row,
+          users: JSON.stringify(row.users),
+        }))
+      : filterResults.map((row) => ({
+          ...row,
+          users: JSON.stringify(row.users),
+        }));
 
   const csvReport = {
     data: csvData,
     headers: headers,
-    filename: `${Date.now()}_Project_Report.csv`
+    filename: `${Date.now()}_Project_Report.csv`,
   };
 
   const handleNew = () => {
@@ -1147,7 +1150,6 @@ function Users() {
     history.push(`/user-profile/${id}`);
   };
   const title = "USERS";
-  
 
   const columns = [
     { selector: "name", name: "Full Name", sortable: true },
@@ -1201,7 +1203,7 @@ function Users() {
             user={user}
           />
           <hr />
-           <div className="mb-3 mt-10 flex flex-row justify-evenly items-center">
+          <div className="mb-3 mt-10 flex flex-row justify-evenly items-center">
             <h3>Filter: </h3>
             <Box sx={{ minWidth: 200 }}>
               <FormControl fullWidth>
@@ -1267,8 +1269,11 @@ function Users() {
                 </Select>
               </FormControl>
             </Box>
-           
-            <CSVLink className="flex flex-row" {...csvReport}> <Icons.Download />  Export Data</CSVLink>
+
+            <CSVLink className="flex flex-row" {...csvReport}>
+              {" "}
+              <Icons.Download /> Export Data
+            </CSVLink>
           </div>
           <hr />
           {loading ? (
@@ -1279,7 +1284,13 @@ function Users() {
               <Item.CircularProgress />
             </Item.Box>
           ) : (
-            <ProjectTable columns={columns} data={filterTerm != "" ? filterResults : data} />
+            <ProjectTable
+              columns={columns}
+              data={filterTerm != "" ? filterResults : data}
+              total={totalPages}
+              countPerPage={countPerPage}
+              changePage={(page) => setPage(page)}
+            />
           )}
         </div>
       </div>

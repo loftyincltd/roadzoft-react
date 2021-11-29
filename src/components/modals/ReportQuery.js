@@ -41,7 +41,7 @@ export default function ReportQuery({
       },
     });
     const result = await response.json();
-    result && setComments(result.data);
+    result && setComments(result.data.data);
     console.log("Comments", result);
   };
 

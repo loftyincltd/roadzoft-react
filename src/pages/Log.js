@@ -5,7 +5,7 @@ import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
 import { API_BASE } from "../utils/Api";
 import ProjectTable from "../components/tables/ProjectTable";
-import Moment from 'react-moment';
+import Moment from "react-moment";
 import * as Item from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -17,12 +17,17 @@ function Log() {
   const [logUser, setLogUser] = React.useState({});
   const [userLog, setUserLog] = React.useState([]);
   const [projectLog, setProjectLog] = React.useState([]);
+  const [page, setPage] = React.useState(1);
+  const [pageProject, setPageProject] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+  const [totalProjectPages, setProjectTotalPages] = React.useState(1);
+  const countPerPage = 20;
   const [loading, setLoading] = React.useState(true);
   const title = "Logs";
 
   const getUserLogs = async () => {
-    setLoading(true)
-    const response = fetch(`${API_BASE}/logs/users`, {
+    setLoading(true);
+    const response = fetch(`${API_BASE}/logs/users?page=${page}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -30,14 +35,15 @@ function Log() {
       },
     });
     const result = await (await response).json();
-    setUserLog(result.data);
-    setLoading(false)
+    setUserLog(result.data.data);
+    setTotalPages(result.data.total)
+    setLoading(false);
     console.log("User Log", result);
   };
 
   const getProjectLogs = async () => {
-    setLoading(true)
-    const response = fetch(`${API_BASE}/logs/projects`, {
+    setLoading(true);
+    const response = fetch(`${API_BASE}/logs/projects?page=${page}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -45,8 +51,9 @@ function Log() {
       },
     });
     const result = await (await response).json();
-    setProjectLog(result.data);
-    setLoading(false)
+    setProjectLog(result.data.data);
+    setProjectTotalPages(result.data.total)
+    setLoading(false);
     console.log("Project Log", result);
   };
   const columns = [
@@ -55,12 +62,16 @@ function Log() {
       name: "User",
       sortable: true,
       cell: (row) => {
-        return (<div>
-          <h2>{row.user.name}</h2>
-            <h2>{row.user.lga}/{row.user.State}</h2>
+        return (
+          <div>
+            <h2>{row.user.name}</h2>
+            <h2>
+              {row.user.lga}/{row.user.State}
+            </h2>
             <h2>{row.user.phone}</h2>
             <h2>{row.user.email}</h2>
-        </div>);
+          </div>
+        );
       },
     },
     {
@@ -68,7 +79,11 @@ function Log() {
       name: "Affected Model",
       sortable: true,
       cell: (row) => {
-        return row.affected_model != null && <UserDialog model={row.affected_model} />;
+        return (
+          row.affected_model != null && (
+            <UserDialog model={row.affected_model} />
+          )
+        );
       },
     },
     { selector: "description", name: "Activity", sortable: true },
@@ -89,12 +104,16 @@ function Log() {
       name: "User",
       sortable: true,
       cell: (row) => {
-        return (<div>
-          <h2>{row.user.name}</h2>
-            <h2>{row.user.lga}/{row.user.State}</h2>
+        return (
+          <div>
+            <h2>{row.user.name}</h2>
+            <h2>
+              {row.user.lga}/{row.user.State}
+            </h2>
             <h2>{row.user.phone}</h2>
             <h2>{row.user.email}</h2>
-        </div>);
+          </div>
+        );
       },
     },
     {
@@ -102,7 +121,11 @@ function Log() {
       name: "Affected Model",
       sortable: true,
       cell: (row) => {
-        return row.affected_model != null && <ProjectDialog model={row.affected_model} />;
+        return (
+          row.affected_model != null && (
+            <ProjectDialog model={row.affected_model} />
+          )
+        );
       },
     },
     { selector: "description", name: "Activity", sortable: true },
@@ -140,9 +163,13 @@ function Log() {
 
   React.useEffect(() => {
     getUser();
-    getUserLogs();
-    getProjectLogs();
   }, []);
+  React.useEffect(() => {
+    getUserLogs();
+  }, [page]);
+  React.useEffect(() => {
+    getProjectLogs();
+  }, [pageProject]);
   return (
     <div>
       <div className="flex flex-row">
@@ -154,16 +181,33 @@ function Log() {
           <Header user={user} title={title.toUpperCase()} />
 
           <div className="main-items mx-5">
-            {loading ? 
-            (<Box className="flex justify-center items-center" sx={{ display: "flex" }}>
-            <CircularProgress />
-          </Box>) :
-            (<div>
-              <h3>User Log</h3>
-              <ProjectTable data={userLog} columns={columns} />
-              <h3>Project Log</h3>
-              <ProjectTable data={projectLog} columns={projcolumns} />
-            </div>)}
+            {loading ? (
+              <Box
+                className="flex justify-center items-center"
+                sx={{ display: "flex" }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
+              <div>
+                <h3>User Log</h3>
+                <ProjectTable
+                  data={userLog}
+                  columns={columns}
+                  total={totalPages}
+                  countPerPage={countPerPage}
+                  changePage={(page) => setPage(page)}
+                />
+                <h3>Project Log</h3>
+                <ProjectTable
+                  data={projectLog}
+                  columns={projcolumns}
+                  total={totalProjectPages}
+                  countPerPage={countPerPage}
+                  changePage={(pageProject) => setPage(pageProject)}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
