@@ -17,6 +17,7 @@ import Box from "@mui/material/Box";
 import { CSVLink } from "react-csv";
 import Fuse from "fuse.js";
 import * as Icons from "react-feather";
+import PaginationComponent from "../components/tables/Pagination";
 
 function Users() {
   const history = useHistory();
@@ -31,6 +32,10 @@ function Users() {
   const [filterTerm, setFilterTerm] = React.useState("");
   const [state, setUserstate] = React.useState("");
   const [lga, setLga] = React.useState("");
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
 
   const handleStateChange = (event) => {
     console.log(event.target.value);
@@ -57,8 +62,8 @@ function Users() {
     });
     const result = await response.json();
     result && setUsers(result.data.data);
-    setTotalPages(result.data.total);
-    setCountPerPage(result.data.per_page)
+    setTotalPages(result.data.last_page);
+    setCountPerPage(result.data.per_page);
     setLoading(false);
     console.log("Users", result);
   };
@@ -1287,13 +1292,19 @@ function Users() {
               <Item.CircularProgress />
             </Item.Box>
           ) : (
-            <ProjectTable
-              columns={columns}
-              data={filterTerm != "" ? filterResults : data}
-              total={totalPages}
-              countPerPage={countPerPage}
-              changePage={(page) => setPage(page)}
-            />
+            <>
+              <ProjectTable
+                columns={columns}
+                data={filterTerm != "" ? filterResults : data}
+                total={countPerPage}
+              />
+              <PaginationComponent
+                page={page}
+                defaultPage={page}
+                count={totalPages}
+                handleChange={handleChange}
+              />
+            </>
           )}
         </div>
       </div>

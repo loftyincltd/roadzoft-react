@@ -10,6 +10,7 @@ import NewMessage from "../components/modals/NewMessage";
 import ReadMessage from "../components/modals/ReadMessage";
 import Moment from "react-moment";
 import { useHistory } from "react-router-dom";
+import PaginationComponent from "../components/tables/Pagination";
 
 function Messages() {
   const history = useHistory();
@@ -24,6 +25,10 @@ function Messages() {
   const [newbody, setBody] = React.useState("");
   const title = "Messages";
 
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
   const getMessages = async () => {
     const response = await fetch(`${API_BASE}/messages?page=${page}`, {
       headers: {
@@ -33,7 +38,7 @@ function Messages() {
     });
     const result = await response.json();
     result && setMessages(result.data.data);
-    setTotalPages(result.data.total)
+    setTotalPages(result.data.last_page);
     setLoading(false);
     console.log("Messages", result);
   };
@@ -93,7 +98,6 @@ function Messages() {
 
   React.useEffect(() => {
     getUser();
-    getMessages();
   }, []);
   React.useEffect(() => {
     getMessages();
@@ -121,9 +125,13 @@ function Messages() {
               <ProjectTable
                 data={messages}
                 columns={columns}
-                total={totalPages}
-                countPerPage={countPerPage}
-                changePage={(page) => setPage(page)}
+                total={countPerPage}
+              />
+              <PaginationComponent
+                page={page}
+                defaultPage={page}
+                count={totalPages}
+                handleChange={handleChange}
               />
             </div>
           </div>

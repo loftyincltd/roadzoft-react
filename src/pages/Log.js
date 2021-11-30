@@ -11,6 +11,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import UserDialog from "../components/dialog/LogDialog";
 import ProjectDialog from "../components/dialog/ProjectLog";
+import PaginationComponent from "../components/tables/Pagination";
 
 function Log() {
   const [user, setUser] = React.useState({});
@@ -25,8 +26,16 @@ function Log() {
   const [loading, setLoading] = React.useState(true);
   const title = "Logs";
 
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
+  const handleChangeProject = (event, value) => {
+    setPageProject(value);
+  };
+
   const getUserLogs = async () => {
-    setLoading(true);
+    
     const response = fetch(`${API_BASE}/logs/users?page=${page}`, {
       headers: {
         "Content-Type": "application/json",
@@ -36,15 +45,14 @@ function Log() {
     });
     const result = await (await response).json();
     setUserLog(result.data.data);
-    setTotalPages(result.data.total)
-    setCountPerPage(result.data.per_page)
-    setLoading(false);
+    setTotalPages(result.data.last_page);
+    setCountPerPage(result.data.per_page);
+   
     console.log("User Log", result);
   };
 
   const getProjectLogs = async () => {
-    setLoading(true);
-    const response = fetch(`${API_BASE}/logs/projects?page=${page}`, {
+    const response = fetch(`${API_BASE}/logs/projects?page=${pageProject}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -53,9 +61,8 @@ function Log() {
     });
     const result = await (await response).json();
     setProjectLog(result.data.data);
-    setProjectTotalPages(result.data.total)
+    setProjectTotalPages(result.data.last_page);
     setCountPerPage(result.data.per_page);
-    setLoading(false);
     console.log("Project Log", result);
   };
   const columns = [
@@ -157,6 +164,7 @@ function Log() {
       const result = await response.json();
       const data = result.data;
       setUser(result.data);
+      setLoading(false)
       console.log("User:", result);
     } catch (error) {
       console.log(error);
@@ -196,17 +204,25 @@ function Log() {
                 <ProjectTable
                   data={userLog}
                   columns={columns}
-                  total={totalPages}
-                  countPerPage={countPerPage}
-                  changePage={(page) => setPage(page)}
+                  total={countPerPage}
+                />
+                <PaginationComponent
+                  page={page}
+                  defaultPage={page}
+                  count={totalPages}
+                  handleChange={handleChange}
                 />
                 <h3>Project Log</h3>
                 <ProjectTable
                   data={projectLog}
                   columns={projcolumns}
-                  total={totalProjectPages}
-                  countPerPage={countPerPage}
-                  changePage={(pageProject) => setPage(pageProject)}
+                  total={countPerPage}
+                />
+                <PaginationComponent
+                  page={pageProject}
+                  defaultPage={pageProject}
+                  count={totalProjectPages}
+                  handleChange={handleChangeProject}
                 />
               </div>
             )}

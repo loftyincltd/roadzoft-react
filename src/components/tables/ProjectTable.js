@@ -7,15 +7,16 @@ export default function ProjectTable({ data, columns, changePage, countPerPage, 
       <DataTable
         columns={columns}
         data={data}
-        pagination
+        pagination={false}
         highlightOnHover
-        paginationServer
+        paginationTotalRows={total}
+       /*  paginationServer
         paginationTotalRows={total}
         paginationPerPage={countPerPage}
         paginationComponentOptions={{
           noRowsPerPage: true,
         }}
-        onChangePage={changePage}
+        onChangePage={changePage} */
       />
     </div>
   );

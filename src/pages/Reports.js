@@ -6,6 +6,7 @@ import Sidebar from "../components/sidebar/Sidebar";
 import * as Item from "@mui/material";
 import Moment from "react-moment";
 import ProjectTable from "../components/tables/ProjectTable";
+import PaginationComponent from "../components/tables/Pagination";
 import { API_BASE } from "../utils/Api";
 import ReportModal from "../components/modals/ReportModal";
 import InputLabel from "@mui/material/InputLabel";
@@ -22,7 +23,7 @@ function Reports() {
   const [user, setUser] = React.useState({});
   const [reports, setReports] = React.useState([]);
   const [page, setPage] = React.useState(1);
-  const [totalPages, setTotalPages] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(2);
   const [countPerPage, setCountPerPage] = React.useState(10);
   const [filterTerm, setFilterTerm] = React.useState("");
   const [projects, setProjects] = React.useState([]);
@@ -31,6 +32,10 @@ function Reports() {
   const [state, setUserstate] = React.useState("");
   const [lga, setLga] = React.useState("");
   const [commentz, setCommentz] = React.useState([]);
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
 
   const handleStateChange = (event) => {
     console.log(event.target.value);
@@ -1073,7 +1078,7 @@ function Reports() {
     const result = await response.json();
     getReports();
   };
-  /* https://roadzoftserver.xyz/api/reports?page=1 */
+ 
   const getReports = async () => {
     const response = await fetch(`${API_BASE}/reports?page=${page}`, {
       headers: {
@@ -1083,8 +1088,8 @@ function Reports() {
     });
     const result = await response.json();
     result && setReports(result.data.data);
-    setTotalPages(result.data.total)
-    setCountPerPage(result.data.per_page)
+    setTotalPages(result.data.last_page);
+    setCountPerPage(result.data.per_page);
     setLoading(false);
     console.log("Reports", result);
   };
@@ -1137,7 +1142,6 @@ function Reports() {
 
   React.useEffect(() => {
     getUser();
-    getReports();
     getProjects();
   }, []);
   React.useEffect(() => {
@@ -1371,9 +1375,13 @@ function Reports() {
           <ProjectTable
             columns={columns}
             data={filterTerm != "" ? filterResults : data}
-            total={totalPages}
-            countPerPage={countPerPage}
-            changePage={(page) => setPage(page)}
+            total={countPerPage}
+          />
+          <PaginationComponent
+            page={page}
+            defaultPage={page}
+            count={totalPages}
+            handleChange={handleChange}
           />
         </div>
       </div>

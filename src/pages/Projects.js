@@ -15,6 +15,7 @@ import { CSVLink } from "react-csv";
 import { useHistory } from "react-router-dom";
 import ExportModal from "../components/modals/ExportModal";
 import ProjectModal from "../components/modals/ProjectModal";
+import PaginationComponent from "../components/tables/Pagination";
 
 function Projects() {
   const history = useHistory();
@@ -24,6 +25,10 @@ function Projects() {
   const [countPerPage, setCountPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(true);
   const [user, setUser] = React.useState({});
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
 
   const loadNew = () => {
     history.push("/create-project");
@@ -39,8 +44,8 @@ function Projects() {
     const result = await response.json();
     setLoading(false);
     result && setProjects(result.data);
-    setTotalPages(result.total);
-    setCountPerPage(result.data.per_page)
+    setTotalPages(result.last_page);
+    setCountPerPage(result.data.per_page);
     console.log("Projects", result);
   };
 
@@ -163,13 +168,19 @@ function Projects() {
               <CircularProgress />
             </Box>
           ) : (
-            <ProjectTable
-              columns={columns}
-              data={data}
-              total={totalPages}
-              countPerPage={countPerPage}
-              changePage={(page) => setPage(page)}
-            />
+            <>
+              <ProjectTable
+                columns={columns}
+                data={data}
+                total={countPerPage}
+              />
+              <PaginationComponent
+                page={page}
+                defaultPage={page}
+                count={totalPages}
+                handleChange={handleChange}
+              />
+            </>
           )}
         </div>
       </div>

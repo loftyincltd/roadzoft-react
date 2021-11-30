@@ -19,6 +19,7 @@ import * as Icons from "react-feather";
 import ReportQuery from "../components/modals/ReportQuery";
 import InquiryModal from "../components/modals/InquiryModal";
 import { useHistory } from "react-router-dom";
+import PaginationComponent from "../components/tables/Pagination";
 
 function Inquiry() {
   const [user, setUser] = React.useState({});
@@ -32,6 +33,10 @@ function Inquiry() {
 
   const title = "Inquiry";
 
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
   const getInquiry = async () => {
     const response = await fetch(`${API_BASE}/inquiries?page=${page}`, {
       headers: {
@@ -41,7 +46,7 @@ function Inquiry() {
     });
     const result = await response.json();
     result && setInquiries(result.data.data);
-    setTotalPages(result.data.total)
+    setTotalPages(result.data.last_page);
     setLoading(false);
     console.log("Inquiry", result);
   };
@@ -68,7 +73,6 @@ function Inquiry() {
   };
 
   React.useEffect(() => {
-    getInquiry();
     getUser();
   }, []);
   React.useEffect(() => {
@@ -208,9 +212,13 @@ function Inquiry() {
           <ProjectTable
             columns={columns}
             data={filterTerm != "" ? filterResults : data}
-            total={totalPages}
-            countPerPage={countPerPage}
-            changePage={(page) => setPage(page)}
+            total={countPerPage}
+          />
+          <PaginationComponent
+            page={page}
+            defaultPage={page}
+            count={totalPages}
+            handleChange={handleChange}
           />
         </div>
       </div>
