@@ -11,7 +11,6 @@ export default function PaginationComponent({count, page, handleChange, defaultP
         onChange={handleChange}
         defaultPage={defaultPage}
         showFirstButton
-        showLastButton
       />
     </Stack>
   );
