@@ -160,6 +160,21 @@ function Dashboard() {
     },
   ];
 
+  const CustomTooltip = () => {
+    return (
+      <div className="custom-tooltip">
+        <p className="label">Users Per Project</p>
+      </div>
+    );
+  };
+  const CustomTooltip2 = () => {
+    return (
+      <div className="custom-tooltip">
+        <p className="label">Reports Per Project</p>
+      </div>
+    );
+  };
+
   return (
     <div>
       <div className="flex flex-row">
@@ -189,47 +204,55 @@ function Dashboard() {
                 {/* <h3 className="mx-5 mt-5 mb-1 font-bold text-center text-gray-700">
                 Users Per Project
               </h3> */}
-              <div>
-                <h5 className="text-center my-1 text-xl text-gray-700">Users per Project</h5>
-                <ResponsiveContainer width={500} height={300}>
-                  <LineChart
-                    stroke="#8884d8"
-                    width={500}
-                    height={300}
-                    data={projects}
-                    margin={{
-                      top: 5,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="title" stroke="#8884d8" />
+                <div>
+                  <h5 className="text-center my-1 text-xl text-gray-700">
+                    Users per Project
+                  </h5>
+                  <ResponsiveContainer width={500} height={300}>
+                    <LineChart
+                      stroke="#8884d8"
+                      width={500}
+                      height={300}
+                      data={projects}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="title" stroke="#8884d8" />
 
-                    <YAxis stroke="#8884d8" />
-                    <Tooltip />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="users.length"
-                      stroke="#2c4c2c"
-                      activeDot={{ r: 8 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+                      <YAxis stroke="#8884d8" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Line
+                        type="monotone"
+                        dataKey="users.length"
+                        stroke="#2c4c2c"
+                        activeDot={{ r: 8 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
                 <div>
-                <h5 className="text-center my-1 text-xl text-gray-700">Reports per Project</h5>
-                <ResponsiveContainer width={500} height={300}>
-                  <BarChart width={500} height={300} data={projects}>
-                    <XAxis dataKey="title" stroke="#8884d8" />
-                    <YAxis />
-                    <Tooltip />
-                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                    <Bar dataKey="users[0].reports.length" fill="#2c4c2c" barSize={30} />
-                  </BarChart>
-                </ResponsiveContainer>
+                  <h5 className="text-center my-1 text-xl text-gray-700">
+                    Reports per Project
+                  </h5>
+                  <ResponsiveContainer width={500} height={300}>
+                    <BarChart width={500} height={300} data={projects}>
+                      <XAxis dataKey="title" stroke="#8884d8" />
+                      <YAxis />
+                      <Tooltip content={<CustomTooltip2 />}  />
+                      <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                      <Bar
+                        dataKey="users[0].reports.length"
+                        fill="#2c4c2c"
+                        barSize={30}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </div>

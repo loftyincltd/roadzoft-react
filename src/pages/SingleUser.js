@@ -111,10 +111,8 @@ function SingleUser() {
 
   //Update User account
   const updateUser = async () => {
-    //const dobYear = date.getFullYear();
-    const response = await fetch(
-      `${API_BASE}/user/update/${userId}`,
-      {
+    if (email === user.email && phone === user.phone) {
+      const response = await fetch(`${API_BASE}/user/update/${userId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -127,18 +125,12 @@ function SingleUser() {
           lga,
           dob: date,
         }),
-      }
-    );
-    const result = await response.json();
-    setMessage(result.message);
-    console.log("Register", result);
-  };
-
-  const updateEmail = async () => {
-    //const dobYear = date.getFullYear();
-    const response = await fetch(
-      `${API_BASE}/user/update/${userId}`,
-      {
+      });
+      const result = await response.json();
+      setMessage(result.message);
+      console.log("Register", result);
+    } else if (email === user.email && phone !== user.phone) {
+      const response = await fetch(`${API_BASE}/user/update/${userId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -146,10 +138,52 @@ function SingleUser() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
-          email,
+          name,
+          state,
+          lga,
+          phone,
+          dob: date,
         }),
-      }
-    );
+      });
+      const result = await response.json();
+      setMessage(result.message);
+      console.log("Register", result);
+    } else if (email !== user.email && phone !== user.phone) {
+      const response = await fetch(`${API_BASE}/user/update/${userId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          name,
+          state,
+          lga,
+          email,
+          phone,
+          dob: date,
+        }),
+      });
+      const result = await response.json();
+      setMessage(result.message);
+      console.log("Register", result);
+    }
+  };
+
+  const updateEmail = async () => {
+    //const dobYear = date.getFullYear();
+    const response = await fetch(`${API_BASE}/user/update/${userId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        email,
+      }),
+    });
     const result = await response.json();
     setMessage(result.message);
     console.log("Register", result);
@@ -157,20 +191,17 @@ function SingleUser() {
 
   const updatePhone = async () => {
     //const dobYear = date.getFullYear();
-    const response = await fetch(
-      `${API_BASE}/user/update/${userId}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          phone,
-        }),
-      }
-    );
+    const response = await fetch(`${API_BASE}/user/update/${userId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        phone,
+      }),
+    });
     const result = await response.json();
     setMessage(result.message);
     console.log("Register", result);
@@ -209,16 +240,13 @@ function SingleUser() {
   //Get user reports
   const getUserReports = async () => {
     try {
-      const response = await fetch(
-        `${API_BASE}/user/${userId}/reports`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await fetch(`${API_BASE}/user/${userId}/reports`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       const result = await response.json();
       setUserReports(result.data.data);
       console.log("Reports", result);
@@ -1411,11 +1439,18 @@ function SingleUser() {
     { selector: "title", name: "Projects", sortable: true },
   ];
   const reportcolumns = [
-    { selector: "message", name: "Reports", sortable: true, cell: (row) => {
-      return (
-        row.message == null ? <span>N/A</span> : <span>{row.message}</span>
-      )
-    } },
+    {
+      selector: "message",
+      name: "Reports",
+      sortable: true,
+      cell: (row) => {
+        return row.message == null ? (
+          <span>N/A</span>
+        ) : (
+          <span>{row.message}</span>
+        );
+      },
+    },
     {
       selector: "latitude",
       name: "Coordinates",
@@ -1633,25 +1668,27 @@ function SingleUser() {
                       >
                         Update User
                       </Item.Button>
-                      <Item.Button
+                      {/* <Item.Button
                         className="user-button"
                         onClick={updateEmail}
                         color="primary"
                         variant="contained"
                       >
                         Update Email
-                      </Item.Button>
-                      <Item.Button
+                      </Item.Button> */}
+                     {/*  <Item.Button
                         className="user-button"
                         onClick={updatePhone}
                         color="primary"
                         variant="contained"
                       >
                         Update Phone
-                      </Item.Button>
+                      </Item.Button> */}
                     </div>
                   </div>
-                  <ProjectTable columns={rolecolumns} data={userRoles} />
+                  <div style={{ minWidth: "100%" }}>
+                    <ProjectTable columns={rolecolumns} data={userRoles} />
+                  </div>
                 </div>
 
                 <div className="pt-20">
@@ -1718,7 +1755,6 @@ function SingleUser() {
                   </div>
                   <ProjectTable columns={reportcolumns} data={userReports} />
                   <ProjectTable columns={projectcolumns} data={projects} />
-                  
                 </div>
               </div>
             </form>

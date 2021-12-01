@@ -22,6 +22,7 @@ import DateTimePicker from "@mui/lab/DateTimePicker";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
 import { API_BASE } from "../utils/Api";
+import { useHistory } from "react-router-dom";
 
 const Input = styled("input")({
   display: "none",
@@ -40,6 +41,7 @@ function AddUser() {
   const [roles, setRoles] = React.useState([]);
   const [user, setUser] = React.useState({});
   const [message, setMessage] = React.useState("");
+  const history = useHistory();
 
   const handleDate = (newDate) => {
     setDate(newDate);
@@ -49,7 +51,7 @@ function AddUser() {
     setRole(event.target.value);
   };
   const handleStateChange = (event) => {
-    console.log(event.target.value)
+    console.log(event.target.value);
     setUserstate(event.target.value);
   };
   const handleProjectChange = (event) => {
@@ -77,28 +79,100 @@ function AddUser() {
     });
     const result = await response.json();
     console.log("Register", result);
-    if (result) {
-      setMessage("User created successfully")
-       
-          const response = await fetch(
-            `${API_BASE}/roles/assign/role/${role}/user/${result.user_id}`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-          const user_role = await response.json();
-          if (user_role.success) {
-            setMessage("Role Added Successfully");
-          }
-          console.log("Assign", user_role);
-      
-      
+    if (role != "" && result.success) {
+      setMessage("User created successfully");
+
+      const response = await fetch(
+        `${API_BASE}/roles/assign/role/${role}/user/${result.data.user_id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const user_role = await response.json();
+      if (user_role.success) {
+        setMessage("Role Added Successfully");
+        history.push(`/user-profile/${result.data.user_id}`);
+      }
+      console.log("Assign", user_role);
+    } else if (role == "" && result.success) {
+      setMessage("Role Added Successfully");
+      history.push(`/user-profile/${result.data.user_id}`);
+    } else {
+      const KeysToErrorArray = (errors) => {
+        Object.keys(errors).map((key, index) =>
+          setMessage((prevError) => [...prevError, errors[key]])
+        );
+      };
+      KeysToErrorArray(result.errors);
     }
-    
+  };
+  const register2 = async () => {
+    const dobYear = date.getFullYear();
+    const response = await fetch(`${API_BASE}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        email,
+        name,
+        phone,
+        state,
+        lga,
+        password: dobYear.toString(),
+        dob: date,
+      }),
+    });
+    const result = await response.json();
+    console.log("Register", result);
+    if (role != "" && result.success) {
+      setMessage(result.message);
+
+      const response = await fetch(
+        `${API_BASE}/roles/assign/role/${role}/user/${result.user_id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const user_role = await response.json();
+      if (user_role.success) {
+        setMessage("Role Added Successfully");
+        setEmail("");
+        setName("");
+        setPassword("");
+        setUserstate("");
+        setLga("");
+        setPhone("");
+        setDate(new Date());
+      }
+      console.log("Assign", user_role);
+    } else if (role == "" && result.success) {
+      setMessage(result.message);
+      setEmail("");
+      setName("");
+      setPassword("");
+      setUserstate("");
+      setLga("");
+      setPhone("");
+      setDate(new Date());
+    } else {
+      const KeysToErrorArray = (errors) => {
+        Object.keys(errors).map((key, index) =>
+          setMessage((prevError) => [...prevError, errors[key]])
+        );
+      };
+      KeysToErrorArray(result.errors);
+    }
   };
 
   const getRoles = async () => {
@@ -1107,7 +1181,6 @@ function AddUser() {
     },
   ];
 
-
   const getUser = async () => {
     try {
       const response = await fetch(
@@ -1153,22 +1226,27 @@ function AddUser() {
               {message}
             </Item.Alert>
           )}
-         
+
           <form className="mx-5 bg-white p-10">
-            <h3 className="mx-5 mt-5 mb-3 text-center font-bold text-gray-700 text-2xl">Create New User</h3>
-            <p className="mx-5 mt-1 mb-1 text-gray-600 text-center text-xl">All fields are required</p>
+            <h3 className="mx-5 mt-5 mb-3 text-center font-bold text-gray-700 text-2xl">
+              Create New User
+            </h3>
+            <p className="mx-5 mt-1 mb-1 text-gray-600 text-center text-xl">
+              All fields are required
+            </p>
             <div className="mt-5 flex flex-column justify-evenly items-center">
               <div className="flex flex-col justify-center items-center">
                 <div>
-                <div className="my-3 flex flex-row justify-evenly items-center">
-                  <TextField
-                  style={{width: "100%"}}
-                    placeholder="Type Name"
-                    onChange={(e) => setName(e.target.value)}
-                    id="outlined-basic"
-                    label="Name"
-                    variant="outlined"
-                  />
+                  <div className="my-3 flex flex-row justify-evenly items-center">
+                    <TextField
+                      style={{ width: "100%" }}
+                      placeholder="Type Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      id="outlined-basic"
+                      label="Name"
+                      variant="outlined"
+                    />
                   </div>
 
                   <div className="my-3 flex flex-row justify-evenly items-center">
@@ -1207,18 +1285,22 @@ function AddUser() {
                           onChange={(e) => setLga(e.target.value)}
                         >
                           <MenuItem>Select LGA</MenuItem>
-                          { states &&
-                            states.filter(s => s.name === state).map((item, i) => (
-                              item.lgas.map((lg, i) => <MenuItem value={lg} key={i}>
-                                {lg}
-                              </MenuItem>)
-                            ))}
+                          {states &&
+                            states
+                              .filter((s) => s.name === state)
+                              .map((item, i) =>
+                                item.lgas.map((lg, i) => (
+                                  <MenuItem value={lg} key={i}>
+                                    {lg}
+                                  </MenuItem>
+                                ))
+                              )}
                         </Select>
                       </FormControl>
-                      </Box>
+                    </Box>
                   </div>
                   <div className="my-3 flex flex-row justify-evenly items-center">
-                    <Box sx={{ minWidth: "50%"}}>
+                    <Box sx={{ minWidth: "50%" }}>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           Role
@@ -1237,8 +1319,9 @@ function AddUser() {
                       </FormControl>
                     </Box>
                     <TextField
-                    style={{minWidth: "50%"}}
+                      style={{ minWidth: "50%" }}
                       placeholder="Phone"
+                      value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       id="outlined-basic"
                       label="Phone"
@@ -1248,6 +1331,7 @@ function AddUser() {
                   <div className="my-3 flex flex-row justify-evenly items-center">
                     <TextField
                       placeholder="Email"
+                      value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       type="email"
                       id="outlined-basic"
@@ -1267,14 +1351,24 @@ function AddUser() {
                       </Stack>
                     </LocalizationProvider>
                   </div>
-                  <Item.Button
-                  className="user-button bg-gree-700"
-                  style={{minWidth: "100%"}}
-                  onClick={register}
-                  variant="contained"
-                >
-                  Register
-                </Item.Button>
+                  <div>
+                    <Item.Button
+                      className="user-button bg-gree-700"
+                      style={{ minWidth: "100%" }}
+                      onClick={register}
+                      variant="contained"
+                    >
+                      Register
+                    </Item.Button>
+                    <Item.Button
+                      className="user-button my-5 bg-gree-700"
+                      style={{ minWidth: "100%", marginTop: 10 }}
+                      onClick={register2}
+                      variant="contained"
+                    >
+                      Add Another User
+                    </Item.Button>
+                  </div>
                 </div>
               </div>
             </div>

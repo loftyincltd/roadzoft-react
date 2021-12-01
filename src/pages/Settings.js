@@ -39,6 +39,7 @@ function Settings() {
   const [newemail, setNewEmail] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [cpassword, setCPassword] = React.useState("");
   const [name, setName] = React.useState("");
   const [state, setUserstate] = React.useState("");
   const [lga, setLga] = React.useState("");
@@ -111,26 +112,29 @@ function Settings() {
 
   //Update User account
   const updateUser = async () => {
-    if (password == "") {
-      setMessage("Password Can not be empty")
+    if (password !== cpassword) {
+      setMessage("Password do not match")
     } else {
-    const response = await fetch(`${API_BASE}/user/update/${user.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        password
-      }),
-    });
-    const result = await response.json();
-    setMessage(result.message);
-    console.log("Register", result);
+    if (password == "") {
+      setMessage("Password Can not be empty");
+    } else {
+      const response = await fetch(`${API_BASE}/user/update/${user.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          password,
+        }),
+      });
+      const result = await response.json();
+      setMessage(result.message);
+      console.log("Password Change", result);
+    }
   }
   };
-
 
   //header user
   const title = "Settings";
@@ -1144,8 +1148,8 @@ function Settings() {
       const result = await response.json();
       const data = result.data;
       setUser(result.data);
-      setUserId(result.data.id)
-      setLoading(false)
+      setUserId(result.data.id);
+      setLoading(false);
       console.log("Real User:", result);
     } catch (error) {
       console.log(error);
@@ -1164,7 +1168,7 @@ function Settings() {
         </div>
 
         <div className="dashboard-right">
-          <Header user={realUser} title={title.toUpperCase()} />
+          <Header user={user} title={title.toUpperCase()} />
           <hr />
           {message != "" && (
             <Item.Alert
@@ -1190,7 +1194,9 @@ function Settings() {
                   component="span"
                 >
                   <Item.Avatar
-                    src={`https://roadzoftserver.xyz/uploads/avatar/${user.photos == null ? "" : user.photos.photo}`}
+                    src={`https://roadzoftserver.xyz/uploads/avatar/${
+                      user.photos == null ? "" : user.photos.photo
+                    }`}
                     style={{ height: 90, width: 90 }}
                     variant="circular"
                   />
@@ -1228,17 +1234,25 @@ function Settings() {
               <div className="flex flex-row justify-evenly items-center">
                 <div className="flex flex-col justify-center items-center">
                   <div>
-                    
                     <div className="my-3 flex flex-row justify-evenly items-center"></div>
+                    <h5 className="text-center">Change Password</h5>
                     <div className="my-3 flex justify-evenly items-center">
                       <TextField
                         onChange={(e) => setPassword(e.target.value)}
                         type="password"
                         id="outlined-basic"
-                        label="Change Password"
+                        label="New Password"
                         variant="outlined"
                       />
-
+                    </div>
+                    <div className="my-3 flex justify-evenly items-center">
+                      <TextField
+                        onChange={(e) => setCPassword(e.target.value)}
+                        type="password"
+                        id="outlined-basic"
+                        label="Confirm Password"
+                        variant="outlined"
+                      />
                     </div>
                     <div className="my-3 flex flex-row justify-evenly items-center">
                       <Item.Button
@@ -1249,7 +1263,6 @@ function Settings() {
                       >
                         Change Password
                       </Item.Button>
-                     
                     </div>
                   </div>
                 </div>
