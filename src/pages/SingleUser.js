@@ -1458,11 +1458,11 @@ function SingleUser() {
   };
 
   //Detach Project
-  const detachProject = async ({projectId}) => {
+  const detachProject = async (id) => {
     try {
-      console.log("Project Id", projectId);
+      console.log("Project Id", id);
       const response = await fetch(
-        `${API_BASE}/project/${projectId}/detach/user/${userId}`,
+        `${API_BASE}/project/${id}/detach/user/${userId}`,
         {
           headers: {
             "Content-Type": "application/json",
