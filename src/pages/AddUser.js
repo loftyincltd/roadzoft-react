@@ -96,20 +96,39 @@ function AddUser() {
       );
       const user_role = await response.json();
       if (user_role.success) {
-        const confirmBox = window.confirm("Do you want to Add another user");
-        if (confirmBox === true) {
-          setMessage("Role Added Successfully");
-          setEmail("");
-          setName("");
-          setPassword("");
-          setUserstate("");
-          setLga("");
-          setPhone("");
-          setDate(new Date());
-        } else {
-          setMessage("Role Added Successfully");
-          history.push(`/user-profile/${result.data.user_id}`);
-        }
+        confirmAlert({
+          title: "Confirm to submit",
+          message: "Do you want to Add a new user?",
+          buttons: [
+            {
+              label: "Add New User",
+              onClick: () => {
+                setMessage("User Added Successfully");
+                setEmail("");
+                setName("");
+                setPassword("");
+                setUserstate("");
+                setLga("");
+                setPhone("");
+                setDate(new Date());
+              },
+            },
+            {
+              label: "No",
+              onClick: () => {
+                setMessage("Role Added Successfully");
+                history.push(`/user-profile/${result.data.user_id}`);
+              },
+            },
+          ],
+        });
+      } else {
+        const KeysToErrorArray = (errors) => {
+          Object.keys(errors).map((key, index) =>
+            setMessage((prevError) => [...prevError, errors[key]])
+          );
+        };
+        KeysToErrorArray(result.errors);
       }
       console.log("Assign", user_role);
     } else if (role == "" && result.success) {
