@@ -296,7 +296,7 @@ function SingleUser() {
   };
 
   //Get projects
-  const getUserProjects = async () => {
+/*   const getUserProjects = async () => {
     try {
       const response = await fetch(`${API_BASE}/projects`, {
         headers: {
@@ -311,7 +311,7 @@ function SingleUser() {
     } catch (error) {
       console.log(error);
     }
-  };
+  }; */
 
   //Get user reports
   const getUserReports = async () => {
@@ -1338,6 +1338,7 @@ function SingleUser() {
       });
       const result = await response.json();
       const data = result.data;
+      setUserProjects(result.data.projects)
       setUser(result.data);
       setName(data.name);
       setDate(data.dob);
@@ -1874,7 +1875,7 @@ function SingleUser() {
                     </Item.Button>
                   </div>
                   <ProjectTable columns={reportcolumns} data={userReports} />
-                  <ProjectTable columns={projectcolumns} data={projects} />
+                  <ProjectTable columns={projectcolumns} data={userProjects} />
                 </div>
               </div>
             </form>
