@@ -175,6 +175,28 @@ function Dashboard() {
     );
   };
 
+  const CustomizedLabel = () => {
+    return (
+      <>
+        <p
+        >
+          Users
+        </p>
+      </>
+    );
+  };
+
+  const CustomLabel  = () => { 
+          return (
+            <g>
+              <foreignObject x={0} y={0} width={100} height={100}>
+                <div>Label</div>
+              </foreignObject>
+            </g>
+          );
+    
+  };
+
   return (
     <div>
       <div className="flex flex-row">
@@ -220,6 +242,7 @@ function Dashboard() {
                         left: 20,
                         bottom: 5,
                       }}
+                     
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="title" stroke="#8884d8" />
@@ -230,8 +253,10 @@ function Dashboard() {
                       <Line
                         type="monotone"
                         dataKey="users.length"
+                        name="Users"
                         stroke="#2c4c2c"
                         activeDot={{ r: 8 }}
+                        
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -244,7 +269,7 @@ function Dashboard() {
                     <BarChart width={500} height={300} data={projects}>
                       <XAxis dataKey="title" stroke="#8884d8" />
                       <YAxis />
-                      <Tooltip content={<CustomTooltip2 />}  />
+                      <Tooltip content={<CustomTooltip2 />} />
                       <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                       <Bar
                         dataKey="users[0].reports.length"
