@@ -127,8 +127,17 @@ function SingleUser() {
         }),
       });
       const result = await response.json();
-      setMessage(result.message);
       console.log("Register", result);
+      if (result.success) {
+        setMessage(result.message);
+      } else {
+        const KeysToErrorArray = (errors) => {
+          Object.keys(errors).map((key, index) =>
+            setMessage((prevError) => [...prevError, errors[key]])
+          );
+        };
+        KeysToErrorArray(result.errors);
+      }
     } else if (email === user.email && phone !== user.phone) {
       const response = await fetch(`${API_BASE}/user/update/${userId}`, {
         method: "PATCH",
@@ -146,8 +155,17 @@ function SingleUser() {
         }),
       });
       const result = await response.json();
-      setMessage(result.message);
       console.log("Register", result);
+      if (result.success) {
+        setMessage(result.message);
+      } else {
+        const KeysToErrorArray = (errors) => {
+          Object.keys(errors).map((key, index) =>
+            setMessage((prevError) => [...prevError, errors[key]])
+          );
+        };
+        KeysToErrorArray(result.errors);
+      }
     } else if (email !== user.email && phone !== user.phone) {
       const response = await fetch(`${API_BASE}/user/update/${userId}`, {
         method: "PATCH",
@@ -166,8 +184,48 @@ function SingleUser() {
         }),
       });
       const result = await response.json();
-      setMessage(result.message);
+
       console.log("Register", result);
+      if (result.success) {
+        setMessage(result.message);
+      } else {
+        const KeysToErrorArray = (errors) => {
+          Object.keys(errors).map((key, index) =>
+            setMessage((prevError) => [...prevError, errors[key]])
+          );
+        };
+        KeysToErrorArray(result.errors);
+      }
+    } else if (email !== user.email && phone === user.phone) {
+      const response = await fetch(`${API_BASE}/user/update/${userId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          name,
+          state,
+          lga,
+          email,
+          phone,
+          dob: date,
+        }),
+      });
+      const result = await response.json();
+
+      console.log("Register", result);
+      if (result.success) {
+        setMessage(result.message);
+      } else {
+        const KeysToErrorArray = (errors) => {
+          Object.keys(errors).map((key, index) =>
+            setMessage((prevError) => [...prevError, errors[key]])
+          );
+        };
+        KeysToErrorArray(result.errors);
+      }
     }
   };
 
@@ -1676,7 +1734,7 @@ function SingleUser() {
                       >
                         Update Email
                       </Item.Button> */}
-                     {/*  <Item.Button
+                      {/*  <Item.Button
                         className="user-button"
                         onClick={updatePhone}
                         color="primary"
