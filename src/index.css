@@ -12,6 +12,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 code {
@@ -26,7 +27,7 @@ code {
 }
 .dashboard-right {
   background: #f7f8fc;
-  width: 250vh;
+  width: 220vh;
 }
 .sidebar-container {
   height: 100%;
