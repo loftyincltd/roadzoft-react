@@ -295,6 +295,24 @@ function SingleUser() {
     }
   };
 
+  //Get projects
+  const getUserProjects = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/projects`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const result = await response.json();
+      setProjects(result.data);
+      console.log("Projects", result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //Get user reports
   const getUserReports = async () => {
     try {
@@ -1438,6 +1456,34 @@ function SingleUser() {
     }
   };
 
+  //Detach Project
+  const detachProject = async ({projectId}) => {
+    try {
+      console.log("Project Id", projectId);
+      const response = await fetch(
+        `${API_BASE}/project/${projectId}/detach/user/${userId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const result = await response.json();
+      console.log("Detach Project", result);
+      if (result.success) {
+        setMessage("Project Detached Successfully");
+      }
+
+      getProjects();
+      getUser();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   const imageChnage = () => {
     console.log("Image Chnage");
   };
@@ -1495,6 +1541,22 @@ function SingleUser() {
   ];
   const projectcolumns = [
     { selector: "title", name: "Projects", sortable: true },
+    {
+      selector: "id",
+      name: "",
+      cell: (row) => {
+        return (
+          <Item.Button
+            className="user-button"
+            onClick={() => detachProject(row.id)}
+            color="warning"
+            variant="contained"
+          >
+            Detach
+          </Item.Button>
+        );
+      },
+    },
   ];
   const reportcolumns = [
     {

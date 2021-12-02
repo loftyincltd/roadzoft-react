@@ -59,94 +59,55 @@ function AddUser() {
   };
 
   const register = async () => {
-    const dobYear = date.getFullYear();
-    const response = await fetch(`${API_BASE}/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        email,
-        name,
-        phone,
-        state,
-        lga,
-        password: dobYear.toString(),
-        dob: date,
-      }),
-    });
-    const result = await response.json();
-    console.log("Register", result);
-    if (role != "" && result.success) {
-      setMessage("User created successfully");
+    const confirmBox = window.confirm("Do you want to Add another user");
+    if (confirmBox === true) {
+      const dobYear = date.getFullYear();
+      const response = await fetch(`${API_BASE}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          email,
+          name,
+          phone,
+          state,
+          lga,
+          password: dobYear.toString(),
+          dob: date,
+        }),
+      });
+      const result = await response.json();
+      console.log("Register", result);
+      if (role != "" && result.success) {
+        setMessage(result.message);
 
-      const response = await fetch(
-        `${API_BASE}/roles/assign/role/${role}/user/${result.data.user_id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      const user_role = await response.json();
-      if (user_role.success) {
-        setMessage("Role Added Successfully");
-        history.push(`/user-profile/${result.data.user_id}`);
-      }
-      console.log("Assign", user_role);
-    } else if (role == "" && result.success) {
-      setMessage("Role Added Successfully");
-      history.push(`/user-profile/${result.data.user_id}`);
-    } else {
-      const KeysToErrorArray = (errors) => {
-        Object.keys(errors).map((key, index) =>
-          setMessage((prevError) => [...prevError, errors[key]])
+        const response = await fetch(
+          `${API_BASE}/roles/assign/role/${role}/user/${result.user_id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
-      };
-      KeysToErrorArray(result.errors);
-    }
-  };
-  const register2 = async () => {
-    const dobYear = date.getFullYear();
-    const response = await fetch(`${API_BASE}/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        email,
-        name,
-        phone,
-        state,
-        lga,
-        password: dobYear.toString(),
-        dob: date,
-      }),
-    });
-    const result = await response.json();
-    console.log("Register", result);
-    if (role != "" && result.success) {
-      setMessage(result.message);
-
-      const response = await fetch(
-        `${API_BASE}/roles/assign/role/${role}/user/${result.user_id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+        const user_role = await response.json();
+        if (user_role.success) {
+          setMessage("Role Added Successfully");
+          setEmail("");
+          setName("");
+          setPassword("");
+          setUserstate("");
+          setLga("");
+          setPhone("");
+          setDate(new Date());
         }
-      );
-      const user_role = await response.json();
-      if (user_role.success) {
-        setMessage("Role Added Successfully");
+        console.log("Assign", user_role);
+      } else if (role == "" && result.success) {
+        setMessage(result.message);
         setEmail("");
         setName("");
         setPassword("");
@@ -154,24 +115,65 @@ function AddUser() {
         setLga("");
         setPhone("");
         setDate(new Date());
+      } else {
+        const KeysToErrorArray = (errors) => {
+          Object.keys(errors).map((key, index) =>
+            setMessage((prevError) => [...prevError, errors[key]])
+          );
+        };
+        KeysToErrorArray(result.errors);
       }
-      console.log("Assign", user_role);
-    } else if (role == "" && result.success) {
-      setMessage(result.message);
-      setEmail("");
-      setName("");
-      setPassword("");
-      setUserstate("");
-      setLga("");
-      setPhone("");
-      setDate(new Date());
     } else {
-      const KeysToErrorArray = (errors) => {
-        Object.keys(errors).map((key, index) =>
-          setMessage((prevError) => [...prevError, errors[key]])
+      const dobYear = date.getFullYear();
+      const response = await fetch(`${API_BASE}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          email,
+          name,
+          phone,
+          state,
+          lga,
+          password: dobYear.toString(),
+          dob: date,
+        }),
+      });
+      const result = await response.json();
+      console.log("Register", result);
+      if (role != "" && result.success) {
+        setMessage("User created successfully");
+
+        const response = await fetch(
+          `${API_BASE}/roles/assign/role/${role}/user/${result.data.user_id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
-      };
-      KeysToErrorArray(result.errors);
+        const user_role = await response.json();
+        if (user_role.success) {
+          setMessage("Role Added Successfully");
+          history.push(`/user-profile/${result.data.user_id}`);
+        }
+        console.log("Assign", user_role);
+      } else if (role == "" && result.success) {
+        setMessage("Role Added Successfully");
+        history.push(`/user-profile/${result.data.user_id}`);
+      } else {
+        const KeysToErrorArray = (errors) => {
+          Object.keys(errors).map((key, index) =>
+            setMessage((prevError) => [...prevError, errors[key]])
+          );
+        };
+        KeysToErrorArray(result.errors);
+      }
     }
   };
 
@@ -1359,14 +1361,6 @@ function AddUser() {
                       variant="contained"
                     >
                       Register
-                    </Item.Button>
-                    <Item.Button
-                      className="user-button my-5 bg-gree-700"
-                      style={{ minWidth: "100%", marginTop: 10 }}
-                      onClick={register2}
-                      variant="contained"
-                    >
-                      Add Another User
                     </Item.Button>
                   </div>
                 </div>
