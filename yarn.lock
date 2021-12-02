@@ -9846,10 +9846,20 @@ react-charts@^2.0.0-beta.7:
     d3-shape "^1.3.7"
     d3-voronoi "^1.1.2"
 
+react-confirm-box@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-confirm-box/-/react-confirm-box-1.2.0.tgz#20d036257869d7cff4f96e6121ee3b6d5e5d8089"
+  integrity sha512-emltOsrQcJ9yFJIfgCEnAn8Srv9T6fJSjdAqf6zHXfO2k7AgM6xEO9dDZkybb8GWTm0Zq/nh2fAGJQN3jpkvKw==
+
 react-csv@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-2.0.3.tgz#f5d17a3c71107d9bcbe580049350200debdc042a"
   integrity sha512-exyAdFLAxtuM4wNwLYrlKyPYLiJ7e0mv9tqPAd3kq+k1CiJFtznevR3yP0icv5q/y200w+lzNgi7TQn1Wrhu0w==
+
+react-custom-confirm-alert@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/react-custom-confirm-alert/-/react-custom-confirm-alert-2.0.7.tgz#ed22ed63d16c852a921677a0ece70490df4529f3"
+  integrity sha512-IL1aHS0u8l3KNDTvFztSyU06fuJbmNPbtl2NvWvK17rRCpsDF01Ny1dq+4LTbXIFEbqLtKggfRXmlt2GQYOl6A==
 
 react-data-table-component@^7.4.1:
   version "7.4.3"

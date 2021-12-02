@@ -23,6 +23,8 @@ import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
 import { API_BASE } from "../utils/Api";
 import { useHistory } from "react-router-dom";
+import { confirmAlert } from "react-custom-confirm-alert"; // Import
+import "react-custom-confirm-alert/src/react-confirm-alert.css";
 
 const Input = styled("input")({
   display: "none",
@@ -111,20 +113,32 @@ function AddUser() {
       }
       console.log("Assign", user_role);
     } else if (role == "" && result.success) {
-      const confirmBox = window.confirm("Do you want to Add another user");
-      if (confirmBox === true) {
-        setMessage("User Added And Role Added Successfully");
-        setEmail("");
-        setName("");
-        setPassword("");
-        setUserstate("");
-        setLga("");
-        setPhone("");
-        setDate(new Date());
-      } else {
-        setMessage("Role Added Successfully");
-        history.push(`/user-profile/${result.data.user_id}`);
-      }
+      confirmAlert({
+        title: "Confirm to submit",
+        message: "Do you want to Add a new user?",
+        buttons: [
+          {
+            label: "Add New User",
+            onClick: () => {
+              setMessage("User Added And Role Added Successfully");
+              setEmail("");
+              setName("");
+              setPassword("");
+              setUserstate("");
+              setLga("");
+              setPhone("");
+              setDate(new Date());
+            },
+          },
+          {
+            label: "No",
+            onClick: () => {
+              setMessage("Role Added Successfully");
+              history.push(`/user-profile/${result.data.user_id}`);
+            },
+          },
+        ],
+      });
     } else {
       const KeysToErrorArray = (errors) => {
         Object.keys(errors).map((key, index) =>
