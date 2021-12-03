@@ -62,8 +62,8 @@ export default function Login() {
             required
             id="outlined-required"
             type="text"
-            label="Satff ID"
-            defaultValue="Phone Number"
+            label="Staff ID"
+            placeholder="Phone Number"
           />
         </div>
         <div className="flex justify-center items-center mb-5 w-full">
