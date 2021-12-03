@@ -32,6 +32,7 @@ export default function ReportQuery({ uuid, reject, query, reportId }) {
   const [totalPages, setTotalPages] = React.useState(1);
   const countPerPage = 20;
   const [comment, setComment] = React.useState("");
+  const [message, setMessage] = React.useState("")
 
   const getComments = async () => {
     const response = await fetch(`${API_BASE}/queried/${uuid}?page=${page}`, {
@@ -63,7 +64,9 @@ export default function ReportQuery({ uuid, reject, query, reportId }) {
     setComment("");
     console.log("Comments", result);
   };
-  const approve = async (reportId, commentId) => {
+  const approve = async (commentId) => {
+    console.log("Report ID", uuid)
+    console.log("Comment Id", commentId)
     const response = await fetch(`${API_BASE}/queried/approve`, {
       method: "POST",
       headers: {
@@ -71,11 +74,12 @@ export default function ReportQuery({ uuid, reject, query, reportId }) {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify({
-        report_uuid: reportId,
+        report_uuid: uuid,
         comment_uuid: commentId,
       }),
     });
     const result = await response.json();
+    setMessage(result.message)
     getComments();
     console.log("Comments", result);
   };
@@ -113,7 +117,7 @@ export default function ReportQuery({ uuid, reject, query, reportId }) {
           ""
         ) : (
           <Item.Button
-            onClick={() => approve(row.report_uuid, uuid)}
+            onClick={() => approve(row.uuid)}
             color="primary"
             variant="outlined"
           >
@@ -134,6 +138,7 @@ export default function ReportQuery({ uuid, reject, query, reportId }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          {message != "" && <Item.Alert color="info" variant="filled">{message}</Item.Alert>}
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Comments:
           </Typography>
