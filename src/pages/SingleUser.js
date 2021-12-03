@@ -1772,7 +1772,7 @@ function SingleUser() {
                         <Stack spacing={3}>
                           <DesktopDatePicker
                             label="Date of Birth"
-                            inputFormat="MM/dd/yyyy"
+                            inputFormat="dd/MM/yyyy"
                             value={date}
                             onChange={handleDate}
                             renderInput={(params) => <TextField {...params} />}
