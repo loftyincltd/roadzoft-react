@@ -12,6 +12,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "bootstrap": "^5.1.2",
+    "caniuse-lite": "^1.0.30001284",
     "date-fns": "^2.25.0",
     "fuse.js": "^6.4.6",
     "google-map-react": "^2.1.10",
@@ -54,7 +55,9 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "not chrome < 51",
+      "not safari < 10"
     ],
     "development": [
       "last 1 chrome version",
