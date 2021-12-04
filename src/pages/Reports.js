@@ -1213,7 +1213,7 @@ function Reports() {
     },
     {
       title: "Pending",
-      color: "#FFF700",
+      color: "rgb(209 148 35)",
       data: reports.filter((report) => report.status === "Pending").length,
     },
     {
