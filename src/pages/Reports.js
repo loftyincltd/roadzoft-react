@@ -18,6 +18,10 @@ import { CSVLink } from "react-csv";
 import Fuse from "fuse.js";
 import * as Icons from "react-feather";
 import ReportQuery from "../components/modals/ReportQuery";
+import MapModal from "../components/modals/MapModal";
+import ReactMapGL from "react-map-gl";
+
+
 
 function Reports() {
   const [user, setUser] = React.useState({});
@@ -1078,7 +1082,7 @@ function Reports() {
     const result = await response.json();
     getReports();
   };
- 
+
   const getReports = async () => {
     const response = await fetch(`${API_BASE}/reports?page=${page}`, {
       headers: {
@@ -1141,6 +1145,8 @@ function Reports() {
   };
 
   React.useEffect(() => {
+    const string = "9.123"
+    console.log("Float", parseFloat(string))
     getUser();
     getProjects();
   }, []);
@@ -1192,25 +1198,33 @@ function Reports() {
   const infos = [
     {
       title: "Total",
-      color: "blue",
+      color: "#DD411A",
       data: reports.length,
     },
     {
       title: "Approved",
-      color: "green",
+      color: "#035C36",
       data: reports.filter((report) => report.status === "Approved").length,
     },
     {
       title: "Pending",
-      color: "red",
+      color: "#FFF700",
       data: reports.filter((report) => report.status === "Pending").length,
     },
     {
       title: "Disapproved",
-      color: "black",
+      color: "#0D0709",
       data: reports.filter((report) => report.status === "Rejected").length,
     },
   ];
+
+  const defaultProps = {
+    center: {
+      lat: 59.95,
+      lng: 30.33,
+    },
+    zoom: 11,
+  };
 
   const columns = [
     {
@@ -1237,8 +1251,17 @@ function Reports() {
         );
       },
     },
-    { selector: "latitude", name: "Coordinates", sortable: true },
-    { selector: "longitude", name: "", sortable: true },
+    {
+      selector: "latitude",
+      name: "Location",
+      sortable: true,
+      cell: (row) => {
+        return (
+          <MapModal apiKey="pk.eyJ1IjoibWljaG9sdXNhbnlhIiwiYSI6ImNrd3MybWM4YjEyOGwycHFvaDhsc2Z2Y3AifQ.uSFsVJGkOiUXSTG2SOES2A" latitude={parseFloat(row.latitude)} longitude={parseFloat(row.longitude)}/>
+        
+        );
+      },
+    },
     { selector: "user.name", name: "User", sortable: true },
     { selector: "status", name: "Status", sortable: true },
     {
@@ -1264,8 +1287,9 @@ function Reports() {
               photo2={`https://roadzoftserver.xyz/uploads/${row.photo_2}`}
               photo3={`https://roadzoftserver.xyz/uploads/${row.photo_3}`}
               photo4={`https://roadzoftserver.xyz/uploads/${row.photo_4}`}
-              latitude={row.latitude}
-              longitude={row.longitude}
+              latitude={parseFloat(row.latitude)} 
+              longitude={parseFloat(row.longitude)}
+              apiKey="pk.eyJ1IjoibWljaG9sdXNhbnlhIiwiYSI6ImNrd3MybWM4YjEyOGwycHFvaDhsc2Z2Y3AifQ.uSFsVJGkOiUXSTG2SOES2A"
               approve={() => handleApprove(row.id)}
               reject={() => handleReject(row.id)}
               query={() => handleQuery(row.id)}
@@ -1280,8 +1304,6 @@ function Reports() {
       },
     },
   ];
-
-  
 
   return (
     <div>

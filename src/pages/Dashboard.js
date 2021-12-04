@@ -140,22 +140,22 @@ function Dashboard() {
   const reportData = [
     {
       title: "Total",
-      color: "blue",
+      color: "#DD411A",
       data: reports.length,
     },
     {
       title: "Approved",
-      color: "green",
+      color: "#035C36",
       data: reports.filter((report) => report.status === "Approved").length,
     },
     {
       title: "Pending",
-      color: "red",
+      color: "#FFF700",
       data: reports.filter((report) => report.status === "Pending").length,
     },
     {
       title: "Disapproved",
-      color: "black",
+      color: "#0D0709",
       data: reports.filter((report) => report.status === "Rejected").length,
     },
   ];
