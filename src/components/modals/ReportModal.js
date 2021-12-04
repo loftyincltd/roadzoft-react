@@ -6,9 +6,9 @@ import Modal from "@mui/material/Modal";
 import * as Item from "@mui/material";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
-import ReactMapGL from "react-map-gl";
-import mapboxgl from "mapbox-gl"; 
-
+import ReactMapGL, { Marker} from "react-map-gl";
+import mapboxgl from "mapbox-gl";
+import * as Icon from "react-feather"
 
 const style = {
   position: "absolute",
@@ -20,7 +20,7 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
-  overflow: "scroll"
+  overflow: "scroll",
 };
 
 export default function ReportModal({
@@ -41,8 +41,8 @@ export default function ReportModal({
   const handleClose = () => setOpen(false);
 
   // @ts-ignore
-// eslint-disable-next-line import/no-webpack-loader-syntax
-  mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+  // eslint-disable-next-line import/no-webpack-loader-syntax
+  //mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
   return (
     <div>
@@ -80,16 +80,25 @@ export default function ReportModal({
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {latitude}/{longitude}
           </Typography>
-          <div style={{width: 450, height: 200}}>
-          <ReactMapGL
-          mapboxApiAccessToken={apiKey}
-            latitude={latitude}
-            longitude={longitude}
-            zoom={16}
-            width="100%"
-            height="100%"
-          />
-</div>
+          <div style={{ width: 450, height: 200 }}>
+            <ReactMapGL
+              mapboxApiAccessToken={apiKey}
+              latitude={latitude}
+              longitude={longitude}
+              zoom={13}
+              width="100%"
+              height="100%"
+            >
+              <Marker
+                latitude={latitude}
+                longitude={longitude}
+                offsetLeft={-20}
+                offsetTop={-10}
+              >
+                <Icon.MapPin size={30} fill="red" />
+              </Marker>
+            </ReactMapGL>
+          </div>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Status:
           </Typography>

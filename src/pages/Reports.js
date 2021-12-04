@@ -40,7 +40,7 @@ function Reports() {
 
   // @ts-ignore
 // eslint-disable-next-line import/no-webpack-loader-syntax
-  mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+  //mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
   const handleChange = (event, value) => {
     setPage(value);

@@ -2,8 +2,9 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import ReactMapGL from "react-map-gl";
-import mapboxgl from "mapbox-gl"; 
+import ReactMapGL, { Marker } from "react-map-gl";
+import mapboxgl from "mapbox-gl";
+import * as Icon from "react-feather";
 
 const style = {
   position: "absolute",
@@ -18,14 +19,13 @@ const style = {
   p: 4,
 };
 
-export default function MapModal({latitude, longitude, apiKey}) {
+export default function MapModal({ latitude, longitude, apiKey }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-// @ts-ignore
-// eslint-disable-next-line import/no-webpack-loader-syntax
-  mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
-
+  // @ts-ignore
+  // eslint-disable-next-line import/no-webpack-loader-syntax
+  //mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
   return (
     <div>
@@ -44,15 +44,23 @@ export default function MapModal({latitude, longitude, apiKey}) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-        <ReactMapGL
+          <ReactMapGL
             mapboxApiAccessToken={apiKey}
+            latitude={latitude}
+            longitude={longitude}
+            zoom={13}
+            width="100%"
+            height="100%"
+          >
+            <Marker
               latitude={latitude}
               longitude={longitude}
-              zoom={14}
-              width="100%"
-              height="100%"
-            />
-         
+              offsetLeft={-20}
+              offsetTop={-10}
+            >
+              <Icon.MapPin fill="red" />
+            </Marker>
+          </ReactMapGL>
         </Box>
       </Modal>
     </div>
