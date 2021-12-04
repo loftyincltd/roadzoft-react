@@ -7,6 +7,7 @@ import * as Item from "@mui/material";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import ReactMapGL from "react-map-gl";
+import mapboxgl from "mapbox-gl"; 
 
 
 const style = {
@@ -38,6 +39,8 @@ export default function ReportModal({
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
   return (
     <div>

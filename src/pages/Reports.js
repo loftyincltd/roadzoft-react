@@ -20,6 +20,7 @@ import * as Icons from "react-feather";
 import ReportQuery from "../components/modals/ReportQuery";
 import MapModal from "../components/modals/MapModal";
 import ReactMapGL from "react-map-gl";
+import mapboxgl from "mapbox-gl"; 
 
 
 
@@ -36,6 +37,8 @@ function Reports() {
   const [state, setUserstate] = React.useState("");
   const [lga, setLga] = React.useState("");
   const [commentz, setCommentz] = React.useState([]);
+
+  mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
   const handleChange = (event, value) => {
     setPage(value);

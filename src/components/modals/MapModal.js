@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import ReactMapGL from "react-map-gl";
+import mapboxgl from "mapbox-gl"; 
 
 const style = {
   position: "absolute",
@@ -22,7 +23,7 @@ export default function MapModal({latitude, longitude, apiKey}) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-
+  mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 
   return (
