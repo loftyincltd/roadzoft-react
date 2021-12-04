@@ -1257,7 +1257,7 @@ function Reports() {
       sortable: true,
       cell: (row) => {
         return (
-          <MapModal apiKey="sk.eyJ1IjoibWljaG9sdXNhbnlhIiwiYSI6ImNrd3M1azJvdTBnM2Qyd3FoYzB5bXk3a24ifQ.F5Ii6bURA0HwaLkuAC3AvA" latitude={parseFloat(row.latitude)} longitude={parseFloat(row.longitude)}/>
+          <MapModal apiKey="pk.eyJ1IjoibWljaG9sdXNhbnlhIiwiYSI6ImNrd3MybWM4YjEyOGwycHFvaDhsc2Z2Y3AifQ.uSFsVJGkOiUXSTG2SOES2A" latitude={parseFloat(row.latitude)} longitude={parseFloat(row.longitude)}/>
         
         );
       },
@@ -1289,7 +1289,7 @@ function Reports() {
               photo4={`https://roadzoftserver.xyz/uploads/${row.photo_4}`}
               latitude={parseFloat(row.latitude)} 
               longitude={parseFloat(row.longitude)}
-              apiKey="sk.eyJ1IjoibWljaG9sdXNhbnlhIiwiYSI6ImNrd3M1azJvdTBnM2Qyd3FoYzB5bXk3a24ifQ.F5Ii6bURA0HwaLkuAC3AvA"
+              apiKey="pk.eyJ1IjoibWljaG9sdXNhbnlhIiwiYSI6ImNrd3MybWM4YjEyOGwycHFvaDhsc2Z2Y3AifQ.uSFsVJGkOiUXSTG2SOES2A"
               approve={() => handleApprove(row.id)}
               reject={() => handleReject(row.id)}
               query={() => handleQuery(row.id)}
