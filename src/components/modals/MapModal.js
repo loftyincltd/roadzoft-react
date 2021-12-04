@@ -22,7 +22,8 @@ export default function MapModal({latitude, longitude, apiKey}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+// @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax
   mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 

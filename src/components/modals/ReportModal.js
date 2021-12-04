@@ -40,6 +40,8 @@ export default function ReportModal({
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  // @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax
   mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
   return (

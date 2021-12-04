@@ -38,6 +38,8 @@ function Reports() {
   const [lga, setLga] = React.useState("");
   const [commentz, setCommentz] = React.useState([]);
 
+  // @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax
   mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
   const handleChange = (event, value) => {
