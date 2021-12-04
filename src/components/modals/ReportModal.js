@@ -85,7 +85,7 @@ export default function ReportModal({
               mapboxApiAccessToken={apiKey}
               latitude={latitude}
               longitude={longitude}
-              zoom={13}
+              zoom={11}
               width="100%"
               height="100%"
             >

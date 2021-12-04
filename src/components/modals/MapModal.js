@@ -2,7 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import ReactMapGL, { Marker } from "react-map-gl";
+import ReactMapGL, { Marker, NavigationControl } from "react-map-gl";
 import mapboxgl from "mapbox-gl";
 import * as Icon from "react-feather";
 
@@ -19,6 +19,7 @@ const style = {
   p: 4,
 };
 
+
 export default function MapModal({ latitude, longitude, apiKey }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -26,6 +27,11 @@ export default function MapModal({ latitude, longitude, apiKey }) {
   // @ts-ignore
   // eslint-disable-next-line import/no-webpack-loader-syntax
   mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+
+  const navControlStyle= {
+    right: 10,
+    top: 10
+  };
 
   return (
     <div>
@@ -48,7 +54,7 @@ export default function MapModal({ latitude, longitude, apiKey }) {
             mapboxApiAccessToken={apiKey}
             latitude={latitude}
             longitude={longitude}
-            zoom={13}
+            zoom={11}
             width="100%"
             height="100%"
           >
@@ -60,6 +66,7 @@ export default function MapModal({ latitude, longitude, apiKey }) {
             >
               <Icon.MapPin fill="red" />
             </Marker>
+            <NavigationControl style={navControlStyle} />
           </ReactMapGL>
         </Box>
       </Modal>
