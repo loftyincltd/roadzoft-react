@@ -61,8 +61,8 @@ export default function MapModal({ latitude, longitude, apiKey }) {
             <Marker
               latitude={latitude}
               longitude={longitude}
-              offsetLeft={1}
-              offsetTop={-10}
+              offsetLeft={10}
+              offsetTop={10}
             >
               <Icon.MapPin fill="red" />
             </Marker>
