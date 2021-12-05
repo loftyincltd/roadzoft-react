@@ -1221,6 +1221,16 @@ function Reports() {
       color: "#0D0709",
       data: reports.filter((report) => report.status === "Rejected").length,
     },
+    {
+      title: "Queried",
+      color: "#DD411A",
+      data: reports.filter((report) => report.status === "Queried").length,
+    },
+    {
+      title: "Projects",
+      color: "#035C36",
+      data: projects.length,
+    },
   ];
 
   const defaultProps = {
@@ -1322,7 +1332,7 @@ function Reports() {
           <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">
             Reports
           </h3>
-          <div className="mx-5 flex flex-row justify-between items-center">
+          <div className="mx-5 flex grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-4 justify-items-center items-center">
             {infos.map((info) => (
               <TopCards info={info} />
             ))}
