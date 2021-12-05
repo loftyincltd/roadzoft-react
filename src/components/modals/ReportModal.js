@@ -92,8 +92,8 @@ export default function ReportModal({
               <Marker
                 latitude={latitude}
                 longitude={longitude}
-                offsetLeft={10}
-                offsetTop={10}
+                offsetLeft={50}
+                offsetTop={50}
               >
                 <Icon.MapPin size={30} fill="red" />
               </Marker>
