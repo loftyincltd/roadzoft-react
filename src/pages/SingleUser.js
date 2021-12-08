@@ -296,7 +296,7 @@ function SingleUser() {
   };
 
   //Get projects
-/*   const getUserProjects = async () => {
+  /*   const getUserProjects = async () => {
     try {
       const response = await fetch(`${API_BASE}/projects`, {
         headers: {
@@ -1338,7 +1338,7 @@ function SingleUser() {
       });
       const result = await response.json();
       const data = result.data;
-      setUserProjects(result.data.projects)
+      setUserProjects(result.data.projects);
       setUser(result.data);
       setName(data.name);
       setDate(data.dob);
@@ -1483,7 +1483,6 @@ function SingleUser() {
       console.log(error);
     }
   };
-
 
   const imageChnage = () => {
     console.log("Image Chnage");
@@ -1684,11 +1683,12 @@ function SingleUser() {
             </Item.Box>
           ) : (
             <form className="">
-              <div className="flex flex-row justify-evenly items-center">
+              <div className="flex lg:flex-row md:flex-col sm:flex-col lg:justify-evenly md:justify-center sm:justify-center items-center">
                 <div className="flex flex-col justify-center items-center">
                   <div>
-                    <div className="my-3 flex flex-row justify-evenly items-center">
+                    <div className="my-3 flex lg:flex-row md:flex-row sm:flex-col justify-evenly items-center">
                       <TextField
+                      className="sm:my-2"
                         style={{ minWidth: "50%" }}
                         placeholder="Type Name"
                         value={name}
@@ -1698,6 +1698,7 @@ function SingleUser() {
                         variant="outlined"
                       />
                       <TextField
+                      className="sm:my-2"
                         style={{ minWidth: "50%" }}
                         placeholder="Phone"
                         value={phone}
@@ -1707,7 +1708,7 @@ function SingleUser() {
                         variant="outlined"
                       />
                     </div>
-                    <div className="my-3 flex flex-row justify-evenly items-center">
+                    <div className="my-3 flex lg:flex-row md:flex-row sm:flex-col sm:my-2 justify-evenly items-center">
                       <Box sx={{ minWidth: "50%" }}>
                         <FormControl fullWidth>
                           <InputLabel id="demo-simple-select-label">
@@ -1758,8 +1759,9 @@ function SingleUser() {
                       </Box>
                     </div>
                     <div className="my-3 flex flex-row justify-evenly items-center"></div>
-                    <div className="my-3 flex flex-row justify-evenly items-center">
+                    <div className="my-3 flex lg:flex-row md:flex-row sm:flex-col sm:my-2 justify-evenly items-center">
                       <TextField
+                      className="sm:my-2"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         type="email"
@@ -1782,29 +1784,13 @@ function SingleUser() {
                     </div>
                     <div className="my-3 flex flex-row justify-evenly items-center">
                       <Item.Button
-                        className="user-button"
+                        className="user-button sm:my-2"
                         onClick={updateUser}
                         color="primary"
                         variant="contained"
                       >
                         Update User
                       </Item.Button>
-                      {/* <Item.Button
-                        className="user-button"
-                        onClick={updateEmail}
-                        color="primary"
-                        variant="contained"
-                      >
-                        Update Email
-                      </Item.Button> */}
-                      {/*  <Item.Button
-                        className="user-button"
-                        onClick={updatePhone}
-                        color="primary"
-                        variant="contained"
-                      >
-                        Update Phone
-                      </Item.Button> */}
                     </div>
                   </div>
                   <div style={{ minWidth: "100%" }}>

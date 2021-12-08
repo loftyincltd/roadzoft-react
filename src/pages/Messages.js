@@ -113,7 +113,7 @@ function Messages() {
           <MessageHeader user={user} title={title.toUpperCase()} />
           <div className="flex flex-row justify-between items-center mx-5">
             <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">
-              Inbox({messages.length})
+              Broadcasts({messages.length})
             </h3>
             {hide == false && (
               <NewMessage close={handleClose} onClick={() => setHide(false)} />

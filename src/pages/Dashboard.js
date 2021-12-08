@@ -153,7 +153,7 @@ function Dashboard() {
       color: "rgb(209 148 35)",
       data: reports.filter((report) => report.status === "Pending").length,
     },
-    
+
     {
       title: "Disapproved",
       color: "#0D0709",
@@ -189,23 +189,19 @@ function Dashboard() {
   const CustomizedLabel = () => {
     return (
       <>
-        <p
-        >
-          Users
-        </p>
+        <p>Users</p>
       </>
     );
   };
 
-  const CustomLabel  = () => { 
-          return (
-            <g>
-              <foreignObject x={0} y={0} width={100} height={100}>
-                <div>Label</div>
-              </foreignObject>
-            </g>
-          );
-    
+  const CustomLabel = () => {
+    return (
+      <g>
+        <foreignObject x={0} y={0} width={100} height={100}>
+          <div>Label</div>
+        </foreignObject>
+      </g>
+    );
   };
 
   return (
@@ -219,10 +215,7 @@ function Dashboard() {
           <Header user={user} title={title.toUpperCase()} />
           <hr />
 
-          <h3 className="mx-5 mt-3 mb-3 font-bold text-gray-600 text-2xl">
-            Reports
-          </h3>
-          <div className="mx-5 flex grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-4 justify-items-center items-center">
+          <div className="mx-5 my-3 flex grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-4 justify-items-center items-center">
             {reportData.map((report) => (
               <TopCards info={report} />
             ))}
@@ -253,7 +246,6 @@ function Dashboard() {
                         left: 20,
                         bottom: 5,
                       }}
-                     
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="title" stroke="#8884d8" />
@@ -267,7 +259,6 @@ function Dashboard() {
                         name="Users"
                         stroke="#2c4c2c"
                         activeDot={{ r: 8 }}
-                        
                       />
                     </LineChart>
                   </ResponsiveContainer>
