@@ -20,9 +20,7 @@ import * as Icons from "react-feather";
 import ReportQuery from "../components/modals/ReportQuery";
 import MapModal from "../components/modals/MapModal";
 import ReactMapGL from "react-map-gl";
-import mapboxgl from "mapbox-gl"; 
-
-
+import mapboxgl from "mapbox-gl";
 
 function Reports() {
   const [user, setUser] = React.useState({});
@@ -36,10 +34,12 @@ function Reports() {
   const [loading, setLoading] = React.useState(true);
   const [state, setUserstate] = React.useState("");
   const [lga, setLga] = React.useState("");
+  const [projectId, setProjectId] = React.useState("");
+  const [searchData, setSearchData] = React.useState([]);
   const [commentz, setCommentz] = React.useState([]);
 
   // @ts-ignore
-// eslint-disable-next-line import/no-webpack-loader-syntax
+  // eslint-disable-next-line import/no-webpack-loader-syntax
   //mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
   const handleChange = (event, value) => {
@@ -48,17 +48,14 @@ function Reports() {
 
   const handleStateChange = (event) => {
     console.log(event.target.value);
-    setFilterTerm(event.target.value);
     setUserstate(event.target.value);
   };
   const handleProjectChange = (event) => {
     console.log(event.target.value);
-    setFilterTerm(event.target.value);
     setProject(event.target.value);
   };
   const handleLgaChange = (event) => {
     console.log(event.target.value);
-    setFilterTerm(event.target.value);
     setLga(event.target.value);
   };
 
@@ -1055,6 +1052,27 @@ function Reports() {
     },
   ];
 
+  const handleSearch = async () => {
+    const response = await fetch(`${API_BASE}/reports/search`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        project_id: project,
+        state: state,
+        lga: lga,
+      }),
+    });
+    const result = await response.json();
+    console.log("Search", result);
+    result && setReports(result.data.data);
+    setTotalPages(result.data.last_page);
+    setCountPerPage(result.data.per_page);
+    setLoading(false);
+  };
+
   const handleApprove = async (id) => {
     const response = await fetch(`${API_BASE}/report/${id}/action/0`, {
       headers: {
@@ -1150,8 +1168,8 @@ function Reports() {
   };
 
   React.useEffect(() => {
-    const string = "9.123"
-    console.log("Float", parseFloat(string))
+    const string = "9.123";
+    console.log("Float", parseFloat(string));
     getUser();
     getProjects();
   }, []);
@@ -1272,8 +1290,11 @@ function Reports() {
       sortable: true,
       cell: (row) => {
         return (
-          <MapModal apiKey="pk.eyJ1IjoibWljaG9sdXNhbnlhIiwiYSI6ImNrd3MybWM4YjEyOGwycHFvaDhsc2Z2Y3AifQ.uSFsVJGkOiUXSTG2SOES2A" latitude={parseFloat(row.latitude)} longitude={parseFloat(row.longitude)}/>
-        
+          <MapModal
+            apiKey="pk.eyJ1IjoibWljaG9sdXNhbnlhIiwiYSI6ImNrd3MybWM4YjEyOGwycHFvaDhsc2Z2Y3AifQ.uSFsVJGkOiUXSTG2SOES2A"
+            latitude={parseFloat(row.latitude)}
+            longitude={parseFloat(row.longitude)}
+          />
         );
       },
     },
@@ -1302,7 +1323,7 @@ function Reports() {
               photo2={`https://roadzoftserver.xyz/uploads/${row.photo_2}`}
               photo3={`https://roadzoftserver.xyz/uploads/${row.photo_3}`}
               photo4={`https://roadzoftserver.xyz/uploads/${row.photo_4}`}
-              latitude={parseFloat(row.latitude)} 
+              latitude={parseFloat(row.latitude)}
               longitude={parseFloat(row.longitude)}
               apiKey="pk.eyJ1IjoibWljaG9sdXNhbnlhIiwiYSI6ImNrd3MybWM4YjEyOGwycHFvaDhsc2Z2Y3AifQ.uSFsVJGkOiUXSTG2SOES2A"
               approve={() => handleApprove(row.id)}
@@ -1353,7 +1374,7 @@ function Reports() {
                   <MenuItem value="">Select Project</MenuItem>
                   {projects &&
                     projects.map((item, i) => (
-                      <MenuItem value={item.title} key={i}>
+                      <MenuItem value={item.id} key={i}>
                         {item.title}
                       </MenuItem>
                     ))}
@@ -1404,6 +1425,14 @@ function Reports() {
                 </Select>
               </FormControl>
             </Box>
+
+            <Item.Button
+              onClick={handleSearch}
+              className="user-button"
+              variant="contained"
+            >
+              Filter
+            </Item.Button>
 
             <CSVLink className="flex flex-row" {...csvReport}>
               {" "}

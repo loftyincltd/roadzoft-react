@@ -12,7 +12,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "bootstrap": "^5.1.2",
-    "caniuse-lite": "^1.0.30001284",
+    "caniuse-lite": "^1.0.30001286",
     "date-fns": "^2.25.0",
     "fuse.js": "^6.4.6",
     "google-map-react": "^2.1.10",
@@ -41,7 +41,7 @@
     "worker-loader": "^3.0.8"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --openssl-legacy-provider --max-old-space-size=4092 --optimize-for-size --max_old_space_size=4092 --optimize_for_size start",
     "build": "react-scripts build && echo '/* /index.html 200' | cat >build/_redirects ",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
