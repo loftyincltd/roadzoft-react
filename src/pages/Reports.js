@@ -25,6 +25,7 @@ import mapboxgl from "mapbox-gl";
 function Reports() {
   const [user, setUser] = React.useState({});
   const [reports, setReports] = React.useState([]);
+  const [reportsData, setReportsData] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(2);
   const [countPerPage, setCountPerPage] = React.useState(10);
@@ -37,6 +38,10 @@ function Reports() {
   const [projectId, setProjectId] = React.useState("");
   const [searchData, setSearchData] = React.useState([]);
   const [commentz, setCommentz] = React.useState([]);
+  const [pending, setPending] = React.useState([]);
+  const [approved, setApproved] = React.useState([]);
+  const [queried, setQuried] = React.useState([]);
+  const [rejected, setRejected] = React.useState([]);
 
   // @ts-ignore
   // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -1115,6 +1120,7 @@ function Reports() {
     });
     const result = await response.json();
     result && setReports(result.data.data);
+    setReportsData(result.data.data);
     setTotalPages(result.data.last_page);
     setCountPerPage(result.data.per_page);
     setLoading(false);
@@ -1167,12 +1173,26 @@ function Reports() {
     console.log("Comments", result);
   };
 
+  const handleApproved = async (term) => {
+    const response = await fetch(`${API_BASE}/reports/${term}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const result = await response.json();
+    result && setReports(result.data.data);
+    setTotalPages(result.data.last_page);
+    setCountPerPage(result.data.per_page);
+    setLoading(false);
+    console.log("Approved", result);
+  };
+
   React.useEffect(() => {
-    const string = "9.123";
-    console.log("Float", parseFloat(string));
     getUser();
     getProjects();
   }, []);
+
   React.useEffect(() => {
     getReports();
   }, [page]);
@@ -1221,32 +1241,32 @@ function Reports() {
   const infos = [
     {
       title: "Total",
-      color: "#DD411A",
-      data: reports.length,
+      color: "rgb(17 76 168)",
+      data: reportsData.length,
     },
     {
       title: "Approved",
       color: "#035C36",
-      data: reports.filter((report) => report.status === "Approved").length,
+      data: reportsData.filter((report) => report.status === "Approved").length,
     },
     {
       title: "Pending",
       color: "rgb(209 148 35)",
-      data: reports.filter((report) => report.status === "Pending").length,
+      data: reportsData.filter((report) => report.status === "Pending").length,
     },
     {
       title: "Disapproved",
       color: "#0D0709",
-      data: reports.filter((report) => report.status === "Rejected").length,
+      data: reportsData.filter((report) => report.status === "Rejected").length,
     },
     {
       title: "Queried",
       color: "#DD411A",
-      data: reports.filter((report) => report.status === "Queried").length,
+      data: reportsData.filter((report) => report.status === "Queried").length,
     },
     {
       title: "Projects",
-      color: "#035C36",
+      color: "rgb(64 3 72)",
       data: projects.length,
     },
   ];
@@ -1360,7 +1380,13 @@ function Reports() {
           </div>
           <hr />
           <div className="my-3 flex flex-row justify-evenly items-center">
-            <h3>Filter: </h3>
+            <div>
+              <h3>Filter: </h3>
+              <CSVLink className="flex flex-row" {...csvReport}>
+                {" "}
+                <Icons.Download />
+              </CSVLink>
+            </div>
             <Box sx={{ minWidth: 200 }}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Project</InputLabel>
@@ -1434,17 +1460,29 @@ function Reports() {
               Filter
             </Item.Button>
 
-            <CSVLink className="flex flex-row" {...csvReport}>
-              {" "}
-              <Icons.Download /> Export Data
-            </CSVLink>
+            <Box sx={{ minWidth: 200 }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Filter by Status
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Filter by Status"
+                  onChange={(e) => handleApproved(e.target.value)}
+                >
+                  <MenuItem>Select Status</MenuItem>
+
+                  <MenuItem value="approved">Approved</MenuItem>
+                  <MenuItem value="pending">Pending</MenuItem>
+                  <MenuItem value="queried">Queried</MenuItem>
+                  <MenuItem value="rejected">Rejected</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
           </div>
           <hr />
-          <ProjectTable
-            columns={columns}
-            data={filterTerm != "" ? filterResults : data}
-            total={countPerPage}
-          />
+          <ProjectTable columns={columns} data={data} total={countPerPage} />
           <PaginationComponent
             page={page}
             defaultPage={page}

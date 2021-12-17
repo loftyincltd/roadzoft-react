@@ -140,7 +140,7 @@ function Dashboard() {
   const reportData = [
     {
       title: "Total",
-      color: "#DD411A",
+      color: "rgb(17 76 168)",
       data: reports.length,
     },
     {
@@ -166,7 +166,7 @@ function Dashboard() {
     },
     {
       title: "Users",
-      color: "#035C36",
+      color: "rgb(64 3 72)",
       data: users.length,
     },
   ];
@@ -211,7 +211,7 @@ function Dashboard() {
           <Sidebar />
         </div>
 
-        <div className="dashboard-right">
+        <div style={{ overflow: "scroll" }} className="dashboard-right">
           <Header user={user} title={title.toUpperCase()} />
           <hr />
 
