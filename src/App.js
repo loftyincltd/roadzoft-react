@@ -11,6 +11,7 @@ import SingleUser from './pages/SingleUser';
 import Log from './pages/Log';
 import Messages from './pages/Messages';
 import Settings from './pages/Settings';
+import Landing from './pages/Landing';
 import Notifications from './pages/Notifications';
 import Inquiry from './pages/Inquiry';
 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/users" exact component={Users} />
           <Route path="/user-profile/:id" exact component={SingleUser} />
           <Route path="/log" exact component={Log} />
+          <Route path="/landing" exact component={Landing} />
           <Route path="/messages" exact component={Messages} />
           <Route path="/add-user" exact component={AddUser} />
         </Switch>

@@ -6,9 +6,9 @@ import Button from "@mui/material/Button";
 import * as Item from "@mui/material";
 import Logo from "../assets/images/logo.png";
 import { API_BASE } from "../utils/Api";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-export default function Login() {
+export default function Landing() {
   const history = useHistory();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -35,13 +35,16 @@ export default function Login() {
       }),
     });
     const result = await response.json();
-   
+
     if (!result.data) {
       setMessage(result.message);
     } else {
       localStorage.setItem("token", result.access_token);
       localStorage.setItem("user", result.data.id);
-      localStorage.setItem("roles", result.data.roles.map(role => role.name));
+      localStorage.setItem(
+        "roles",
+        result.data.roles.map((role) => role.name)
+      );
       history.push("/dashboard");
     }
     console.log("Login", result);
@@ -49,45 +52,46 @@ export default function Login() {
 
   return (
     <div className="login-container flex justify-center items-center">
-      <div className="overlay p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex flex-col items-center space">
+      <div className="login-wrapper overlay p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex flex-col items-center space">
         <div className="flex flex-col justify-between items-center mb-5">
           <img src={Logo} width="90" alt="Ferma Logo" />
-          <h2 style={{color: "#064E3B"}} className="text-3xl font-bold my-2">ROADZOFT</h2>
-          <h4 style={{color: "#017831"}}>FERMA Monotoring and Evaluation Portal</h4>
+          <h2 style={{ color: "#064E3B" }} className="text-2xl font-bold my-5">
+            ROADZOFT
+          </h2>
+          
+        </div>
+        <div className="flex flex-col justify-between items-center mb-5">
+        <h4 style={{ color: "#064E3B" }} className="text-xl font-bold">
+            Welcome, Tom West
+          </h4>
+          <p style={{ color: "#017831" }} className="text-xs">
+            Select a dashboard to proceed.
+          </p>
+        </div>
+
+        <div className="flex flex-col justify-center items-center mb-5 w-full">
+          <Button
+            onClick={handleLogin}
+            className="w-full bg-green-900 mb-5"
+            color="success"
+            variant="contained"
+          >
+            <span className="capitalize">Ad-hoc Dashboard</span>
+          </Button>
         </div>
         <div className="flex flex-col justify-center items-center mb-5 w-full">
-          <TextField
-            className="w-full"
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            id="outlined-required"
-            type="text"
-            label="Staff ID"
-            placeholder="Phone Number"
-            size="small"
-          />
+          <Button
+            onClick={handleLogin}
+            className="w-full bg-green-900 mb-3"
+            color="success"
+            variant="outlined"
+          >
+            <span style={{ color: "#017831" }} className="capitalize">
+              Citizen Dashboard
+            </span>
+          </Button>
         </div>
-        <div className="flex flex-col w-full">
-          <TextField
-            className="w-full"
-            onChange={(e) => setPassword(e.target.value)}
-            id="outlined-password-input"
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            size="small"
-          />
-          <Link to="/forgot-password" style={{color: "#017831"}} className="mb-5 text-right text-xs">Forgot Password?</Link>
-        </div>
-        <Button
-          onClick={handleLogin}
-          className="w-full bg-green-900 mb-3"
-          color="success"
-          variant="contained"
-        >
-          Log In
-        </Button>
-        <p style={{color: "#017831"}} className="my-2 text-xs">Don't have an account? Contact Admin.</p>
+
         {message != "" && (
           <Item.Alert color="info" variant="filled">
             {message}

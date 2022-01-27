@@ -36,7 +36,7 @@ export default function Sidebar() {
                 onClick={() => setOpen(false)}
                 className="flex text-right flex-row justify-end items-end mr-1 ml-auto"
               >
-                <ToggleOnIcon color="inherit" />
+                {/* <ToggleOnIcon color="inherit" /> */}
               </div>
             </div>
             <nav className="nav-menu bg-green-900">
@@ -49,7 +49,9 @@ export default function Sidebar() {
                     </Link>
                   </li>
                 ))}
-                <hr className="text-gray-100 border-gray-50 bg-gray-400" />
+                 <div className="px-5">
+                <hr className="text-green-100 border-green-400 bg-green-400 " />
+                </div>
                 {BottomSeidebarData.map((item, i) => (
                   <li className={item.classname}>
                     <Link to={item.path}>
@@ -86,7 +88,7 @@ export default function Sidebar() {
                 onClick={() => setOpen(true)}
                 className="flex text-gray-200 text-right flex-row justify-end items-end"
               >
-                <ToggleOffIcon style={{ fill: "gray" }} />
+               {/*  <ToggleOffIcon style={{ fill: "gray" }} /> */}
               </div>
             </div>
             <nav className="nav-menu bg-green-900">
@@ -96,7 +98,10 @@ export default function Sidebar() {
                     <Link to={item.path}>{item.icon}</Link>
                   </p>
                 ))}
-                <hr className="text-gray-100 border-gray-50 bg-gray-400" />
+                <div className="">
+                <hr className="text-green-100 border-green-50 bg-green-400 px-5" />
+                </div>
+                
                 {BottomSeidebarData.map((item, i) => (
                   <p className={item.classname2}>
                     <Link to={item.path}>{item.icon}</Link>
