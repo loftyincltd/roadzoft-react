@@ -28,22 +28,34 @@ export const SidebarData = [
         title: "Users",
         path: "/users",
         icon: <MdIcons.MdSupervisorAccount />,
+        frontIcon: <MdIcons.MdChevronRight />,
         classname: "nav-item",
-        classname2: "nav-item2"
-    },
-    {
-        title: "Inquiries",
-        path: "/inquiries",
-        icon: <MdIcons.MdHelpCenter />,
-        classname: "nav-item",
-        classname2: "nav-item2"
-    },
-    {
-        title: "Logs",
-        path: "/log",
-        icon: <MdIcons.MdBook />,
-        classname: "nav-item",
-        classname2: "nav-item2"
+        classname2: "nav-item2",
+        sub:  [
+   
+            {
+                title: "All Users",
+                path: "/users",
+                icon: <MdIcons.MdSupervisorAccount />,
+                classname: "nav-item",
+                classname2: "nav-item2"
+            },
+            {
+                title: "Inquiries",
+                path: "/inquiries",
+                icon: <MdIcons.MdHelpCenter />,
+                classname: "nav-item",
+                classname2: "nav-item2"
+            },
+            {
+                title: "Logs",
+                path: "/log",
+                icon: <MdIcons.MdBook />,
+                classname: "nav-item",
+                classname2: "nav-item2"
+            },
+            
+        ]
     },
     {
         title: "Messages",
@@ -53,6 +65,7 @@ export const SidebarData = [
         classname2: "nav-item2"
     },
 ]
+
 
 export const BottomSeidebarData = [
     {

@@ -14,12 +14,6 @@ export default function Landing() {
   const [password, setPassword] = React.useState("");
   const [message, setMessage] = React.useState("");
 
-  React.useEffect(() => {
-    if (localStorage.getItem("user") != null) {
-      history.push("/dashboard");
-    }
-  });
-
   const handleLogin = async () => {
     console.log(email);
     console.log(password);
@@ -71,7 +65,7 @@ export default function Landing() {
 
         <div className="flex flex-col justify-center items-center mb-5 w-full">
           <Button
-            onClick={handleLogin}
+            onClick={() => history.push("/dashboard")}
             className="w-full bg-green-900 mb-5"
             color="success"
             variant="contained"
@@ -81,7 +75,7 @@ export default function Landing() {
         </div>
         <div className="flex flex-col justify-center items-center mb-5 w-full">
           <Button
-            onClick={handleLogin}
+            onClick={() => history.push("/dashboard")}
             className="w-full bg-green-900 mb-3"
             color="success"
             variant="outlined"

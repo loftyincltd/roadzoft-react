@@ -12,6 +12,15 @@ import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 export default function Sidebar() {
   const history = useHistory();
   const [open, setOpen] = React.useState(true);
+  const [show, setShow] = React.useState('d-none')
+
+  const handleSub = () => {
+      if (show == 'd-none') {
+        setShow('d-block')
+      } else {
+        setShow('d-none')
+      }
+  }
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -46,7 +55,12 @@ export default function Sidebar() {
                     <Link to={item.path}>
                       {item.icon}
                       <span>{item.title}</span>
+                      <span onClick={handleSub}>{item.frontIcon}</span>
                     </Link>
+                    {item.sub && item.sub.map(i => <Link className={show} to={i.path}>
+                      {i.icon}
+                      <span>{i.title}</span>
+                    </Link>)}
                   </li>
                 ))}
                  <div className="px-5">

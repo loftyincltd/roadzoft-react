@@ -42,7 +42,7 @@ export default function Login() {
       localStorage.setItem("token", result.access_token);
       localStorage.setItem("user", result.data.id);
       localStorage.setItem("roles", result.data.roles.map(role => role.name));
-      history.push("/dashboard");
+      history.push("/landing");
     }
     console.log("Login", result);
   };

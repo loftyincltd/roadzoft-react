@@ -30,7 +30,7 @@ export default function Header({ title, user }) {
       <div className="dashname-container">
         <div className="dashname-wrapper">
           <p>Current View</p>
-          <p style={{ fontWeight: "bolder" }}>Ad-hoc Dashboard</p>
+          <p onClick={() => alert('You want to change dashboard?')} style={{ fontWeight: "bolder", cursor: 'pointer' }}>Ad-hoc Dashboard</p>
         </div>
       </div>
       <span className="text-3xl text-gray-200 mr-5">|</span>
