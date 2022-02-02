@@ -12,6 +12,7 @@ import {
   Bar,
 } from "recharts";
 import { Chart } from "react-charts";
+import Badge from "@mui/material/Badge";
 import LargeCard from "../components/cards/LargeCard";
 import TopCards from "../components/cards/TopCards";
 import Header from "../components/header/Header";
@@ -21,6 +22,15 @@ import { useHistory } from "react-router-dom";
 import LargeProjectsCard from "../components/cards/LargeProjectCard";
 import LargeReportsCard from "../components/cards/LargeReportsCard";
 import LargeMessagesCard from "../components/cards/LargeMessagesCard";
+import NewCardSmall from "../components/cards/NewCardSmall";
+import HomeTableCard from "../components/cards/HomeTableCard";
+import HomeTableCard2 from "../components/cards/HomeTableCard2";
+
+import BlueBG from "../assets/bg/bluesquare.svg";
+import GreenBG from "../assets/bg/greensquare.svg";
+import OrangeBG from "../assets/bg/orangesquare.svg";
+import RedBG from "../assets/bg/redsquare.svg";
+import YellowBG from "../assets/bg/yellowsquare.svg";
 
 function Dashboard() {
   const history = useHistory();
@@ -31,36 +41,6 @@ function Dashboard() {
   const [loading, setLoading] = React.useState(true);
   const [open, setOpen] = React.useState(false);
   const title = "Overview";
-
-  const getData = async () => {
-    const response = fetch(`${API_BASE}/`);
-  };
-
-  const infos = [
-    {
-      title: "Total",
-      data: 5,
-    },
-    {
-      title: "Ongoing",
-      data: 15,
-    },
-    {
-      title: "Pending",
-      data: 2,
-    },
-    {
-      title: "Completed",
-      data: 20,
-    },
-  ];
-
-  const titles = [
-    { name: "Unresolved biodata requests" },
-    { name: "Latest Reports" },
-    { name: "Latest Messages" },
-    { name: "New Users" },
-  ];
 
   const getReports = async () => {
     const response = await fetch(`${API_BASE}/reports`, {
@@ -139,35 +119,35 @@ function Dashboard() {
 
   const reportData = [
     {
-      title: "Total",
+      title: "Total Reports",
       color: "rgb(17 76 168)",
+      image: BlueBG,
       data: reports.length,
     },
     {
       title: "Approved",
       color: "#035C36",
+      image: GreenBG,
       data: reports.filter((report) => report.status === "Approved").length,
     },
     {
       title: "Pending",
       color: "rgb(209 148 35)",
+      image: OrangeBG,
       data: reports.filter((report) => report.status === "Pending").length,
     },
 
     {
       title: "Disapproved",
       color: "#0D0709",
+      image: RedBG,
       data: reports.filter((report) => report.status === "Rejected").length,
     },
     {
       title: "Queried",
       color: "#DD411A",
+      image: YellowBG,
       data: reports.filter((report) => report.status === "Queried").length,
-    },
-    {
-      title: "Users",
-      color: "rgb(64 3 72)",
-      data: users.length,
     },
   ];
 
@@ -212,24 +192,54 @@ function Dashboard() {
         </div>
 
         <div style={{ overflow: "scroll" }} className="dashboard-right">
-          <Header user={user} title={title.toUpperCase()} />
+          <Header user={user} title={title} />
           <hr />
 
-          <div className="mx-5 my-3 flex grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-4 justify-items-center items-center">
+          <div className="mx-5 my-3 flex grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-1 justify-items-center items-center">
+            <div
+              className="flex flex-col justify-center items-center shadow-md"
+              style={{
+                width: 180,
+                height: 180,
+                background: "#043C2D",
+                margin: 10,
+                borderRadius: "20px",
+              }}
+            >
+              <div className="report-item flex flex-row justify-center items-center text-white">
+                <Badge variant="dot" color="error">
+                  <h2 className="text-4xl mr-3">15</h2>
+                </Badge>
+                <span>New Reports</span>
+              </div>
+              <div
+                style={{ color: "#49BF78" }}
+                className="report-item flex flex-row justify-center items-center text-white"
+              >
+                <h4 className="text-xl mr-2">7</h4>
+                <span className="text-sm">Citizen Reports</span>
+              </div>
+              <div
+                style={{ color: "#CEFF68" }}
+                className="report-item flex flex-row justify-center items-center text-white"
+              >
+                <h4 className="text-xl mr-2">8</h4>
+                <span className="text-sm">Inspection Reports</span>
+              </div>
+            </div>
             {reportData.map((report) => (
               <TopCards info={report} />
             ))}
           </div>
 
+          {/*
           {localStorage.getItem("roles") == "Super Admin" && (
             <div className="flex flex-col justify-center items-center ">
               <div
                 style={{}}
                 className="chart-wrapper bg-white shadow-sm rounded-sm my-5 mx-5"
               >
-                {/* <h3 className="mx-5 mt-5 mb-1 font-bold text-center text-gray-700">
-                Users Per Project
-              </h3> */}
+               
                 <div>
                   <h5 className="text-center my-1 text-xl text-gray-700">
                     Users per Project
@@ -283,28 +293,12 @@ function Dashboard() {
                 </div>
               </div>
             </div>
-          )}
-          <div className="main-items justify-items-center items-center grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4 my-3 mx-5">
-            <div>
-              <LargeCard title="New Users" data={users} link="users" />
-            </div>
-            <div>
-              <LargeProjectsCard
-                title="Latest Projects"
-                data={projects}
-                link="projects"
-              />
-            </div>
-            <div>
-              <LargeReportsCard
-                title="Latest Reports"
-                data={reports}
-                link="reports"
-              />
-            </div>
-            <div>
-              <LargeMessagesCard title="New Messages" link="messages" />
-            </div>
+          )}  */}
+          <div className="home-card shadow-md">
+            <HomeTableCard data={reports} />
+          </div>
+          <div className="home-card shadow-md">
+            <HomeTableCard2 data={reports} />
           </div>
         </div>
       </div>

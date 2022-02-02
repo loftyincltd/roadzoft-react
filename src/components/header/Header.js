@@ -22,12 +22,12 @@ export default function Header({ title, user }) {
         <h2 className="font-semibold text-2xl">{title}</h2>
       </div>
       <div className="search-container">
-        <div className="search-wrapper">
+        <div className="search-wrapper center-item">
           <Icon.Search size={16} className="search-icon" />
           <input className="search-input" type="text" placeholder="" />
         </div>
       </div>
-      <div className="dashname-container">
+      <div className="dashname-container center-item">
         <div className="dashname-wrapper">
           <p>Current View</p>
           <p onClick={() => alert('You want to change dashboard?')} style={{ fontWeight: "bolder", cursor: 'pointer' }}>Ad-hoc Dashboard</p>

@@ -35,14 +35,12 @@ export default function MapModal({ latitude, longitude, apiKey }) {
 
   return (
     <div>
-      <Button
-        style={{ borderRadius: 50, background: "#035C36" }}
-        color="primary"
-        variant="contained"
+      <span
+      style={{cursor: "pointer", color: "blue" }}
         onClick={handleOpen}
       >
-        Open Map
-      </Button>
+        View on map
+      </span>
       <Modal
         open={open}
         onClose={handleClose}
