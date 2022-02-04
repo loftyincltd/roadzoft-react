@@ -31,7 +31,10 @@ code {
 .dashboard-right {
   background: #f7f8fc;
   width: 80vw;
-  padding-left: 15px;
+  
+}
+.dashboard-wrapper {
+  padding: 15px;
 }
 .dashboard-left {
   width: 20vw;
@@ -237,5 +240,12 @@ code {
   }
   .center-item {
     display: none
+  }
+  .dashboard-left {
+    display: none;
+  }
+  .dashboard-right {
+    width: 100vw;
+    padding: 0;
   }
 }

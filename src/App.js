@@ -14,6 +14,7 @@ import Settings from './pages/Settings';
 import Landing from './pages/Landing';
 import Notifications from './pages/Notifications';
 import Inquiry from './pages/Inquiry';
+import CitizenDashboard from './pages/citizen/Dashboard';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/landing" exact component={Landing} />
           <Route path="/messages" exact component={Messages} />
           <Route path="/add-user" exact component={AddUser} />
+          <Route path="/citizen/dashboard" exact component={CitizenDashboard} />
         </Switch>
       </Router>
     </div>

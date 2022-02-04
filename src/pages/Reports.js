@@ -14,13 +14,18 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Box from "@mui/material/Box";
+import Badge from "@mui/material/Badge";
 import { CSVLink } from "react-csv";
 import Fuse from "fuse.js";
 import * as Icons from "react-feather";
 import ReportQuery from "../components/modals/ReportQuery";
 import MapModal from "../components/modals/MapModal";
-import ReactMapGL from "react-map-gl";
-import mapboxgl from "mapbox-gl";
+
+import BlueBG from "../assets/bg/bluesquare.svg";
+import GreenBG from "../assets/bg/greensquare.svg";
+import OrangeBG from "../assets/bg/orangesquare.svg";
+import RedBG from "../assets/bg/redsquare.svg";
+import YellowBG from "../assets/bg/yellowsquare.svg";
 
 function Reports() {
   const [user, setUser] = React.useState({});
@@ -1063,6 +1068,7 @@ function Reports() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "X-RGM-PLATFORM": "Ad-hoc"
       },
       body: JSON.stringify({
         project_id: project,
@@ -1083,6 +1089,7 @@ function Reports() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "X-RGM-PLATFORM": "Ad-hoc"
       },
     });
     const result = await response.json();
@@ -1094,6 +1101,7 @@ function Reports() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "X-RGM-PLATFORM": "Ad-hoc"
       },
     });
     const result = await response.json();
@@ -1105,6 +1113,7 @@ function Reports() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "X-RGM-PLATFORM": "Ad-hoc"
       },
     });
     const result = await response.json();
@@ -1116,6 +1125,7 @@ function Reports() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "X-RGM-PLATFORM": "Ad-hoc"
       },
     });
     const result = await response.json();
@@ -1240,36 +1250,38 @@ function Reports() {
 
   const infos = [
     {
-      title: "Total",
+      title: "Total Reports",
       color: "rgb(17 76 168)",
+      image: BlueBG,
       data: reportsData.length,
     },
     {
       title: "Approved",
       color: "#035C36",
+      image: GreenBG,
       data: reportsData.filter((report) => report.status === "Approved").length,
     },
     {
       title: "Pending",
       color: "rgb(209 148 35)",
+      image: OrangeBG,
       data: reportsData.filter((report) => report.status === "Pending").length,
     },
+
     {
       title: "Disapproved",
       color: "#0D0709",
+      image: RedBG,
       data: reportsData.filter((report) => report.status === "Rejected").length,
     },
     {
       title: "Queried",
       color: "#DD411A",
+      image: YellowBG,
       data: reportsData.filter((report) => report.status === "Queried").length,
     },
-    {
-      title: "Projects",
-      color: "rgb(64 3 72)",
-      data: projects.length,
-    },
   ];
+
 
   const defaultProps = {
     center: {
@@ -1373,7 +1385,38 @@ function Reports() {
           <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">
             Reports
           </h3>
-          <div className="mx-5 flex grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-4 justify-items-center items-center">
+          <div className="mx-5 my-3 flex grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-1 justify-items-center items-center">
+            <div
+              className="flex flex-col justify-center items-center shadow-md"
+              style={{
+                width: 180,
+                height: 180,
+                background: "#043C2D",
+                margin: 10,
+                borderRadius: "20px",
+              }}
+            >
+              <div className="report-item flex flex-row justify-center items-center text-white">
+                <Badge variant="dot" color="error">
+                  <h2 className="text-4xl mr-3">15</h2>
+                </Badge>
+                <span>New Reports</span>
+              </div>
+              <div
+                style={{ color: "#49BF78" }}
+                className="report-item flex flex-row justify-center items-center text-white"
+              >
+                <h4 className="text-xl mr-2">7</h4>
+                <span className="text-sm">Citizen Reports</span>
+              </div>
+              <div
+                style={{ color: "#CEFF68" }}
+                className="report-item flex flex-row justify-center items-center text-white"
+              >
+                <h4 className="text-xl mr-2">8</h4>
+                <span className="text-sm">Inspection Reports</span>
+              </div>
+            </div>
             {infos.map((info) => (
               <TopCards info={info} />
             ))}

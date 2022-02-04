@@ -75,7 +75,7 @@ export default function Landing() {
         </div>
         <div className="flex flex-col justify-center items-center mb-5 w-full">
           <Button
-            onClick={() => history.push("/dashboard")}
+            onClick={() => history.push("/citizen/dashboard")}
             className="w-full bg-green-900 mb-3"
             color="success"
             variant="outlined"
