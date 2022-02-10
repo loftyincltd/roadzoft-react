@@ -4,6 +4,7 @@ import * as Item from "@mui/material";
 import { useParams, useHistory, Link } from "react-router-dom";
 import Badge from "@mui/material/Badge";
 import { API_BASE } from "../../utils/Api";
+import SwitchDialogDemo from "./Switch";
 
 export default function Header({ title, user }) {
   const params = useParams();
@@ -27,12 +28,8 @@ export default function Header({ title, user }) {
           <input className="search-input" type="text" placeholder="" />
         </div>
       </div>
-      <div className="dashname-container center-item">
-        <div className="dashname-wrapper">
-          <p>Current View</p>
-          <p onClick={() => alert('You want to change dashboard?')} style={{ fontWeight: "bolder", cursor: 'pointer' }}>Ad-hoc Dashboard</p>
-        </div>
-      </div>
+      <SwitchDialogDemo />
+
       <span className="text-3xl text-gray-200 mr-5">|</span>
 
       <div className=" flex flex-row justify-between items-center">

@@ -2,7 +2,7 @@ import React from "react";
 import Badge from "@mui/material/Badge";
 import TopCards from "../../components/cards/TopCards";
 import Header from "../../components/header/Header";
-import Sidebar from "../../components/sidebar/Sidebar";
+import CitizenSidebar from "../../components/sidebar/CitizenSidebar";
 import { API_BASE } from "../../utils/Api";
 import { useHistory } from "react-router-dom";
 import HomeTableCard from "../../components/cards/HomeTableCard";
@@ -65,6 +65,7 @@ function CitizenDashboard() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "X-RGM-PLATFORM": "Citizen"
       },
     });
     const result = await response.json();
@@ -79,6 +80,7 @@ function CitizenDashboard() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "X-RGM-PLATFORM": "Citizen"
       },
     });
     const result = await response.json();
@@ -139,7 +141,7 @@ function CitizenDashboard() {
     <div>
       <div className="flex flex-row">
         <div className="dashboard-left">
-          <Sidebar />
+          <CitizenSidebar />
         </div>
 
         <div style={{ overflow: "scroll" }} className="dashboard-right">

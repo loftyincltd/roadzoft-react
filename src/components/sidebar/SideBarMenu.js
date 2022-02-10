@@ -26,7 +26,7 @@ export const SidebarData = [
     }, 
     {
         title: "Users",
-        path: "/users",
+        path: "#",
         icon: <MdIcons.MdSupervisorAccount />,
         frontIcon: <MdIcons.MdChevronRight />,
         classname: "nav-item",
@@ -64,7 +64,72 @@ export const SidebarData = [
         classname: "nav-item",
         classname2: "nav-item2"
     },
+];
+
+export const CitizenSidebarData = [
+    {
+        title: "Overview",
+        path: "/citizen/dashboard",
+        icon: <MdIcons.MdPieChart />,
+        classname: "nav-item",
+        classname2: "nav-item2"
+    },
+    {
+        title: "Projects",
+        path: "/citizen/projects",
+        icon: <MdIcons.MdOutlineWork />,
+        classname: "nav-item",
+        classname2: "nav-item2"
+    },
+     {
+        title: "Reports",
+        path: "/citizen/reports",
+        icon: <MdIcons.MdLightbulb />,
+        classname: "nav-item",
+        classname2: "nav-item2"
+    }, 
+    {
+        title: "Users",
+        path: "#",
+        icon: <MdIcons.MdSupervisorAccount />,
+        frontIcon: <MdIcons.MdChevronRight />,
+        classname: "nav-item",
+        classname2: "nav-item2",
+        sub:  [
+   
+            {
+                title: "All Users",
+                path: "/citizen/users",
+                icon: <MdIcons.MdSupervisorAccount />,
+                classname: "nav-item",
+                classname2: "nav-item2"
+            },
+            {
+                title: "Inquiries",
+                path: "/citizen/inquiries",
+                icon: <MdIcons.MdHelpCenter />,
+                classname: "nav-item",
+                classname2: "nav-item2"
+            },
+            {
+                title: "Logs",
+                path: "/citizen/log",
+                icon: <MdIcons.MdBook />,
+                classname: "nav-item",
+                classname2: "nav-item2"
+            },
+            
+        ]
+    },
+    {
+        title: "Messages",
+        path: "/citizen/messages",
+        icon: <MdIcons.MdChat />,
+        classname: "nav-item",
+        classname2: "nav-item2"
+    },
 ]
+
 
 
 export const BottomSeidebarData = [
@@ -78,6 +143,23 @@ export const BottomSeidebarData = [
     {
         title: "Notifications",
         path: "/notifications",
+        icon: <MdIcons.MdNotifications />,
+        classname: "nav-item",
+        classname2: "nav-item2"
+    },
+]
+
+export const CitizenBottomSeidebarData = [
+    {
+        title: "Settings",
+        path: "/citizen/settings",
+        icon: <MdIcons.MdSettings />,
+        classname: "nav-item",
+        classname2: "nav-item2"
+    }, 
+    {
+        title: "Notifications",
+        path: "/citizen/notifications",
         icon: <MdIcons.MdNotifications />,
         classname: "nav-item",
         classname2: "nav-item2"

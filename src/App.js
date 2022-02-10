@@ -15,6 +15,8 @@ import Landing from './pages/Landing';
 import Notifications from './pages/Notifications';
 import Inquiry from './pages/Inquiry';
 import CitizenDashboard from './pages/citizen/Dashboard';
+import CitizenReports from './pages/citizen/Reports';
+import CitizenUsers from './pages/citizen/Users';
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
           <Route path="/messages" exact component={Messages} />
           <Route path="/add-user" exact component={AddUser} />
           <Route path="/citizen/dashboard" exact component={CitizenDashboard} />
+          <Route path="/citizen/reports" exact component={CitizenReports} />
+          <Route path="/citizen/users" exact component={CitizenUsers} />
         </Switch>
       </Router>
     </div>
