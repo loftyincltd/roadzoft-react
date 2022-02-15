@@ -14,6 +14,7 @@ import { CSVLink } from "react-csv";
 import Fuse from "fuse.js";
 import * as Icons from "react-feather";
 import PaginationComponent from "../../components/tables/Pagination";
+import Filter from "../../components/filter/Filter";
 
 function CitizenUsers() {
   const history = useHistory();
@@ -54,7 +55,7 @@ function CitizenUsers() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "X-RGM-PLATFORM": "Citizen"
+        "X-RGM-PLATFORM": "Citizen",
       },
     });
     const result = await response.json();
@@ -92,7 +93,7 @@ function CitizenUsers() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "X-RGM-PLATFORM": "Citizen"
+        "X-RGM-PLATFORM": "Citizen",
       },
     });
     const result = await response.json();
@@ -105,7 +106,7 @@ function CitizenUsers() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "X-RGM-PLATFORM": "Citizen"
+        "X-RGM-PLATFORM": "Citizen",
       },
     });
     const result = await response.json();
@@ -1157,21 +1158,59 @@ function CitizenUsers() {
   const title = "Users";
 
   const columns = [
-    { selector: "name", name: "Full Name", sortable: true },
-    { selector: "State", name: "State", sortable: true },
-    { selector: "lga", name: "LGA", sortable: true },
     {
-      selector: "id",
+      selector: "photos",
       name: "",
+      sortable: true,
       cell: (row) => {
         return (
-          <Item.Button
+          <Item.Avatar
+            variant="circular"
+            src={`https://roadzoftserver.xyz/uploads/avatar/${
+              row.photos == null ? "" : row.photos.photo
+            }`}
+          />
+        );
+      },
+    },
+    {
+      selector: "name",
+      name: "Name",
+      sortable: true,
+      cell: (row) => {
+        return (
+          <span
+            style={{ cursor: "pointer" }}
             onClick={() => viewUser(row.id)}
             color="success"
             variant="contained"
           >
-            View
-          </Item.Button>
+            {row.name}
+          </span>
+        );
+      },
+    },
+    {
+      selector: "State",
+      name: "Current Projects",
+      sortable: true,
+      cell: (row) => {
+        return (
+          <span style={{ textAlign: "center" }} className="text-center">
+            {row.projects.length == 0 ? "None" : row.projects.length}
+          </span>
+        );
+      },
+    },
+    {
+      selector: "lga",
+      name: "Location",
+      sortable: true,
+      cell: (row) => {
+        return (
+          <span>
+            {row.lga}, {row.State}
+          </span>
         );
       },
     },
@@ -1182,15 +1221,19 @@ function CitizenUsers() {
       ignoreRowClick: true,
       cell: (row) => {
         return (
-          <Item.Button
-            onClick={() => {
-              if (window.confirm("Delete this user?")) handleDelete(row.id);
-            }}
-            color="error"
-            variant="contained"
+          <div
+            style={{ cursor: "pointer" }}
+            className="flex flex-row justify-end items-end"
           >
-            Delete
-          </Item.Button>
+            <Icons.Trash
+              onClick={() => {
+                if (window.confirm("Delete this user?")) handleDelete(row.id);
+              }}
+              color="red"
+              size={14}
+              fill="red"
+            />
+          </div>
         );
       },
     },
@@ -1204,106 +1247,44 @@ function CitizenUsers() {
         </div>
 
         <div className="dashboard-right">
-          <Header
-            title={title}
-            user={user}
-          />
+          <Header title={title} user={user} />
           <hr />
-          <div className="mb-3 mt-10 flex flex-row justify-evenly items-center">
-            <h3>Filter: </h3>
-            <Box sx={{ minWidth: 200 }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Project</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={project}
-                  label="Project"
-                  onChange={handleProjectChange}
-                >
-                  <MenuItem value="">Select Project</MenuItem>
-                  {projects &&
-                    projects.map((item, i) => (
-                      <MenuItem value={item.title} key={i}>
-                        {item.title}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Box>
-            <Box sx={{ minWidth: 200 }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">State</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={state}
-                  label="State"
-                  onChange={handleStateChange}
-                >
-                  <MenuItem value="">Select State</MenuItem>
-                  {states &&
-                    states.map((item, i) => (
-                      <MenuItem value={item.name} key={i}>
-                        {item.name}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Box>
-            <Box sx={{ minWidth: 200 }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">LGA</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={lga}
-                  label="LGA"
-                  onChange={handleLgaChange}
-                >
-                  <MenuItem value="">Select LGA</MenuItem>
-                  {states &&
-                    states
-                      .filter((s) => s.name === state)
-                      .map((item, i) =>
-                        item.lgas.map((lg, i) => (
-                          <MenuItem value={lg} key={i}>
-                            {lg}
-                          </MenuItem>
-                        ))
-                      )}
-                </Select>
-              </FormControl>
-            </Box>
-
-            <CSVLink className="flex flex-row" {...csvReport}>
-              {" "}
-              <Icons.Download /> Export Data
-            </CSVLink>
+          <div className="bg-white shadow-md p-2 m-5 rounded-sm">
+            <Filter
+              states={states}
+              project={project}
+              handleProjectChange={handleProjectChange}
+              projects={projects}
+              lga={lga}
+              handleLgaChange={handleLgaChange}
+              csvReport={csvReport}
+              state={state}
+              handleStateChange={handleStateChange}
+            />
+            <hr />
+            {loading ? (
+              <Item.Box
+                className="flex justify-center items-center"
+                sx={{ display: "flex" }}
+              >
+                <Item.CircularProgress />
+              </Item.Box>
+            ) : (
+              <div>
+                <ProjectTable
+                  columns={columns}
+                  data={filterTerm != "" ? filterResults : data}
+                  total={countPerPage}
+                />
+                <PaginationComponent
+                  page={page}
+                  defaultPage={page}
+                  count={totalPages}
+                  handleChange={handleChange}
+                />
+              </div>
+            )}
           </div>
-          <hr />
-          {loading ? (
-            <Item.Box
-              className="flex justify-center items-center"
-              sx={{ display: "flex" }}
-            >
-              <Item.CircularProgress />
-            </Item.Box>
-          ) : (
-            <>
-              <ProjectTable
-                columns={columns}
-                data={filterTerm != "" ? filterResults : data}
-                total={countPerPage}
-              />
-              <PaginationComponent
-                page={page}
-                defaultPage={page}
-                count={totalPages}
-                handleChange={handleChange}
-              />
-            </>
-          )}
         </div>
       </div>
     </div>

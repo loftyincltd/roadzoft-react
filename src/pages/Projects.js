@@ -10,7 +10,6 @@ import Box from "@mui/material/Box";
 import Moment from "react-moment";
 import ProjectTable from "../components/tables/ProjectTable";
 import { API_BASE } from "../utils/Api";
-import HeaderWithButton from "../components/header/HeaderWithButton";
 import { CSVLink } from "react-csv";
 import { useHistory } from "react-router-dom";
 import ExportModal from "../components/modals/ExportModal";
@@ -148,9 +147,8 @@ function Projects() {
         </div>
 
         <div className="dashboard-right">
-          <HeaderWithButton
-            handlClick={loadNew}
-            title={title.toUpperCase()}
+          <Header
+            title={title}
             user={user}
           />
           <h3 className="mx-5 mt-5 mb-3 font-bold text-gray-700 text-2xl">
