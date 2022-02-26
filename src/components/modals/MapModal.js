@@ -35,11 +35,11 @@ export default function MapModal({ latitude, longitude, apiKey }) {
 
   return (
     <div>
-      <span
+      <span className="text-sm"
       style={{cursor: "pointer", color: "blue" }}
         onClick={handleOpen}
       >
-        View on map
+        View
       </span>
       <Modal
         open={open}

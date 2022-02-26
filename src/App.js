@@ -17,6 +17,8 @@ import Inquiry from './pages/Inquiry';
 import CitizenDashboard from './pages/citizen/Dashboard';
 import CitizenReports from './pages/citizen/Reports';
 import CitizenUsers from './pages/citizen/Users';
+import ViewReport from './pages/citizen/ViewReport';
+import AssignInspection from './pages/citizen/AssignInspection';
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
           <Route path="/add-user" exact component={AddUser} />
           <Route path="/citizen/dashboard" exact component={CitizenDashboard} />
           <Route path="/citizen/reports" exact component={CitizenReports} />
+          <Route path="/citizen/view-report" exact component={ViewReport} />
+          <Route path="/citizen/assign-inspection" exact component={AssignInspection} />
           <Route path="/citizen/users" exact component={CitizenUsers} />
         </Switch>
       </Router>

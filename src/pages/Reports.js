@@ -1068,7 +1068,7 @@ function Reports() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "X-RGM-PLATFORM": "Ad-hoc"
+        "X-RGM-PLATFORM": "Ad-hoc",
       },
       body: JSON.stringify({
         project_id: project,
@@ -1089,7 +1089,7 @@ function Reports() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "X-RGM-PLATFORM": "Ad-hoc"
+        "X-RGM-PLATFORM": "Ad-hoc",
       },
     });
     const result = await response.json();
@@ -1101,7 +1101,7 @@ function Reports() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "X-RGM-PLATFORM": "Ad-hoc"
+        "X-RGM-PLATFORM": "Ad-hoc",
       },
     });
     const result = await response.json();
@@ -1113,7 +1113,7 @@ function Reports() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "X-RGM-PLATFORM": "Ad-hoc"
+        "X-RGM-PLATFORM": "Ad-hoc",
       },
     });
     const result = await response.json();
@@ -1125,7 +1125,7 @@ function Reports() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "X-RGM-PLATFORM": "Ad-hoc"
+        "X-RGM-PLATFORM": "Ad-hoc",
       },
     });
     const result = await response.json();
@@ -1282,7 +1282,6 @@ function Reports() {
     },
   ];
 
-
   const defaultProps = {
     center: {
       lat: 59.95,
@@ -1338,7 +1337,12 @@ function Reports() {
       sortable: true,
       ignoreRowClick: true,
       cell: (row) => {
-        return <Moment fromNow>{row.created_at}</Moment>;
+        return (
+          <div>
+            <Moment format="YYYY-MM-DD">{row.created_at}</Moment>
+            <Moment fromNow>{row.created_at}</Moment>
+          </div>
+        );
       },
     },
     {
